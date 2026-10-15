@@ -49,8 +49,9 @@ flowchart TD
      * `Phase 2 [突发意外/本能反应]`：受物理因果驱动的突发变故（如前夜大雨导致次日路面湿滑引发车祸），仅有本能惊呼，无上帝视角台词；
      * `Phase 3 [生理苏醒/怀疑否认]`：落地后的生理不适（咳嗽、摸索眼镜），第一反应以为是恶作剧、剧组拍戏或幻觉；
      * `Phase 4 [证据冲击/确认觉醒]`：被真实的物理细节（刀口血迹、泥泞粮车、“汉”字帅旗、街亭军报）击碎幻想，完成时空推理与使命觉醒。
-2. **契诃夫之枪静默法则（草蛇灰线，伏笔绝不进台词明牌）**：
-   * 关键未来转折道具（如顾渊的**第二副备用眼镜**），在铺垫期只能作为**视觉环境道具 (`Silent Visual Prop`)** 自然出现在画面角落（如随手敞开的眼镜盒、睡前拢入双肩包），**严禁在台词中直接点破其未来用途**。
+2. **契诃夫之枪静默法则与物理光学细节体现律（Show, Don't Tell 进阶）**：
+   * **铺垫期静默埋设**：关键未来转折道具（如顾渊的**第二副备用远视眼镜**），在铺垫期只能作为**视觉环境道具 (`Silent Visual Prop`)** 自然出现在画面角落（如随手敞开的眼镜盒、睡前拢入双肩包），**严禁在铺垫期台词中直接点破其未来用途**。
+   * **全剧禁直白验光词**：远视凸透镜（`convex eyeglass lenses`）解决 47 岁诸葛亮老花眼、以及折射寒光震慑曹魏暗哨的设定，**全剧任何阶段严禁在台词中直白说出“远视眼/老花眼/凸透镜/度数”**，必须通过三组可拍物理细节体现：① 诸葛亮烛下看竹简时伸直手臂拉远 (`at arm's length`) + 微眯眼揉眉心；② 过肩微距特写展示竹简细字经凸透镜光学放大变清晰，诸葛亮眉头舒展；③ 山间阳光/帐内火把照在镜片上折射双道冷白寒光惊退敌哨。
 
 ### L2：视觉资产与全局事实锁层 (Production Fact Sheet & Asset Lock)
 * 以项目根目录的 [`fact_sheet.toml`](file:///c:/Users/Liang/Downloads/sanguo/fact_sheet.toml) 与 [`characters/profiles.toml`](file:///c:/Users/Liang/Downloads/sanguo/characters/profiles.toml) 作为唯一事实源（Single Source of Truth）：
@@ -58,21 +59,25 @@ flowchart TD
   2. **全局摄影胶片锁 (`GLOBAL_STYLE_LOCK`)**：锁死 `ARRI Alexa 65 + Panavision anamorphic lens + Rembrandt chiaroscuro + Kodak Vision3 500T film grain`。
   3. **时代服化道物理隔离 (`Era Isolation`)**：现代内景/外景严禁混入古装甲胄后缀，古代战场严禁混入现代建筑元素。
 
-### L3：视听空间调度与分镜矩阵层 (Spatial Blocking & Acoustic Space Matrix)
+### L3：视听空间调度、同房间三维拓扑与声学矩阵层 (Spatial Blocking, 3D Room Topology & Acoustic Matrix)
 1. **场次空间建置律（Exterior Establishing $\rightarrow$ Interior Cut）**：
    * 凡涉及天气、环境氛围（如雨夜、风雪、战场），**第一镜必须是从室外向室内的建置镜头（Establishing Shot）**——例如透过挂满雨珠的宿舍玻璃窗看到窗内暖光下伏案的主角，随后第二镜再切入室内（Over-the-Shoulder / Medium Close-up）。
-2. **声画空间物理一致性（Acoustic Space Matching）**：
+2. **同场次跨镜三维空间拓扑锁 (`[spatial_rooms]` / `room_id`)**：
+   * 同一房间连续镜头（如 `dorm_room_night` 的窗外向内看 Shot 1 与室内近景 Shot 2/3）必须在 `fact_sheet.toml` 中锁死**左/中/右/前/后三维空间坐标**（如左：27寸显示器亮着漫展返图相册+黄铜暖光台灯；中前景：眼镜盒+白羽扇+青色纶巾+单反相机+双肩包；右：顾渊面朝左侧显示器），并分别绑定配对的外景透窗母图（`ep01_01_exterior_window_anchor.jpg`）与内景屏幕母图（`ep01_02_interior_cosplay_screen_anchor.jpg`），严禁发生 180° 越轴或左右陈设翻转。
+   * **透窗推镜 Z 轴一致性警示**：若外景透窗镜中窗户在前景平面（$Z=0$）、人物背景是内墙/床铺（$Z=10$），切入内景同角度拍人物侧面时，需注意窗户位于前景侧方而非背景墙，防止窗户平面发生 Z 轴瞬移。
+3. **声画空间物理一致性（Acoustic Space Matching）**：
    * **外景镜头 (`exterior_storm` / `ancient_battlefield`)**：环境雨声/山风保持全频段高清晰度（Volume `0.75~0.90`，无低通滤波）；
    * **关窗内景与军帐内景镜头 (`interior_closed` / `ancient_tent_interior`)**：室外雨声/寒风必须经过**物理墙体/玻璃/厚牛皮帐篷低通滤波（FFmpeg `lowpass=f=420,volume=0.18` 或 `lowpass=f=380,volume=0.22`）**转化为沉闷微弱的背景底噪，同时凸显室内/帐内近场音效（鼠标滚轮声、摩挲羽扇声、拉链声、烛火噼啪与竹简碰撞声）。
-3. **跨时空匹配转场（Match Cut Transition）**：
+4. **跨时空匹配转场（Match Cut Transition）**：
    * 场景切换优先采用物理动势匹配（如现代雨后车祸飞旋而出的白羽扇与水花，下一帧直接接古代秦岭山道飞溅的泥浆与寒雨）。
 
-### L4：去文学化“可拍性”编译器层 (De-Literary Shootability Compiler)
-* 在代码管线中内置**静态规则检查器 (`DirectorLinter`)**，所有分镜进入生成引擎前必须通过四项硬性审查：
+### L4：去文学化“可拍性”与台词视觉证据对齐编译器层 (De-Literary & Visual Evidence Compiler)
+* 在代码管线中内置**静态规则检查器 (`DirectorLinter`)**，所有分镜进入生成引擎前必须通过五项硬性审查：
   1. **强制物理焦段与运镜矢量 (`Camera Lens & Vector Lock`)**：每个镜头必须显式声明物理焦段（如 `28mm`, `35mm`, `50mm`, `85mm`）与运动方向。
-  2. **拦截中英文抽象文学废话 (`Bilingual Literary Vagueness Guard`)**：自动扫描并报错拦截诸如 `史诗感`、`宿命感`、`内心涌起`、`realizes the`、`feels a sense of`、`profound warmth and quiet emotion` 等不可拍词汇，强制替换为**物理动作（Physical Action）+ 光影几何（Lighting Geometry）+ 运镜矢量（Camera Vector）**。
-  3. **拦截伏笔剧透台词与弧光倒退 (`Spoiler Prop & Monotonic Arc Guard`)**：自动比对 `fact_sheet.toml` 中的静默伏笔词表（如 `备用眼镜`、`穿越回去`），在铺垫期 (`phase_1` / `phase_2`) 严禁台词明牌剧透，仅允许在回收期 (`phase_4`) 自然兑现；同时强制校验 `arc_phase` 单调非递减演进。
-  4. **拦截声画空间违和与时代串戏 (`Acoustic Space & Era Isolation Guard`)**：强制校验外景建置先行律、定妆母图 `ref_image` 物理存在性，以及现代/古代双向服化道隔离。
+  2. **台词指涉物与画面视觉证据强对齐 (`Dialogue Referent Visual Evidence Lock`)**：当台词提及特定媒介或现象（如“漫展拍出来”、“拨云见日”、“目中寒光”），画面 `action` 必须包含直接对应的视觉证据（如显示器展示漫展现场 Cos 诸葛亮活动相册与单反相机、凸透镜微距放大竹简细字、镜片反射双道冷白寒光）。
+  3. **拦截中英文抽象文学废话 (`Bilingual Literary Vagueness Guard`)**：自动扫描并报错拦截诸如 `史诗感`、`宿命感`、`内心涌起`、`realizes the`、`feels a sense of`、`profound warmth and quiet emotion` 等不可拍词汇，强制替换为**物理动作（Physical Action）+ 光影几何（Lighting Geometry）+ 运镜矢量（Camera Vector）**。
+  4. **拦截伏笔剧透、直白验光词与弧光倒退 (`Spoiler, Medical Term & Monotonic Arc Guard`)**：在铺垫期严禁台词剧透备用眼镜，全剧严禁台词直白说出“远视眼/老花眼/凸透镜”，并强制校验 `arc_phase` 单调非递减演进。
+  5. **拦截声画空间违和、三维拓扑冲突与时代串戏 (`Acoustic, 3D Topology & Era Guard`)**：强制校验外景建置先行律、`[spatial_rooms]` 房间拓扑一致性、定妆母图 `ref_image` 物理存在性，以及现代/古代双向服化道隔离。
 
 ### L5：双引擎分级渲染与后期声学成片层 (Dual-Engine Render & Acoustic Mastering)
 * **云地双引擎协同**：

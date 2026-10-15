@@ -4,6 +4,8 @@ Implements the standardized methodology from `docs/industrial_ai_video_sop.md`:
   - L1 Gatekeeper:
       * Chekhov's Gun Silent Prop Protection (blocks foreshadowed props like spare glasses
         from being explicitly spoiled in early setup dialogue).
+      * Show-Don't-Tell Optical/Medical Term Guard (forbids modern optometry terms like
+        '远视眼/老花眼/凸透镜/度数' in dialogue across ALL phases; mandates visual action).
       * Psychological 4-Phase Arc Validation (enforces mandatory `arc_phase` declaration
         and monotonic progression across the episode).
       * Mandatory Dialogue / Voiceover check (`line`).
@@ -16,10 +18,17 @@ Implements the standardized methodology from `docs/industrial_ai_video_sop.md`:
       * Mandatory `acoustic_space` validation against `fact_sheet.toml`.
       * Spatial Blocking Sequence Check (enforces Exterior Establishing shot before
         cutting to any closed interior space `interior_closed` / `ancient_tent_interior`).
+      * 3D Room Layout Topology & Continuity Check (`[spatial_rooms]` / `room_id`):
+        verifies that multi-shot interior/exterior sequences in the same room bind the
+        matching spatial anchor keyframes and do not flip left/right 180-degree camera axis.
       * Acoustic Space Physical Consistency (maps `acoustic_space` to FFmpeg low-pass
         filters so indoor/tent scenes muffle outdoor rain/wind realistically).
   - L4 Gatekeeper:
       * Mandatory `camera_motion` with explicit physical lens focal length (e.g. `35mm`, `50mm`).
+      * Dialogue Referent Visual Evidence Alignment (`dialogue_visual_evidence_rules`):
+        when dialogue mentions a specific medium/event (e.g. '漫展', '拨云见日', '目中寒光'),
+        verifies that `action` contains the corresponding physical visual evidence (e.g.
+        convention cosplay photo album on monitor, convex lens magnification, cold light glint).
       * Bilingual De-Literary Shootability Check (blocks unshootable literary vagueness and
         abstract internal states in both Chinese and English).
 """
@@ -62,7 +71,7 @@ class LintReport:
             f"总镜头数: {self.scene_count} 幕 | 质检结果: {'✅ 通过 (PASS)' if self.passed else '❌ 阻断 (BLOCKED - 存在违反导演铁律项)'}",
         ]
         if not self.issues:
-            lines.append("✨ 全部镜头已 100% 通过 L1(叙事弧光/静默伏笔)、L2(事实锁/时代隔离)、L3(空间建置/声学滤波)、L4(物理焦段/去文学化可拍性) 审查！")
+            lines.append("✨ 全部镜头已 100% 通过 L1(叙事弧光/静默伏笔/禁直白说破)、L2(事实锁/时代隔离)、L3(空间建置/三维房间拓扑/声学滤波)、L4(物理焦段/台词视觉证据对齐/去文学化) 审查！")
         else:
             lines.append("\n发现以下需要修正的工程问题:")
             for idx, iss in enumerate(self.issues, 1):
@@ -81,6 +90,7 @@ class DirectorLinter:
         self.fact_sheet = self._load_toml(self.fact_sheet_path)
         self.rules = self.fact_sheet.get("director_rules", {})
         self.acoustic_spaces = self.fact_sheet.get("acoustic_spaces", {})
+        self.spatial_rooms = self.fact_sheet.get("spatial_rooms", {})
         self.ffmpeg_bin = shutil.which("ffmpeg") or "ffmpeg"
 
     @staticmethod
@@ -96,7 +106,9 @@ class DirectorLinter:
         issues: List[LintIssue] = []
 
         banned_dialogue_kw = self.rules.get("silent_foreshadow_keywords_banned_in_dialogue", [])
+        always_banned_dialogue = self.rules.get("always_banned_explicit_medical_terms_in_dialogue", [])
         banned_action_kw = self.rules.get("banned_literary_vagueness_in_action", [])
+        evidence_rules: List[Dict[str, Any]] = self.rules.get("dialogue_visual_evidence_rules", [])
         valid_arc_phases: List[str] = self.rules.get("psychological_arc_phases", [
             "phase_1_daily_empathy",
             "phase_2_sudden_accident",
@@ -111,7 +123,9 @@ class DirectorLinter:
         for idx, sc in enumerate(scenes):
             sc_id = sc.get("id", f"scene_{idx+1:02d}")
             era = sc.get("era", "modern" if any(k in sc_id.lower() for k in ("modern", "dorm", "cosplay", "pack", "rain_exterior", "crash")) else "ancient")
+            room_id = sc.get("room_id", "")
             action = sc.get("action", "")
+            action_lower = action.lower()
             line = sc.get("line", "")
             arc_phase = sc.get("arc_phase", "")
             acoustic_space = sc.get("acoustic_space", "")
@@ -150,7 +164,16 @@ class DirectorLinter:
                     suggestion="在分镜配置中补充与 `script.md` 严格对齐的 `speaker` 与 `line`。"
                 ))
 
-            # --- L1 Check 3: Chekhov's Gun Silent Foreshadowing Protection ---
+            # --- L1 Check 3: Chekhov's Gun Silent Foreshadowing & Show-Don't-Tell Protection ---
+            for kw in always_banned_dialogue:
+                if kw in line:
+                    issues.append(LintIssue(
+                        level="ERROR",
+                        layer="L1-细节体现律(禁直白说破)",
+                        scene_id=sc_id,
+                        message=f"台词中直白说出了现代验光/设定术语『{kw}』：\"{line}\"",
+                        suggestion="远视镜解决丞相老花眼及敌军误认神器必须完全靠画面物理细节体现（如竹简拉远微眯、凸透镜放大墨字、寒光反射震慑敌哨），严禁在台词中直白点破！"
+                    ))
             if arc_phase in ("phase_1_daily_empathy", "phase_2_sudden_accident", ""):
                 for kw in banned_dialogue_kw:
                     if kw in line:
@@ -170,7 +193,7 @@ class DirectorLinter:
                         layer="L2-视觉资产事实锁",
                         scene_id=sc_id,
                         message=f"镜头包含角色 {chars}，但未显式绑定定妆母图 `ref_image`。",
-                        suggestion="在 scene 中指定 `ref_image = \"characters/images/guyuan_modern_v2.jpg\"`（现代）或对应古装母图，防止五官漂移。"
+                        suggestion="在 scene 中指定 `ref_image` 定妆/空间锚定母图，防止五官与空间漂移。"
                     ))
                 elif not (BASE_DIR / ref_image).exists():
                     issues.append(LintIssue(
@@ -182,7 +205,6 @@ class DirectorLinter:
                     ))
 
             # --- L2 Check 2: Bidirectional Era Isolation ---
-            action_lower = action.lower()
             if era == "modern" and ("armor" in action_lower or "ancient chinese soldiers" in action_lower):
                 issues.append(LintIssue(
                     level="ERROR",
@@ -236,6 +258,38 @@ class DirectorLinter:
                         suggestion="室内镜头提示词应强调温暖静谧内景，并将 `acoustic_space` 设为 `interior_closed` 以启用 FFmpeg 420Hz 低通滤波闷雨声。"
                     ))
 
+            # --- L3 Check 3: 3D Room Layout Topology & Cross-Shot Axis Continuity ---
+            if room_id:
+                if room_id not in self.spatial_rooms:
+                    issues.append(LintIssue(
+                        level="ERROR",
+                        layer="L3-三维空间拓扑锁",
+                        scene_id=sc_id,
+                        message=f"声明的 `room_id = \"{room_id}\"` 未在 `fact_sheet.toml` 的 `[spatial_rooms]` 中定义。",
+                        suggestion=f"请在 `[spatial_rooms]` 中登记该房间的左/中/右三维坐标与配对首帧母图，可选值: {list(self.spatial_rooms.keys())}"
+                    ))
+                else:
+                    room_cfg = self.spatial_rooms[room_id]
+                    for bad_topo in room_cfg.get("banned_topology_contradictions", []):
+                        if bad_topo.lower() in action_lower:
+                            issues.append(LintIssue(
+                                level="ERROR",
+                                layer="L3-三维空间拓扑锁",
+                                scene_id=sc_id,
+                                message=f"镜头画面描述违反了房间 `{room_id}` 的固定三维空间拓扑（出现了越轴/方位颠倒词『{bad_topo}』）。",
+                                suggestion=f"必须严格保持房间拓扑一致：左={room_cfg.get('camera_left')} | 中={room_cfg.get('center_foreground')} | 右={room_cfg.get('camera_right')}。"
+                            ))
+                    if acoustic_space == "exterior_storm" and room_cfg.get("exterior_anchor_image"):
+                        expected_ext = room_cfg["exterior_anchor_image"]
+                        if ref_image != expected_ext:
+                            issues.append(LintIssue(
+                                level="ERROR",
+                                layer="L3-三维空间拓扑锁",
+                                scene_id=sc_id,
+                                message=f"外景透窗镜头未绑定该房间专用的外景透窗空间锚定图 `{expected_ext}`（当前: `{ref_image}`）。",
+                                suggestion=f"将 `ref_image` 设为 `\"{expected_ext}\"`，确保从窗外看室内的桌面布局与内景镜头 100% 咬合。"
+                            ))
+
             # --- L4 Check 1: Mandatory Physical Camera Lens & Motion Vector ---
             if not camera_motion.strip() or not re.search(r"\d+\s*mm\b", camera_motion.lower()):
                 issues.append(LintIssue(
@@ -246,7 +300,21 @@ class DirectorLinter:
                     suggestion="在 `camera_motion` 中明确指定物理焦段与运镜矢量，例如 `\"50mm anamorphic lens, subtle slow push-in\"`。"
                 ))
 
-            # --- L4 Check 2: Bilingual De-Literary Shootability Check ---
+            # --- L4 Check 2: Dialogue Referent -> Visual Evidence Alignment ---
+            for rule in evidence_rules:
+                trig = rule.get("dialogue_trigger", "")
+                req_list = rule.get("required_any_in_action", [])
+                if trig and trig in line and req_list:
+                    if not any(req.lower() in action_lower for req in req_list):
+                        issues.append(LintIssue(
+                            level="ERROR",
+                            layer="L4-台词视觉证据对齐律",
+                            scene_id=sc_id,
+                            message=f"台词提到了『{trig}』，但画面 `action` 中缺少对应的直接视觉证据（需包含以下任一特征词: {req_list}）。",
+                            suggestion=rule.get("description", "确保台词所谈论的照片、器物或光学现象在画面中有直接对应的特写或屏幕画面。")
+                        ))
+
+            # --- L4 Check 3: Bilingual De-Literary Shootability Check ---
             for bad_kw in banned_action_kw:
                 if bad_kw.lower() in action_lower:
                     issues.append(LintIssue(

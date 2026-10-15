@@ -180,6 +180,38 @@ class FlowEngine:
             "error": res.stderr,
         }
 
+    def generate_i2v_clip(
+        self,
+        initial_frame: Path,
+        prompt: str,
+        output_file: Optional[Path] = None,
+        out_dir: Optional[Path] = None,
+        aspect: str = DEFAULT_ASPECT,
+        model: str = "veo-fast",
+    ) -> Dict[str, Any]:
+        """Generate a spatially locked video clip from an initial keyframe image (I2V) using Veo."""
+        args = [
+            "video", "i2v",
+            "--initial-frame", str(initial_frame),
+            prompt,
+            "--aspect", aspect,
+            "--model", model,
+        ]
+        if output_file:
+            output_file.parent.mkdir(parents=True, exist_ok=True)
+            args.extend(["-o", str(output_file)])
+        else:
+            target_dir = out_dir or RAW_CLIPS_DIR
+            target_dir.mkdir(parents=True, exist_ok=True)
+            args.extend(["--out-dir", str(target_dir)])
+
+        res = self._run_cmd(args, check=False)
+        return {
+            "success": res.returncode == 0,
+            "output": res.stdout,
+            "error": res.stderr,
+        }
+
     def upscale_video(self, video_path: Path) -> Dict[str, Any]:
         """Upscale a generated Veo video clip to 1080p."""
         args = ["video", "upscale", str(video_path)]

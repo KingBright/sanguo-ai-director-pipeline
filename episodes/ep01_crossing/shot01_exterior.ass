@@ -1,0 +1,17 @@
+[Script Info]
+Title: Sanguo Ep01 Shot01 Exterior Rain Establishing
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Cinema,Microsoft YaHei,36,&H00F2F6FA,&H0000FFFF,&H00141414,&H80000000,-1,0,0,0,100,100,1.5,0,1,2.2,1.2,2,40,40,38,1
+Style: TitleCard,Microsoft YaHei,28,&H00D4E6F1,&H0000FFFF,&H00101010,&H80000000,-1,0,0,0,100,100,3.0,0,1,1.8,1.0,8,40,40,32,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.50,0:00:03.50,TitleCard,,0,0,0,,{\fad(300,300)}第一集：一梦千八百载 · 雨夜思相
+Dialogue: 0,0:00:03.60,0:00:05.50,Cinema,GuYuan,0,0,0,,{\fad(120,80)}今天漫展这身孔明行头
+Dialogue: 0,0:00:05.65,0:00:07.60,Cinema,GuYuan,0,0,0,,{\fad(80,150)}拍出来倒还有几分意思……

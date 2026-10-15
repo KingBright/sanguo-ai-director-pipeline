@@ -120,8 +120,9 @@ class H3Engine:
     def resolve_character_reference(self, char_name: str, scene_id: str) -> Optional[Path]:
         """Resolve V2.1 locked character visual anchor image from characters/images/."""
         name_lower = char_name.lower()
+        sid_lower = scene_id.lower()
         if "guyuan" in name_lower:
-            if "modern" in scene_id or "study" in scene_id or "dorm" in scene_id:
+            if any(k in sid_lower for k in ("modern", "study", "dorm", "rain_exterior", "cosplay", "pack", "crash")):
                 for fname in ("guyuan_modern_v2.jpg", "guyuan_modern.jpg"):
                     cand = self.characters_dir / fname
                     if cand.exists():
@@ -228,12 +229,20 @@ class H3Engine:
             chars = scene.get("characters", [])
             output_clip_path = target_out_dir / f"{scene_id}.mp4"
 
-            # 1. Resolve character consistency anchors (Ref2VA)
+            # 1. Resolve character consistency anchors (Ref2VA), prioritizing explicit scene['ref_image']
             ref_images = []
-            for c in chars:
-                ref_img = self.resolve_character_reference(c, scene_id)
-                if ref_img:
-                    ref_images.append(ref_img)
+            explicit_ref = scene.get("ref_image", "")
+            if explicit_ref:
+                explicit_path = Path(explicit_ref)
+                if not explicit_path.is_absolute():
+                    explicit_path = self.base_dir / explicit_ref
+                if explicit_path.exists():
+                    ref_images.append(explicit_path)
+            if not ref_images:
+                for c in chars:
+                    ref_img = self.resolve_character_reference(c, scene_id)
+                    if ref_img:
+                        ref_images.append(ref_img)
 
             # 2. Build H3 prompt with dual visual & audio cues
             h3_prompt = self.build_h3_prompt(scene, global_style)

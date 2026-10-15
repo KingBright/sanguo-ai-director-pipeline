@@ -103,6 +103,8 @@ class StoryboardCompiler:
                 f'selected_model = "{selected_model}"',
                 f'produced_by_model = "{sc.get("produced_by_model", selected_model)}"',
             ])
+            if "room_id" in sc:
+                lines.append(f'room_id = "{sc["room_id"]}"')
             if "arc_phase" in sc:
                 lines.append(f'arc_phase = "{sc["arc_phase"]}"')
             if "acoustic_space" in sc:

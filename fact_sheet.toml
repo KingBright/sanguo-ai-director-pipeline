@@ -1,11 +1,19 @@
 # ============================================================================
-# 《三国：逆天改命》产线事实表 (Production Line Fact Sheet v2.3 - L1~L5 工业化导演架构)
+# 《三国：逆天改命》产线事实表 (Production Line Fact Sheet v2.4 - L1~L5 工业化导演架构)
 # 融合自 open-ai-canvas (S1-S6 短剧六工位体系) 与《工业化AI视频制作工作流：L1-L5导演决策SOP》
 # 铁律：
-#   1. L1 叙事与弧光锁：契诃夫之枪静默埋设（铺垫期伏笔绝不进台词明牌，回收期自然兑现）；人物心理必须经历四阶段渐进弧光；
-#   2. L2 视觉资产与全局事实锁：真实画面比形容词可靠（必须绑定定妆参考母图 @ref_image），时代服化道物理隔离；
-#   3. L3 视听空间调度与声学锁：场次必须先有外景建置 (Establishing) 再切入内景；关窗/帐内雨风声必须施加低通滤波 (LPF)；
-#   4. L4 去文学化可拍性编译：严禁中英文抽象文学废话与不可拍心理词进入视频提示词，强制校验物理焦段与运镜矢量；
+#   1. L1 叙事与弧光锁：
+#      - 契诃夫之枪静默埋设（铺垫期伏笔绝不进台词明牌，回收期自然兑现）；
+#      - 细节体现律（全剧严禁台词直白说出“远视眼/老花眼/凸透镜/度数”等现代验光词，全靠“竹简拉远微眯、凸透镜微距放大、镜片寒光震慑敌哨”等物理光学画面体现）；
+#      - 人物心理必须经历四阶段单调非递减演进；
+#   2. L2 视觉资产与全局事实锁：真实画面比形容词可靠（必须绑定定妆参考母图 @ref_image），双向时代服化道物理隔离；
+#   3. L3 视听空间调度与三维拓扑锁：
+#      - 场次必须先有外景建置 (Establishing) 再切入内景；
+#      - 同场次跨镜必须绑定 `[spatial_rooms]` 统一三维空间坐标系（锁死左/中/右/前景/背景拓扑与 180° 轴线，严禁左右颠倒或窗户平面瞬移）；
+#      - 关窗/帐内雨风声必须施加物理低通滤波 (LPF)；
+#   4. L4 去文学化可拍性与台词视觉证据锁：
+#      - 严禁中英文抽象文学废话与不可拍心理词进入视频提示词，强制校验物理焦段与运镜矢量；
+#      - 台词指涉物（如“漫展行头拍出来”）必须在画面中有直接视觉证据（显示器打开漫展活动现场返图相册 + 桌面单反相机）；
 #   5. L5 双引擎分级渲染：先本地 H3 / 云端 Lite 预演，确认预算与运镜后再调用 Veo 3.1 Quality。
 # ============================================================================
 
@@ -24,9 +32,15 @@ modern_suffix = "Shot on ARRI Alexa 65 with Panavision anamorphic lens, live-act
 negative_prompt = "cartoon, anime, 3d render, plastic skin, fantasy magic glow, neon lights, watermark, floating text, gibberish subtitles, deformed face, extra limbs"
 
 [director_rules]
-# L1 契诃夫之枪静默保护：以下伏笔道具仅允许在铺垫期 (phase_1 / phase_2) 出现在视觉画面 (action) 中，严禁在铺垫期台词 (line) 中直接明牌点破
+# L1 契诃夫之枪静默保护：
+#   1) 铺垫期 (phase_1 / phase_2) 严禁在台词中直接点破“备用眼镜/穿越”；
+#   2) 全剧任何阶段 (phase_1 ~ phase_4) 严禁在台词中直白说出“远视眼/老花眼/凸透镜/度数”等现代验光术语，必须完全靠物理动作与细节体现！
 silent_foreshadow_keywords_banned_in_dialogue = [
-    "备用眼镜", "第二副眼镜", "两副眼镜", "眼镜盒", "穿越回去", "带回三国", "未来转折", "备用明目镜"
+    "备用眼镜", "第二副眼镜", "两副眼镜", "眼镜盒", "穿越回去", "带回三国", "未来转折", "备用明目镜",
+    "远视眼", "老花眼", "凸透镜", "度数", "屈光"
+]
+always_banned_explicit_medical_terms_in_dialogue = [
+    "远视眼", "老花眼", "凸透镜", "远视度数", "屈光度", "备用明目镜"
 ]
 
 # L4 去文学化可拍性拦截：以下不可拍的中英文抽象修辞或纯心理描写严禁出现在视频生成提示词 (action) 中
@@ -43,6 +57,41 @@ psychological_arc_phases = [
     "phase_3_shock_and_denial",     # 生理苏醒与怀疑否认（以为在宿舍/剧组拍戏）
     "phase_4_evidence_awakening"    # 物理铁证冲击下的时空确认、智谋破局与伏笔回收觉醒
 ]
+
+# L4 台词指涉物与画面视觉证据强制映射表（Dialogue Referent -> Required Action Visual Evidence）
+[[director_rules.dialogue_visual_evidence_rules]]
+dialogue_trigger = "漫展"
+required_any_in_action = ["cosplay photo", "convention photo", "photo album", "photo gallery"]
+description = "台词提及漫展拍摄时，画面中的显示器必须明确展示漫展现场 Cosplay 活动照片/相册缩略图及单反导图细节，严禁只放无关地图"
+
+[[director_rules.dialogue_visual_evidence_rules]]
+dialogue_trigger = "拨云见日"
+required_any_in_action = ["convex", "magnif", "arm's length"]
+description = "台词体现丞相看清竹简细字时，画面必须展示『原本伸直手臂拿远微眯 -> 透过远视凸透镜微距放大竹简细字、眉头舒展』的物理光学细节"
+
+[[director_rules.dialogue_visual_evidence_rules]]
+dialogue_trigger = "目中寒光"
+required_any_in_action = ["convex", "flash of cold white light", "glint"]
+description = "台词体现敌军/武将畏惧神光时，画面必须展示阳光或火把照射在凸透镜片上折射出刺目双道冷白寒光及敌哨惊退的物理细节"
+
+[spatial_rooms]
+# L3 同场次跨镜三维空间拓扑坐标系（锁死房间左/中/右/前/后几何关系与外景/内景配对首帧母图）
+[spatial_rooms.dorm_room_night]
+description = "顾渊大学宿舍夜间书桌区（统一外景透窗与内景近景的三维空间拓扑）"
+camera_left = "27-inch PC monitor displaying convention cosplay photo album + warm brass desk lamp"
+center_foreground = "wooden desk with open matte-black hard-shell eyeglasses case (holding spare convex glasses), white crane feather fan, folded teal GuanJin headscarf, DSLR camera, dark trekking backpack"
+camera_right = "21-year-old GuYuan seated in dark charcoal hoodie & vest facing camera-left toward the monitor"
+exterior_anchor_image = "characters/images/ep01_01_exterior_window_anchor.jpg"
+interior_anchor_image = "characters/images/ep01_02_interior_cosplay_screen_anchor.jpg"
+banned_topology_contradictions = ["monitor on the right", "facing right toward monitor", "lamp on the far right"]
+
+[spatial_rooms.qishan_command_tent]
+description = "蜀汉祁山大营中军帅帐三维坐标系"
+camera_left = "wooden campaign desk under flickering oil candlelight where Chancellor Zhuge Liang sits"
+center_foreground = "clay topographical sand table of Jieting and wooden command token"
+camera_right = "tent entrance and assembled Shu Han generals"
+interior_anchor_image = "characters/images/zhugeliang_v2.jpg"
+banned_topology_contradictions = []
 
 [acoustic_spaces]
 # L3 声画空间物理一致性矩阵（FFmpeg 音频滤波器参数 + H3 原生声学提示词）
@@ -86,10 +135,11 @@ default_duration = 5
 cost_credits = 0
 
 [assets.characters.GuYuan]
-immutable_face_phrase = "21-year-old youthful and handsome Chinese male college student (sharp defined jawline, straight nose bridge, natural parted black hair with light wispy bangs, wearing sleek black-rimmed rectangular eyeglasses)"
-modern_costume_phrase = "wearing a casual dark charcoal hoodie with a half-unfastened Zhuge Liang cosplay white crane-patterned outer robe draped over his shoulders after returning from a campus cosplay convention, with an open matte-black hard-shell eyeglasses case holding a second pair of spare glasses, a white crane feather fan, and a folded dark-indigo GuanJin headscarf resting naturally on the desk corner"
+immutable_face_phrase = "21-year-old youthful and handsome Chinese male college student (sharp defined jawline, straight nose bridge, natural parted black hair with light wispy bangs, wearing sleek black-rimmed rectangular farsighted eyeglasses with subtle convex lenses)"
+modern_costume_phrase = "wearing a casual dark charcoal hoodie under a dark utility vest, with an open matte-black hard-shell eyeglasses case holding a second pair of spare convex metal-rimmed glasses, a white crane feather fan, a folded teal GuanJin headscarf, and a DSLR camera resting naturally on the desk corner"
 ancient_costume_phrase = "wearing his cosplay Zhuge Liang outfit (classic white Hanfu scholar inner robe and dark-indigo cloak with crane-feather shoulder trim) over his modern collar, holding a white crane feather fan, with his matte-black hard-shell eyeglasses case clipped to his chest strap"
-ref_image_modern = "characters/images/guyuan_modern_v2.jpg"
+ref_image_exterior_window = "characters/images/ep01_01_exterior_window_anchor.jpg"
+ref_image_modern = "characters/images/ep01_02_interior_cosplay_screen_anchor.jpg"
 ref_image_ancient = "characters/images/guyuan_ancient_v2.jpg"
 
 [assets.characters.ZhugeLiang]
@@ -103,6 +153,6 @@ costume_phrase = "wearing weathered heavy Shu Han leather and iron lamellar armo
 ref_image = "characters/images/guyuan_ancient.jpg"
 
 [assets.characters.MaSu]
-immutable_face_phrase = "Proud Chinese military advisor-general Ma Su in his late 30s (sharp haughty gaze, fair skin,aquiline nose, trimmed beard)"
+immutable_face_phrase = "Proud Chinese military advisor-general Ma Su in his late 30s (sharp haughty gaze, fair skin, aquiline nose, trimmed beard)"
 costume_phrase = "wearing ornate silver-scale Shu Han general armor with pristine white silk battle cloak and high military crest helmet"
 ref_image = "characters/images/zhuge_liang.jpg"
