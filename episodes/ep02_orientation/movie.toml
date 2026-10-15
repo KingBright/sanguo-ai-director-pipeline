@@ -1,0 +1,165 @@
+# Auto-generated L1-L5 Industrial AI Video Manifest: 第2集：栈道辨时·急赴祁山
+schema_version = 1
+title = "第2集：栈道辨时·急赴祁山"
+project = "sanguo_ep02_orientation"
+output_dir = "C:/Users/Liang/Downloads/sanguo/output/raw_clips/ep02_orientation"
+
+[style]
+look = "cinematic, 8k film grain, photorealistic, dramatic Rembrandt chiaroscuro lighting"
+palette = "rich earthy tones, warm tungsten highlights against deep slate shadows, Kodak Vision3 500T"
+negative = "cartoon, anime, 3d render, plastic skin, fantasy magic glow, neon lights, watermark, floating text, gibberish subtitles, deformed face, extra limbs"
+suffix = "Shot on ARRI Alexa 65 with Panavision anamorphic lens, live-action cinematic historical drama realism blended with Rembrandt classical oil-painting chiaroscuro lighting, real human skin micro-texture, rich warm amber/tungsten highlights against deep slate shadows, fine Kodak Vision3 500T film grain, 8k cinematic color grading."
+
+  [style.variants.modern]
+  suffix = "Shot on ARRI Alexa 65 with Panavision anamorphic lens, live-action cinematic realism blended with Rembrandt classical oil-painting chiaroscuro lighting, real human skin micro-texture, rich warm tungsten desk lamp highlights against deep slate shadows, fine Kodak Vision3 500T film grain, 8k cinematic color grading. Clean video without any subtitles or text."
+
+  [style.variants.tense]
+  suffix = "Tense claustrophobic military council, heavy shadows, flickering torchlight."
+
+  [style.variants.epic]
+  suffix = "Vast sweeping landscape, misty Qinling mountains, sprawling ancient armies, cinematic grandeur."
+
+  [style.variants.intimate]
+  suffix = "Soft warm lantern light, emotional quiet character focus, shallow depth of field."
+
+[[characters]]
+name = "GuYuan"
+appearance = "21-year-old youthful and handsome Chinese male college student (locked facial bone structure: sharp defined jawline, straight nose bridge, natural parted black hair with light wispy bangs, wearing sleek black-rimmed rectangular eyeglasses at all times, carrying a matte-black hard-shell eyeglasses case with a spare pair of metal-rimmed glasses and a white crane feather fan). Shot on ARRI Alexa 65 with Panavision anamorphic lens, Rembrandt classical oil-painting chiaroscuro lighting, Kodak Vision3 500T film grain."
+appearance_modern = "21-year-old youthful and handsome Chinese male college student (locked facial bone structure: sharp defined jawline, straight nose bridge, natural parted black hair with light wispy bangs, wearing sleek black-rimmed rectangular eyeglasses). Wearing a casual dark charcoal hoodie with his campus cosplay Zhuge Liang white crane-patterned outer robe half-draped over his shoulders. Shot on ARRI Alexa 65 with Panavision anamorphic lens, Rembrandt chiaroscuro tungsten lighting, Kodak Vision3 500T film grain."
+appearance_ancient = "21-year-old youthful and handsome Chinese male college student (locked facial bone structure: sharp defined jawline, straight nose bridge, natural parted black hair with light wispy bangs, wearing sleek black-rimmed rectangular eyeglasses). Wearing his full Zhuge Liang cosplay scholar outfit (white Hanfu inner robe and dark-indigo crane-patterned cloak) over his modern collar, holding a white crane feather fan, with a matte-black hard-shell eyeglasses case clipped to his chest strap. Shot on ARRI Alexa 65 with Panavision anamorphic lens, Rembrandt chiaroscuro lighting, Kodak Vision3 500T film grain."
+voice = "rigel"
+ref_image_modern = "characters/images/guyuan_modern_v2.jpg"
+ref_image_ancient = "characters/images/guyuan_ancient_v2.jpg"
+
+[[characters]]
+name = "ZhugeLiang"
+appearance = "Chancellor Zhuge Liang at age 47 (First Northern Expedition, 228 AD), closely modeled after the iconic 1994 CCTV Three Kingdoms portrayal by Tang Guoqiang. Dignified, handsome and noble Chinese scholarly face, expressive sword-like eyebrows, deep intelligent and compassionate eyes, straight nose, classic well-groomed three-stranded long black beard. Wearing the iconic tall teal/dark-blue silk GuanJin headdress and wide-sleeved white crane-patterned robe (HeChang) with blue-and-gold woven brocade trim, holding a white crane feather fan. Shot on ARRI Alexa 65 with Panavision anamorphic lens, live-action historical drama realism blended with Rembrandt classical oil-painting chiaroscuro lighting, Kodak Vision3 500T film grain."
+voice = "alnilam"
+ref_image = "characters/images/zhugeliang_v2.jpg"
+
+[[characters]]
+name = "MaSu"
+appearance = "Proud and handsome Chinese military advisor-general in his late 30s, sharp haughty gaze, fair skin, wearing ornate silver-scale Shu Han general armor with pristine white silk battle cloak, holding a sword pommel with arrogant confidence, high military crest helmet."
+ref_image = "characters/images/zhuge_liang.jpg"
+
+[[characters]]
+name = "OfficerWang"
+appearance = "Veteran Shu Han general Wang Ping in his late 30s, sturdy battle-hardened face with stubble beard and grounded practical demeanor, wearing weathered heavy leather and iron lamellar armor, holding military pass tokens and a map scroll."
+ref_image = "characters/images/guyuan_ancient.jpg"
+
+[[characters]]
+name = "ZhangHe"
+appearance = "Fierce veteran Cao Wei general in his 50s, battle-hardened weathered face with thick greying beard and scarred cheek, wearing heavy dark iron plate armor with bronze tiger motifs, flowing crimson battle cloak, menacing commanding general aura."
+ref_image = "characters/images/zhuge_liang.jpg"
+
+[[scenes]]
+id = "ep02_01_muddy_crisis"
+era = "ancient"
+action = "On a perilous Qinling cliffside trail slick with mud, a massive ancient wooden grain cart has cracked its wooden axle, tilting dangerously over the sheer precipice. Exhausted Shu Han soldiers in wet leather armor strain desperately on hemp ropes as mud slides into the abyss."
+framing = "establishing"
+aspect = "16:9"
+duration = 8
+model = "veo-quality"
+selected_model = "veo-quality"
+produced_by_model = "veo-quality"
+arc_phase = "phase_3_shock_and_denial"
+acoustic_space = "ancient_battlefield"
+camera_motion = "28mm wide handheld tracking along perilous cliffside mud trail"
+style_variant = "tense"
+speaker = "Soldier"
+line = "拉不住了！车轴断了，粮车要坠崖了！"
+
+[[scenes]]
+id = "ep02_02_officer_despair"
+era = "ancient"
+action = "Shu Han logistics officer @OfficerWang brandishes his iron sword in fury, veins bulging on his forehead as he chops at a wooden post and yells at the stalled convoy amidst cold mountain rain."
+framing = "medium"
+aspect = "16:9"
+duration = 8
+model = "veo-quality"
+selected_model = "veo-quality"
+produced_by_model = "veo-quality"
+arc_phase = "phase_3_shock_and_denial"
+acoustic_space = "ancient_battlefield"
+camera_motion = "50mm lens, low-angle push-in on desperate officer drawing sword"
+ref_image = "characters/images/guyuan_ancient.jpg"
+characters = ["OfficerWang"]
+style_variant = "tense"
+speaker = "OfficerWang"
+line = "山道塌陷，粮车坠崖！误了祁山大营军期，丞相军法如山，你我皆要斩首！"
+
+[[scenes]]
+id = "ep02_03_guyuan_leverage"
+era = "ancient"
+action = "@GuYuan in his white crane-patterned scholar robe and black-rimmed eyeglasses steps out of the misty woods holding his white feather fan. With calm authority, he directs soldiers to wedge sturdy pine logs under the broken axle as levers and loop hemp ropes around a cliffside pine trunk as a compound pulley system."
+framing = "medium"
+aspect = "16:9"
+duration = 8
+model = "veo-quality"
+selected_model = "veo-quality"
+produced_by_model = "veo-quality"
+arc_phase = "phase_4_evidence_awakening"
+acoustic_space = "ancient_battlefield"
+camera_motion = "35mm anamorphic tracking shot following GuYuan directing pulley rigging"
+ref_image = "characters/images/guyuan_ancient_v2.jpg"
+characters = ["GuYuan"]
+style_variant = "tense"
+speaker = "GuYuan"
+line = "慌什么！三人一组砍巨木作支点，藤索绕树作动滑轮，听我口令同时发力！"
+
+[[scenes]]
+id = "ep02_04_cart_rescued"
+era = "ancient"
+action = "With a synchronized heave, the heavy grain cart rolls safely back onto solid stone roadway. @GuYuan opens his chest eyeglasses case, takes out the spare metal-rimmed glasses, and aligns the lenses at both ends of a hollow bamboo tube to inspect the distant mountain pass. @OfficerWang drops his sword and kneels with clasped fists in stunned reverence."
+framing = "wide"
+aspect = "16:9"
+duration = 8
+model = "veo-quality"
+selected_model = "veo-quality"
+produced_by_model = "veo-quality"
+arc_phase = "phase_4_evidence_awakening"
+acoustic_space = "ancient_battlefield"
+camera_motion = "40mm crane up from rescued grain cart to GuYuan holding makeshift spyglass"
+ref_image = "characters/images/guyuan_ancient_v2.jpg"
+characters = ["GuYuan", "OfficerWang"]
+style_variant = "epic"
+speaker = "OfficerWang"
+line = "先生身披鹤氅、手握千里明目神镜，莫非是丞相座下奇人？！"
+
+[[scenes]]
+id = "ep02_05_bamboo_slip_year"
+era = "ancient"
+action = "Extreme macro close-up of an official Shu Han military bamboo slip held in @GuYuan's mud-stained hands. Cold sunlight glints off his black-rimmed eyeglasses as his gaze locks onto the bold clerical ink inscription: 'Spring of the 6th Year of Jianxing - Transporting Hanzhong grain to Qishan Main Camp'."
+framing = "close-up"
+aspect = "16:9"
+duration = 8
+model = "veo-quality"
+selected_model = "veo-quality"
+produced_by_model = "veo-quality"
+arc_phase = "phase_4_evidence_awakening"
+acoustic_space = "ancient_battlefield"
+camera_motion = "85mm macro tilt across ink-inscribed military bamboo slip to GuYuan's eyes"
+ref_image = "characters/images/guyuan_ancient_v2.jpg"
+characters = ["GuYuan"]
+style_variant = "tense"
+speaker = "GuYuan"
+line = "建兴六年春……督运汉中粮料，发祁山中军？！"
+
+[[scenes]]
+id = "ep02_06_countdown_alarm"
+era = "ancient"
+action = "@GuYuan's pupils contract sharply behind his glasses, knuckles whitening as he grips the bamboo slip tightly. The camera sweeps rapidly upward over jagged Qinling peaks to reveal the sprawling Qishan Shu Han military encampment with hundreds of red-and-black war banners flapping in the wind."
+framing = "medium-close"
+aspect = "16:9"
+duration = 8
+model = "veo-quality"
+selected_model = "veo-quality"
+produced_by_model = "veo-quality"
+arc_phase = "phase_4_evidence_awakening"
+acoustic_space = "ancient_battlefield"
+camera_motion = "50mm snap zoom on GuYuan's pale resolute face then sweeping pan up to Qishan fortress"
+ref_image = "characters/images/guyuan_ancient_v2.jpg"
+characters = ["GuYuan"]
+style_variant = "epic"
+speaker = "GuYuan"
+line = "建兴六年春！张郃五万铁骑已出关中，马谡马上就要去守街亭了！快备快马，带我见丞相！"

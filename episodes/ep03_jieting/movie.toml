@@ -1,0 +1,165 @@
+# Auto-generated L1-L5 Industrial AI Video Manifest: 第3集：祁山惊雷·截胡马谡军令状
+schema_version = 1
+title = "第3集：祁山惊雷·截胡马谡军令状"
+project = "sanguo_ep03_jieting"
+output_dir = "C:/Users/Liang/Downloads/sanguo/output/raw_clips/ep03_jieting"
+
+[style]
+look = "cinematic, 8k film grain, photorealistic, dramatic Rembrandt chiaroscuro lighting"
+palette = "rich earthy tones, warm tungsten highlights against deep slate shadows, Kodak Vision3 500T"
+negative = "cartoon, anime, 3d render, plastic skin, fantasy magic glow, neon lights, watermark, floating text, gibberish subtitles, deformed face, extra limbs"
+suffix = "Shot on ARRI Alexa 65 with Panavision anamorphic lens, live-action cinematic historical drama realism blended with Rembrandt classical oil-painting chiaroscuro lighting, real human skin micro-texture, rich warm amber/tungsten highlights against deep slate shadows, fine Kodak Vision3 500T film grain, 8k cinematic color grading."
+
+  [style.variants.modern]
+  suffix = "Shot on ARRI Alexa 65 with Panavision anamorphic lens, live-action cinematic realism blended with Rembrandt classical oil-painting chiaroscuro lighting, real human skin micro-texture, rich warm tungsten desk lamp highlights against deep slate shadows, fine Kodak Vision3 500T film grain, 8k cinematic color grading. Clean video without any subtitles or text."
+
+  [style.variants.tense]
+  suffix = "Tense claustrophobic military council, heavy shadows, flickering torchlight."
+
+  [style.variants.epic]
+  suffix = "Vast sweeping landscape, misty Qinling mountains, sprawling ancient armies, cinematic grandeur."
+
+  [style.variants.intimate]
+  suffix = "Soft warm lantern light, emotional quiet character focus, shallow depth of field."
+
+[[characters]]
+name = "GuYuan"
+appearance = "21-year-old youthful and handsome Chinese male college student (locked facial bone structure: sharp defined jawline, straight nose bridge, natural parted black hair with light wispy bangs, wearing sleek black-rimmed rectangular eyeglasses at all times, carrying a matte-black hard-shell eyeglasses case with a spare pair of metal-rimmed glasses and a white crane feather fan). Shot on ARRI Alexa 65 with Panavision anamorphic lens, Rembrandt classical oil-painting chiaroscuro lighting, Kodak Vision3 500T film grain."
+appearance_modern = "21-year-old youthful and handsome Chinese male college student (locked facial bone structure: sharp defined jawline, straight nose bridge, natural parted black hair with light wispy bangs, wearing sleek black-rimmed rectangular eyeglasses). Wearing a casual dark charcoal hoodie with his campus cosplay Zhuge Liang white crane-patterned outer robe half-draped over his shoulders. Shot on ARRI Alexa 65 with Panavision anamorphic lens, Rembrandt chiaroscuro tungsten lighting, Kodak Vision3 500T film grain."
+appearance_ancient = "21-year-old youthful and handsome Chinese male college student (locked facial bone structure: sharp defined jawline, straight nose bridge, natural parted black hair with light wispy bangs, wearing sleek black-rimmed rectangular eyeglasses). Wearing his full Zhuge Liang cosplay scholar outfit (white Hanfu inner robe and dark-indigo crane-patterned cloak) over his modern collar, holding a white crane feather fan, with a matte-black hard-shell eyeglasses case clipped to his chest strap. Shot on ARRI Alexa 65 with Panavision anamorphic lens, Rembrandt chiaroscuro lighting, Kodak Vision3 500T film grain."
+voice = "rigel"
+ref_image_modern = "characters/images/guyuan_modern_v2.jpg"
+ref_image_ancient = "characters/images/guyuan_ancient_v2.jpg"
+
+[[characters]]
+name = "ZhugeLiang"
+appearance = "Chancellor Zhuge Liang at age 47 (First Northern Expedition, 228 AD), closely modeled after the iconic 1994 CCTV Three Kingdoms portrayal by Tang Guoqiang. Dignified, handsome and noble Chinese scholarly face, expressive sword-like eyebrows, deep intelligent and compassionate eyes, straight nose, classic well-groomed three-stranded long black beard. Wearing the iconic tall teal/dark-blue silk GuanJin headdress and wide-sleeved white crane-patterned robe (HeChang) with blue-and-gold woven brocade trim, holding a white crane feather fan. Shot on ARRI Alexa 65 with Panavision anamorphic lens, live-action historical drama realism blended with Rembrandt classical oil-painting chiaroscuro lighting, Kodak Vision3 500T film grain."
+voice = "alnilam"
+ref_image = "characters/images/zhugeliang_v2.jpg"
+
+[[characters]]
+name = "MaSu"
+appearance = "Proud and handsome Chinese military advisor-general in his late 30s, sharp haughty gaze, fair skin, wearing ornate silver-scale Shu Han general armor with pristine white silk battle cloak, holding a sword pommel with arrogant confidence, high military crest helmet."
+ref_image = "characters/images/zhuge_liang.jpg"
+
+[[characters]]
+name = "OfficerWang"
+appearance = "Veteran Shu Han general Wang Ping in his late 30s, sturdy battle-hardened face with stubble beard and grounded practical demeanor, wearing weathered heavy leather and iron lamellar armor, holding military pass tokens and a map scroll."
+ref_image = "characters/images/guyuan_ancient.jpg"
+
+[[characters]]
+name = "ZhangHe"
+appearance = "Fierce veteran Cao Wei general in his 50s, battle-hardened weathered face with thick greying beard and scarred cheek, wearing heavy dark iron plate armor with bronze tiger motifs, flowing crimson battle cloak, menacing commanding general aura."
+ref_image = "characters/images/zhuge_liang.jpg"
+
+[[scenes]]
+id = "ep03_01_establishing"
+era = "ancient"
+action = "Sweeping aerial establishing shot of the sprawling Shu Han military fortress in the misty Qinling mountains at dawn. Towering wooden watchtowers and 'HAN' and 'ZHUGE' silk war banners snap fiercely in the freezing mountain gale outside the central command tent."
+framing = "establishing"
+aspect = "16:9"
+duration = 8
+model = "veo-quality"
+selected_model = "veo-quality"
+produced_by_model = "veo-quality"
+arc_phase = "phase_4_evidence_awakening"
+acoustic_space = "ancient_battlefield"
+camera_motion = "24mm anamorphic aerial drone sweep over misty Qishan fortress at dawn"
+style_variant = "epic"
+speaker = "Narrator"
+line = "建兴六年春，祁山大营。一场决定大汉国运的军议，正在帅帐中开启。"
+
+[[scenes]]
+id = "ep03_02_zhuge_fatigue"
+era = "ancient"
+action = "Inside the closed heavy canvas command tent, 47-year-old Chancellor @ZhugeLiang (Tang Guoqiang 1994 CCTV likeness, teal GuanJin headdress, white crane robe) sits behind a wooden campaign desk stacked with bamboo scrolls. Under flickering oil candlelight, he briefly rubs his fatigued eyes while squinting at a fine-drawn map, then raises his white feather fan with solemn dignity."
+framing = "medium"
+aspect = "16:9"
+duration = 8
+model = "veo-quality"
+selected_model = "veo-quality"
+produced_by_model = "veo-quality"
+arc_phase = "phase_4_evidence_awakening"
+acoustic_space = "ancient_tent_interior"
+camera_motion = "50mm lens, slow push-in on Zhuge Liang rubbing weary eyes under oil lamp"
+ref_image = "characters/images/zhugeliang_v2.jpg"
+characters = ["ZhugeLiang"]
+style_variant = "tense"
+speaker = "ZhugeLiang"
+line = "张郃引五万关中铁骑出斜谷，街亭乃汉中咽喉，谁敢引兵据守？"
+
+[[scenes]]
+id = "ep03_03_masu_vow"
+era = "ancient"
+action = "General @MaSu in gleaming silver-scale armor and white battle cloak strides proudly to the center of the tent, chin raised with haughty confidence, clasping his hands and reaching out to take the red-lacquered military command token."
+framing = "medium"
+aspect = "16:9"
+duration = 8
+model = "veo-quality"
+selected_model = "veo-quality"
+produced_by_model = "veo-quality"
+arc_phase = "phase_4_evidence_awakening"
+acoustic_space = "ancient_tent_interior"
+camera_motion = "35mm low-angle dolly in on Ma Su stepping forward to claim command token"
+ref_image = "characters/images/zhuge_liang.jpg"
+characters = ["MaSu"]
+style_variant = "tense"
+speaker = "MaSu"
+line = "某自幼熟读兵书，街亭小小山僻之地，愿立军令状，乞存一军以当张郃！"
+
+[[scenes]]
+id = "ep03_04_guyuan_stops_token"
+era = "ancient"
+action = "@GuYuan in his mud-splashed white crane robe bursts through the tent flap and slams his hand firmly onto the wooden command token on the desk before it can be lifted. Torchlight glints sharply off his black-rimmed eyeglasses as armored generals turn in shock."
+framing = "medium-close"
+aspect = "16:9"
+duration = 8
+model = "veo-quality"
+selected_model = "veo-quality"
+produced_by_model = "veo-quality"
+arc_phase = "phase_4_evidence_awakening"
+acoustic_space = "ancient_tent_interior"
+camera_motion = "40mm handheld whip-pan to GuYuan's hand slamming down on the command token"
+ref_image = "characters/images/guyuan_ancient_v2.jpg"
+characters = ["GuYuan"]
+style_variant = "tense"
+speaker = "GuYuan"
+line = "丞相万万不可！这支令箭一旦发下，街亭必失，陇右三郡尽毁一旦！"
+
+[[scenes]]
+id = "ep03_05_sandtable_reveal"
+era = "ancient"
+action = "@GuYuan sweeps his white feather fan decisively across the clay sand table, pointing directly at the isolated arid mountaintop of Jieting and the narrow river waterway at its base. Behind the desk, @ZhugeLiang leans forward sharply, sword-like eyebrows raised in stunned recognition."
+framing = "close-up"
+aspect = "16:9"
+duration = 8
+model = "veo-quality"
+selected_model = "veo-quality"
+produced_by_model = "veo-quality"
+arc_phase = "phase_4_evidence_awakening"
+acoustic_space = "ancient_tent_interior"
+camera_motion = "50mm anamorphic rack focus from Jieting sand table ridge to Zhuge Liang's astonished eyes"
+ref_image = "characters/images/zhugeliang_v2.jpg"
+characters = ["GuYuan", "ZhugeLiang"]
+style_variant = "tense"
+speaker = "GuYuan"
+line = "马幼常必舍水登山！张郃只需围山断水，不出一日蜀军自乱，唯有当道筑垒方可破敌！"
+
+[[scenes]]
+id = "ep03_06_glasses_gift"
+era = "ancient"
+action = "Late at night in the quiet lantern-lit tent, @GuYuan opens his matte-black hard-shell eyeglasses case and respectfully presents the second pair of spare metal-rimmed eyeglasses with both hands. @ZhugeLiang places the glasses onto his bridge, looks down at the fine military map coming into crystal-clear focus, and looks up at @GuYuan with glistening eyes and a warm appreciative nod."
+framing = "medium-close"
+aspect = "16:9"
+duration = 8
+model = "veo-quality"
+selected_model = "veo-quality"
+produced_by_model = "veo-quality"
+arc_phase = "phase_4_evidence_awakening"
+acoustic_space = "ancient_tent_interior"
+camera_motion = "85mm warm portrait lens, slow dolly in on spare eyeglasses gift and shared gaze"
+ref_image = "characters/images/zhugeliang_v2.jpg"
+characters = ["GuYuan", "ZhugeLiang"]
+style_variant = "intimate"
+speaker = "GuYuan"
+line = "丞相夙夜操劳，这副备用明目镜献给丞相。有晚辈在，定助丞相克复中原！"

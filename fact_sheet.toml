@@ -1,0 +1,108 @@
+# ============================================================================
+# 《三国：逆天改命》产线事实表 (Production Line Fact Sheet v2.3 - L1~L5 工业化导演架构)
+# 融合自 open-ai-canvas (S1-S6 短剧六工位体系) 与《工业化AI视频制作工作流：L1-L5导演决策SOP》
+# 铁律：
+#   1. L1 叙事与弧光锁：契诃夫之枪静默埋设（铺垫期伏笔绝不进台词明牌，回收期自然兑现）；人物心理必须经历四阶段渐进弧光；
+#   2. L2 视觉资产与全局事实锁：真实画面比形容词可靠（必须绑定定妆参考母图 @ref_image），时代服化道物理隔离；
+#   3. L3 视听空间调度与声学锁：场次必须先有外景建置 (Establishing) 再切入内景；关窗/帐内雨风声必须施加低通滤波 (LPF)；
+#   4. L4 去文学化可拍性编译：严禁中英文抽象文学废话与不可拍心理词进入视频提示词，强制校验物理焦段与运镜矢量；
+#   5. L5 双引擎分级渲染：先本地 H3 / 云端 Lite 预演，确认预算与运镜后再调用 Veo 3.1 Quality。
+# ============================================================================
+
+[project]
+name = "三国：逆天改命·诸葛亮北伐"
+pipeline_type = "drama_s1_s6_l1_l5"
+episode_aspect = "16:9"
+historical_anchor_year = "蜀汉建兴六年（公元228年，距今近一千八百年）"
+
+[style_lock]
+camera_base = "Shot on ARRI Alexa 65 with Panavision anamorphic lens"
+lighting_base = "live-action cinematic realism blended with Rembrandt classical oil-painting chiaroscuro lighting, real human skin micro-texture, rich warm amber/tungsten highlights against deep slate shadows"
+film_stock = "fine Kodak Vision3 500T film grain, 8k cinematic color grading"
+global_suffix = "Shot on ARRI Alexa 65 with Panavision anamorphic lens, live-action cinematic historical drama realism blended with Rembrandt classical oil-painting chiaroscuro lighting, real human skin micro-texture, rich warm amber/tungsten highlights against deep slate shadows, fine Kodak Vision3 500T film grain, 8k cinematic color grading."
+modern_suffix = "Shot on ARRI Alexa 65 with Panavision anamorphic lens, live-action cinematic realism blended with Rembrandt classical oil-painting chiaroscuro lighting, real human skin micro-texture, rich warm tungsten desk lamp highlights against deep slate shadows, fine Kodak Vision3 500T film grain, 8k cinematic color grading. Clean video without any subtitles or text."
+negative_prompt = "cartoon, anime, 3d render, plastic skin, fantasy magic glow, neon lights, watermark, floating text, gibberish subtitles, deformed face, extra limbs"
+
+[director_rules]
+# L1 契诃夫之枪静默保护：以下伏笔道具仅允许在铺垫期 (phase_1 / phase_2) 出现在视觉画面 (action) 中，严禁在铺垫期台词 (line) 中直接明牌点破
+silent_foreshadow_keywords_banned_in_dialogue = [
+    "备用眼镜", "第二副眼镜", "两副眼镜", "眼镜盒", "穿越回去", "带回三国", "未来转折", "备用明目镜"
+]
+
+# L4 去文学化可拍性拦截：以下不可拍的中英文抽象修辞或纯心理描写严禁出现在视频生成提示词 (action) 中
+banned_literary_vagueness_in_action = [
+    "内心涌起", "意识到真相", "史诗感", "高级感", "宿命感", "酷炫", "炸裂", "心想", "仿佛看到",
+    "inner bitterness", "realizes the", "realizing the", "feels a sense of", "thinks in his heart",
+    "unspoken emotion", "profound warmth and quiet emotion", "epic vibe", "cool vibe", "sense of destiny"
+]
+
+# L1 人物心理渐进四阶段定义（分镜必须按阶段单调非递减演进）
+psychological_arc_phases = [
+    "phase_1_daily_empathy",        # 日常共情与历史遗憾铺垫（如漫展归来看Cos返图感慨丞相）
+    "phase_2_sudden_accident",      # 物理因果触发的突发意外（如雨后路滑突发车祸，本能反应）
+    "phase_3_shock_and_denial",     # 生理苏醒与怀疑否认（以为在宿舍/剧组拍戏）
+    "phase_4_evidence_awakening"    # 物理铁证冲击下的时空确认、智谋破局与伏笔回收觉醒
+]
+
+[acoustic_spaces]
+# L3 声画空间物理一致性矩阵（FFmpeg 音频滤波器参数 + H3 原生声学提示词）
+[acoustic_spaces.exterior_storm]
+description = "室外雨夜/风暴全频段空间（允许清晰大雨声与雷声）"
+ffmpeg_bg_filter = "volume=0.85"
+h3_audio_cue = "Sound: heavy rain pouring outside hitting window glass and leaves, distant low thunder."
+
+[acoustic_spaces.interior_closed]
+description = "门窗关闭的温暖室内空间（室外雨声必须经墙体/玻璃低通滤波变闷压低，凸显室内近场动作音）"
+ffmpeg_bg_filter = "lowpass=f=420,volume=0.18"
+h3_audio_cue = "Sound: quiet warm indoor room tone, very faint muffled rain outside the closed window, subtle mouse click and gentle rustle of a feather fan."
+
+[acoustic_spaces.exterior_street_wet]
+description = "次日雨后湿滑街道外景（轮胎涉水声、急刹摩擦声、低频撞击声）"
+ffmpeg_bg_filter = "volume=0.90"
+h3_audio_cue = "Sound: wet city street ambiance, car tires splashing water, sudden sharp tire screech on wet asphalt, heavy impact sub-bass drop."
+
+[acoustic_spaces.ancient_battlefield]
+description = "古代秦岭泥泞山谷与军营外景（寒风、木轮陷泥声、甲叶碰撞声、战鼓声）"
+ffmpeg_bg_filter = "volume=0.75"
+h3_audio_cue = "Sound: howling mountain wind, wooden cart wheels groaning in deep mud, clinking iron armor, distant low war horns."
+
+[acoustic_spaces.ancient_tent_interior]
+description = "古代中军帅帐内景（帐外寒风经厚重牛皮帐篷 380Hz 低通滤波变闷，凸显帐内烛火噼啪声、竹简与令箭碰撞声）"
+ffmpeg_bg_filter = "lowpass=f=380,volume=0.22"
+h3_audio_cue = "Sound: quiet military command tent interior, faint muffled wind outside the heavy canvas tent, soft crackle of oil lamps and rustle of bamboo slips."
+
+[engines.cloud_google_flow]
+platform = "flow.google.com"
+project_id = "a4467199-16db-464b-860b-2a4efb46e00c"
+default_duration = 8
+models = { "veo-quality" = 100, "omni-flash" = 12, "veo-fast" = 10, "veo-lite" = 5 }
+
+[engines.local_minimax_h3]
+platform = "local_rocm_strix_halo"
+model_dir = "C:/Users/Liang/minimax/MiniMax-H3"
+python_bin = "C:/Users/Liang/minimax/.venv/Scripts/python.exe"
+default_resolution = "896x512"
+default_duration = 5
+cost_credits = 0
+
+[assets.characters.GuYuan]
+immutable_face_phrase = "21-year-old youthful and handsome Chinese male college student (sharp defined jawline, straight nose bridge, natural parted black hair with light wispy bangs, wearing sleek black-rimmed rectangular eyeglasses)"
+modern_costume_phrase = "wearing a casual dark charcoal hoodie with a half-unfastened Zhuge Liang cosplay white crane-patterned outer robe draped over his shoulders after returning from a campus cosplay convention, with an open matte-black hard-shell eyeglasses case holding a second pair of spare glasses, a white crane feather fan, and a folded dark-indigo GuanJin headscarf resting naturally on the desk corner"
+ancient_costume_phrase = "wearing his cosplay Zhuge Liang outfit (classic white Hanfu scholar inner robe and dark-indigo cloak with crane-feather shoulder trim) over his modern collar, holding a white crane feather fan, with his matte-black hard-shell eyeglasses case clipped to his chest strap"
+ref_image_modern = "characters/images/guyuan_modern_v2.jpg"
+ref_image_ancient = "characters/images/guyuan_ancient_v2.jpg"
+
+[assets.characters.ZhugeLiang]
+immutable_face_phrase = "Chancellor Zhuge Liang at age 47 (closely modeled after the iconic 1994 CCTV Three Kingdoms portrayal by Tang Guoqiang: dignified handsome Chinese scholarly face, expressive sword-like eyebrows, deep intelligent compassionate eyes, straight nose, classic well-groomed three-stranded long black beard)"
+costume_phrase = "wearing the iconic tall teal/dark-blue silk GuanJin headdress and wide-sleeved white crane-patterned robe (HeChang) with blue-and-gold woven brocade trim, holding a white crane feather fan"
+ref_image = "characters/images/zhugeliang_v2.jpg"
+
+[assets.characters.OfficerWang]
+immutable_face_phrase = "Veteran Shu Han logistics officer Wang Ping in his late 30s (sturdy battle-hardened Chinese face with short stubble beard and grounded resolute eyes)"
+costume_phrase = "wearing weathered heavy Shu Han leather and iron lamellar armor stained with mountain mud, sword at hip"
+ref_image = "characters/images/guyuan_ancient.jpg"
+
+[assets.characters.MaSu]
+immutable_face_phrase = "Proud Chinese military advisor-general Ma Su in his late 30s (sharp haughty gaze, fair skin,aquiline nose, trimmed beard)"
+costume_phrase = "wearing ornate silver-scale Shu Han general armor with pristine white silk battle cloak and high military crest helmet"
+ref_image = "characters/images/zhuge_liang.jpg"

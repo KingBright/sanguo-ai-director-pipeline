@@ -1,0 +1,335 @@
+"""L1-L5 Industrial Screenwriter & Director Linter and Acoustic Mastering Engine.
+
+Implements the standardized methodology from `docs/industrial_ai_video_sop.md`:
+  - L1 Gatekeeper:
+      * Chekhov's Gun Silent Prop Protection (blocks foreshadowed props like spare glasses
+        from being explicitly spoiled in early setup dialogue).
+      * Psychological 4-Phase Arc Validation (enforces mandatory `arc_phase` declaration
+        and monotonic progression across the episode).
+      * Mandatory Dialogue / Voiceover check (`line`).
+  - L2 Gatekeeper:
+      * Mandatory Visual Reference Anchor (`ref_image`) binding and file existence check
+        for every scene containing characters.
+      * Bidirectional Era Isolation check (prevents ancient armor terms in modern scenes
+        and modern electronics/vehicles in ancient scenes).
+  - L3 Gatekeeper:
+      * Mandatory `acoustic_space` validation against `fact_sheet.toml`.
+      * Spatial Blocking Sequence Check (enforces Exterior Establishing shot before
+        cutting to any closed interior space `interior_closed` / `ancient_tent_interior`).
+      * Acoustic Space Physical Consistency (maps `acoustic_space` to FFmpeg low-pass
+        filters so indoor/tent scenes muffle outdoor rain/wind realistically).
+  - L4 Gatekeeper:
+      * Mandatory `camera_motion` with explicit physical lens focal length (e.g. `35mm`, `50mm`).
+      * Bilingual De-Literary Shootability Check (blocks unshootable literary vagueness and
+        abstract internal states in both Chinese and English).
+"""
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Dict, Any, List, Optional
+import re
+import subprocess
+import shutil
+
+try:
+    import tomllib
+except ModuleNotFoundError:
+    import tomli as tomllib
+
+from .config import BASE_DIR
+
+
+@dataclass
+class LintIssue:
+    level: str          # "ERROR" or "WARNING"
+    layer: str          # "L1", "L2", "L3", "L4", "L5"
+    scene_id: str
+    message: str
+    suggestion: str
+
+
+@dataclass
+class LintReport:
+    manifest_path: Path
+    passed: bool
+    issues: List[LintIssue] = field(default_factory=list)
+    scene_count: int = 0
+
+    def format_report(self) -> str:
+        lines = [
+            "=" * 78,
+            f"🎬 [L1-L5 工业化编剧导演质检报告] 分镜工程: {self.manifest_path.parent.name}/{self.manifest_path.name}",
+            "=" * 78,
+            f"总镜头数: {self.scene_count} 幕 | 质检结果: {'✅ 通过 (PASS)' if self.passed else '❌ 阻断 (BLOCKED - 存在违反导演铁律项)'}",
+        ]
+        if not self.issues:
+            lines.append("✨ 全部镜头已 100% 通过 L1(叙事弧光/静默伏笔)、L2(事实锁/时代隔离)、L3(空间建置/声学滤波)、L4(物理焦段/去文学化可拍性) 审查！")
+        else:
+            lines.append("\n发现以下需要修正的工程问题:")
+            for idx, iss in enumerate(self.issues, 1):
+                icon = "🛑" if iss.level == "ERROR" else "⚠️"
+                lines.append(f"  {idx}. {icon} [{iss.layer}][{iss.level}] 镜头 `{iss.scene_id}`: {iss.message}")
+                lines.append(f"     💡 导演修正建议: {iss.suggestion}")
+        lines.append("=" * 78)
+        return "\n".join(lines)
+
+
+class DirectorLinter:
+    """Enforces L1-L5 Industrial Screenwriter & Director SOP rules on movie.toml manifests."""
+
+    def __init__(self, fact_sheet_path: Optional[Path] = None):
+        self.fact_sheet_path = fact_sheet_path or (BASE_DIR / "fact_sheet.toml")
+        self.fact_sheet = self._load_toml(self.fact_sheet_path)
+        self.rules = self.fact_sheet.get("director_rules", {})
+        self.acoustic_spaces = self.fact_sheet.get("acoustic_spaces", {})
+        self.ffmpeg_bin = shutil.which("ffmpeg") or "ffmpeg"
+
+    @staticmethod
+    def _load_toml(path: Path) -> Dict[str, Any]:
+        if not path.exists():
+            return {}
+        with open(path, "rb") as f:
+            return tomllib.load(f)
+
+    def lint_manifest(self, manifest_path: Path) -> LintReport:
+        data = self._load_toml(manifest_path)
+        scenes: List[Dict[str, Any]] = data.get("scenes", [])
+        issues: List[LintIssue] = []
+
+        banned_dialogue_kw = self.rules.get("silent_foreshadow_keywords_banned_in_dialogue", [])
+        banned_action_kw = self.rules.get("banned_literary_vagueness_in_action", [])
+        valid_arc_phases: List[str] = self.rules.get("psychological_arc_phases", [
+            "phase_1_daily_empathy",
+            "phase_2_sudden_accident",
+            "phase_3_shock_and_denial",
+            "phase_4_evidence_awakening",
+        ])
+        phase_rank = {p: i for i, p in enumerate(valid_arc_phases)}
+
+        seen_exterior_establishing = False
+        last_phase_idx = -1
+
+        for idx, sc in enumerate(scenes):
+            sc_id = sc.get("id", f"scene_{idx+1:02d}")
+            era = sc.get("era", "modern" if any(k in sc_id.lower() for k in ("modern", "dorm", "cosplay", "pack", "rain_exterior", "crash")) else "ancient")
+            action = sc.get("action", "")
+            line = sc.get("line", "")
+            arc_phase = sc.get("arc_phase", "")
+            acoustic_space = sc.get("acoustic_space", "")
+            camera_motion = sc.get("camera_motion", "")
+            chars = sc.get("characters", [])
+            ref_image = sc.get("ref_image", "")
+
+            # --- L1 Check 1: Psychological Arc Phase Presence & Monotonic Progression ---
+            if not arc_phase or arc_phase not in phase_rank:
+                issues.append(LintIssue(
+                    level="ERROR",
+                    layer="L1-人物心理四阶段律",
+                    scene_id=sc_id,
+                    message=f"未声明合法的 `arc_phase`（当前值: '{arc_phase}'）。",
+                    suggestion=f"必须显式指定心理弧光阶段，可选值: {valid_arc_phases}"
+                ))
+            else:
+                curr_phase_idx = phase_rank[arc_phase]
+                if curr_phase_idx < last_phase_idx:
+                    issues.append(LintIssue(
+                        level="ERROR",
+                        layer="L1-人物心理四阶段律",
+                        scene_id=sc_id,
+                        message=f"心理弧光阶段出现倒退（上一镜阶段索引 {last_phase_idx} -> 当前 `{arc_phase}`）。",
+                        suggestion="人物心理弧光必须按 phase_1 -> phase_2 -> phase_3 -> phase_4 单调推进，不可逻辑倒退。"
+                    ))
+                last_phase_idx = max(last_phase_idx, curr_phase_idx)
+
+            # --- L1 Check 2: Mandatory Script Line / Voiceover ---
+            if not line.strip():
+                issues.append(LintIssue(
+                    level="ERROR",
+                    layer="L1-台词与叙事锁",
+                    scene_id=sc_id,
+                    message="镜头缺少核定台词或画外音 (`line`)。",
+                    suggestion="在分镜配置中补充与 `script.md` 严格对齐的 `speaker` 与 `line`。"
+                ))
+
+            # --- L1 Check 3: Chekhov's Gun Silent Foreshadowing Protection ---
+            if arc_phase in ("phase_1_daily_empathy", "phase_2_sudden_accident", ""):
+                for kw in banned_dialogue_kw:
+                    if kw in line:
+                        issues.append(LintIssue(
+                            level="ERROR",
+                            layer="L1-契诃夫之枪静默律",
+                            scene_id=sc_id,
+                            message=f"铺垫期台词中直接明牌剧透了静默伏笔关键词『{kw}』：\"{line}\"",
+                            suggestion="备用眼镜/穿越机制在铺垫期属于视觉暗线（Show, Don't Tell），仅允许写在画面 action 中自然陈列，严禁在台词中直接说破！"
+                        ))
+
+            # --- L2 Check 1: Character Reference Anchor & Existence ---
+            if chars:
+                if not ref_image:
+                    issues.append(LintIssue(
+                        level="ERROR",
+                        layer="L2-视觉资产事实锁",
+                        scene_id=sc_id,
+                        message=f"镜头包含角色 {chars}，但未显式绑定定妆母图 `ref_image`。",
+                        suggestion="在 scene 中指定 `ref_image = \"characters/images/guyuan_modern_v2.jpg\"`（现代）或对应古装母图，防止五官漂移。"
+                    ))
+                elif not (BASE_DIR / ref_image).exists():
+                    issues.append(LintIssue(
+                        level="ERROR",
+                        layer="L2-视觉资产事实锁",
+                        scene_id=sc_id,
+                        message=f"绑定的定妆母图文件不存在: `{ref_image}`。",
+                        suggestion="请检查 `characters/images/` 目录下的定妆母图路径。"
+                    ))
+
+            # --- L2 Check 2: Bidirectional Era Isolation ---
+            action_lower = action.lower()
+            if era == "modern" and ("armor" in action_lower or "ancient chinese soldiers" in action_lower):
+                issues.append(LintIssue(
+                    level="ERROR",
+                    layer="L2-时代服化道隔离",
+                    scene_id=sc_id,
+                    message="现代场景画面描述中混入了古代盔甲/古装士卒词汇，会导致古今串戏。",
+                    suggestion="使用 `era = \"modern\"` 与现代场景描述，将现代场景与古代战场服化道严格物理隔离。"
+                ))
+            elif era == "ancient" and any(w in action_lower for w in ("dormitory", "laptop", "computer monitor", "asphalt street", "sedan")):
+                issues.append(LintIssue(
+                    level="ERROR",
+                    layer="L2-时代服化道隔离",
+                    scene_id=sc_id,
+                    message="古代场景画面描述中混入了现代宿舍/电子屏幕/柏油路汽车词汇。",
+                    suggestion="确保古代场景完全使用建兴六年历史环境与古装服化道描述。"
+                ))
+
+            # --- L3 Check 1: Mandatory Acoustic Space Validation ---
+            if not acoustic_space or acoustic_space not in self.acoustic_spaces:
+                issues.append(LintIssue(
+                    level="ERROR",
+                    layer="L3-声画空间物理锁",
+                    scene_id=sc_id,
+                    message=f"未声明合法的声学空间 `acoustic_space`（当前值: '{acoustic_space}'）。",
+                    suggestion=f"必须指定 `fact_sheet.toml` 中定义的声学空间: {list(self.acoustic_spaces.keys())}"
+                ))
+
+            # --- L3 Check 2: Exterior Establishing before Closed Interior ---
+            if (
+                acoustic_space in ("exterior_storm", "exterior_street_wet", "ancient_battlefield")
+                or "establishing" in sc.get("framing", "").lower()
+                or "exterior" in sc_id.lower()
+            ):
+                seen_exterior_establishing = True
+
+            if acoustic_space in ("interior_closed", "ancient_tent_interior"):
+                if not seen_exterior_establishing:
+                    issues.append(LintIssue(
+                        level="ERROR",
+                        layer="L3-视听空间建置律",
+                        scene_id=sc_id,
+                        message=f"在未交代外部环境建置镜头的情况下，直接切入封闭内景 (`{acoustic_space}`)。",
+                        suggestion="场次必须遵循『外景建置先行律 (Exterior Establishing -> Interior Cut)』，先用外景镜头交代风雨或军营环境，再切入室内/帐内。"
+                    ))
+                if "heavy rain pouring" in action_lower and "window" not in action_lower and "muffled" not in action_lower:
+                    issues.append(LintIssue(
+                        level="WARNING",
+                        layer="L3-声画空间一致性",
+                        scene_id=sc_id,
+                        message="关窗室内镜头提示词中包含未加修饰的倾盆大雨描述，易诱发视频模型生成室内漏雨或过大雨声。",
+                        suggestion="室内镜头提示词应强调温暖静谧内景，并将 `acoustic_space` 设为 `interior_closed` 以启用 FFmpeg 420Hz 低通滤波闷雨声。"
+                    ))
+
+            # --- L4 Check 1: Mandatory Physical Camera Lens & Motion Vector ---
+            if not camera_motion.strip() or not re.search(r"\d+\s*mm\b", camera_motion.lower()):
+                issues.append(LintIssue(
+                    level="ERROR",
+                    layer="L4-物理摄影机参数锁",
+                    scene_id=sc_id,
+                    message=f"`camera_motion` 缺失或未包含明确物理镜头焦段（如 35mm/50mm/85mm）：'{camera_motion}'。",
+                    suggestion="在 `camera_motion` 中明确指定物理焦段与运镜矢量，例如 `\"50mm anamorphic lens, subtle slow push-in\"`。"
+                ))
+
+            # --- L4 Check 2: Bilingual De-Literary Shootability Check ---
+            for bad_kw in banned_action_kw:
+                if bad_kw.lower() in action_lower:
+                    issues.append(LintIssue(
+                        level="ERROR",
+                        layer="L4-去文学化可拍性",
+                        scene_id=sc_id,
+                        message=f"视频画面提示词包含不可拍的中/英文抽象词或心理描写『{bad_kw}』。",
+                        suggestion="摄影机只能拍摄物理可见的动作与光影，请将其改写为具体的面部微表情、肢体动作、焦段景深与光影方向。"
+                    ))
+
+        has_errors = any(i.level == "ERROR" for i in issues)
+        return LintReport(
+            manifest_path=manifest_path,
+            passed=not has_errors,
+            issues=issues,
+            scene_count=len(scenes),
+        )
+
+    def get_ffmpeg_bg_filter(self, acoustic_space: str) -> str:
+        """Return physically accurate FFmpeg audio filter for the scene's acoustic space."""
+        space_cfg = self.acoustic_spaces.get(acoustic_space, {})
+        return space_cfg.get("ffmpeg_bg_filter", "volume=0.35")
+
+    def master_scene_clip(
+        self,
+        raw_video_path: Path,
+        output_video_path: Path,
+        acoustic_space: str = "interior_closed",
+        voiceover_path: Optional[Path] = None,
+        ass_subtitle_path: Optional[Path] = None,
+        target_duration: float = 8.0,
+    ) -> bool:
+        """L5 Acoustic Space & Subtitle Mastering:
+        Applies physical acoustic filtering (e.g. lowpass=f=420,volume=0.18 for closed indoor rooms
+        or lowpass=f=380,volume=0.22 for military tents vs full-spectrum rain/wind for exterior shots),
+        mixes voiceover, and burns ASS subtitles.
+        """
+        if not raw_video_path.exists():
+            raise FileNotFoundError(f"Raw video clip not found: {raw_video_path}")
+
+        bg_filter = self.get_ffmpeg_bg_filter(acoustic_space)
+        output_video_path.parent.mkdir(parents=True, exist_ok=True)
+
+        # Video filter chain: pad if shorter than target_duration, scale to 1280x720, burn ASS if present
+        v_filters = [f"tpad=stop_mode=clone:stop_duration={target_duration}", "scale=1280:720:flags=lanczos"]
+        if ass_subtitle_path and ass_subtitle_path.exists():
+            safe_ass = ass_subtitle_path.as_posix().replace(":", "\\:")
+            v_filters.append(f"ass='{safe_ass}'")
+        v_chain = ",".join(v_filters)
+
+        if voiceover_path and voiceover_path.exists():
+            filter_complex = (
+                f"[0:v]{v_chain}[v];"
+                f"[0:a]apad=whole_dur={target_duration},{bg_filter}[bg];"
+                f"[1:a]adelay=200|200,apad=whole_dur={target_duration},volume=1.45[vo];"
+                f"[bg][vo]amix=inputs=2:duration=first:dropout_transition=2[a]"
+            )
+            cmd = [
+                self.ffmpeg_bin, "-y",
+                "-i", str(raw_video_path),
+                "-i", str(voiceover_path),
+                "-filter_complex", filter_complex,
+                "-map", "[v]", "-map", "[a]",
+                "-t", str(target_duration),
+                "-c:v", "libx264", "-crf", "18", "-pix_fmt", "yuv420p",
+                "-c:a", "aac", "-b:a", "192k",
+                str(output_video_path),
+            ]
+        else:
+            filter_complex = (
+                f"[0:v]{v_chain}[v];"
+                f"[0:a]apad=whole_dur={target_duration},{bg_filter}[a]"
+            )
+            cmd = [
+                self.ffmpeg_bin, "-y",
+                "-i", str(raw_video_path),
+                "-filter_complex", filter_complex,
+                "-map", "[v]", "-map", "[a]",
+                "-t", str(target_duration),
+                "-c:v", "libx264", "-crf", "18", "-pix_fmt", "yuv420p",
+                "-c:a", "aac", "-b:a", "192k",
+                str(output_video_path),
+            ]
+
+        res = subprocess.run(cmd, capture_output=True, text=True)
+        return res.returncode == 0

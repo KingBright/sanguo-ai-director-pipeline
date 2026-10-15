@@ -1,0 +1,21 @@
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+
+# Virtual environments & local secrets
+.venv/
+venv/
+env/
+.env
+*.local
+
+# Generated video outputs & heavy binary caches (keep directory structure only)
+output/raw_clips/**/*.mp4
+output/final_episodes/*.mp4
+
+# OS metadata
+.DS_Store
+Thumbs.db

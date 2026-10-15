@@ -1,0 +1,17 @@
+[Script Info]
+Title: Sanguo Ep01 Scene01 V2.1 Subtitles
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,Microsoft YaHei,36,&H00FFFFFF,&H0000FFFF,&H00141414,&H80000000,-1,0,0,0,100,100,1.5,0,1,2.5,1.5,2,40,40,38,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.15,0:00:01.10,Default,GuYuan,0,0,0,,{\fad(80,80)}老丞相一生北伐
+Dialogue: 0,0:00:01.39,0:00:02.89,Default,GuYuan,0,0,0,,{\fad(80,80)}终困于祁山粮道与街亭
+Dialogue: 0,0:00:03.39,0:00:05.81,Default,GuYuan,0,0,0,,{\fad(80,80)}若我能带着这副备用眼镜回到建兴六年
+Dialogue: 0,0:00:06.29,0:00:07.60,Default,GuYuan,0,0,0,,{\fad(80,80)}大汉还会是这个结局吗？

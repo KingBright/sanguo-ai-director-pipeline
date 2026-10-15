@@ -1,0 +1,32 @@
+# Character profiles for consistent character generation in Google Flow & MiniMax H3
+# Injected into movie.toml [[characters]] blocks with era-aware costume isolation
+
+[[characters]]
+name = "GuYuan"
+appearance = "21-year-old youthful and handsome Chinese male college student (locked facial bone structure: sharp defined jawline, straight nose bridge, natural parted black hair with light wispy bangs, wearing sleek black-rimmed rectangular eyeglasses at all times, carrying a matte-black hard-shell eyeglasses case with a spare pair of metal-rimmed glasses and a white crane feather fan). Shot on ARRI Alexa 65 with Panavision anamorphic lens, Rembrandt classical oil-painting chiaroscuro lighting, Kodak Vision3 500T film grain."
+appearance_modern = "21-year-old youthful and handsome Chinese male college student (locked facial bone structure: sharp defined jawline, straight nose bridge, natural parted black hair with light wispy bangs, wearing sleek black-rimmed rectangular eyeglasses). Wearing a casual dark charcoal hoodie with his campus cosplay Zhuge Liang white crane-patterned outer robe half-draped over his shoulders. Shot on ARRI Alexa 65 with Panavision anamorphic lens, Rembrandt chiaroscuro tungsten lighting, Kodak Vision3 500T film grain."
+appearance_ancient = "21-year-old youthful and handsome Chinese male college student (locked facial bone structure: sharp defined jawline, straight nose bridge, natural parted black hair with light wispy bangs, wearing sleek black-rimmed rectangular eyeglasses). Wearing his full Zhuge Liang cosplay scholar outfit (white Hanfu inner robe and dark-indigo crane-patterned cloak) over his modern collar, holding a white crane feather fan, with a matte-black hard-shell eyeglasses case clipped to his chest strap. Shot on ARRI Alexa 65 with Panavision anamorphic lens, Rembrandt chiaroscuro lighting, Kodak Vision3 500T film grain."
+ref_image_modern = "characters/images/guyuan_modern_v2.jpg"
+ref_image_ancient = "characters/images/guyuan_ancient_v2.jpg"
+voice = "rigel"
+
+[[characters]]
+name = "ZhugeLiang"
+appearance = "Chancellor Zhuge Liang at age 47 (First Northern Expedition, 228 AD), closely modeled after the iconic 1994 CCTV Three Kingdoms portrayal by Tang Guoqiang. Dignified, handsome and noble Chinese scholarly face, expressive sword-like eyebrows, deep intelligent and compassionate eyes, straight nose, classic well-groomed three-stranded long black beard. Wearing the iconic tall teal/dark-blue silk GuanJin headdress and wide-sleeved white crane-patterned robe (HeChang) with blue-and-gold woven brocade trim, holding a white crane feather fan. Shot on ARRI Alexa 65 with Panavision anamorphic lens, live-action historical drama realism blended with Rembrandt classical oil-painting chiaroscuro lighting, Kodak Vision3 500T film grain."
+ref_image = "characters/images/zhugeliang_v2.jpg"
+voice = "alnilam"
+
+[[characters]]
+name = "MaSu"
+appearance = "Proud and handsome Chinese military advisor-general in his late 30s, sharp haughty gaze, fair skin, wearing ornate silver-scale Shu Han general armor with pristine white silk battle cloak, holding a sword pommel with arrogant confidence, high military crest helmet."
+ref_image = "characters/images/zhuge_liang.jpg"
+
+[[characters]]
+name = "OfficerWang"
+appearance = "Veteran Shu Han general Wang Ping in his late 30s, sturdy battle-hardened face with stubble beard and grounded practical demeanor, wearing weathered heavy leather and iron lamellar armor, holding military pass tokens and a map scroll."
+ref_image = "characters/images/guyuan_ancient.jpg"
+
+[[characters]]
+name = "ZhangHe"
+appearance = "Fierce veteran Cao Wei general in his 50s, battle-hardened weathered face with thick greying beard and scarred cheek, wearing heavy dark iron plate armor with bronze tiger motifs, flowing crimson battle cloak, menacing commanding general aura."
+ref_image = "characters/images/zhuge_liang.jpg"
