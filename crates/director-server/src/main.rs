@@ -811,9 +811,10 @@ async fn build_quota_summary(state: &AppState) -> QuotaSummaryResponse {
     let fast_min = ((fast_sec as f64 / 60.0) * 10.0).round() / 10.0;
     let quality_min = ((quality_sec as f64 / 60.0) * 10.0).round() / 10.0;
 
+    let flow_account = std::env::var("GFLOW_ACCOUNT").unwrap_or_else(|_| "jl.kingbright@gmail.com".to_string());
     let flow_video = FlowVideoQuotaSummary {
         tier: "Google AI Ultra (TIER_ULTRA)".to_string(),
-        account: "yuanyang749@gmail.com".to_string(),
+        account: flow_account,
         remaining_credits: flow_bal,
         total_credits: flow_total,
         percentage: flow_pct,

@@ -514,22 +514,27 @@ class SlowFastContactSheetGenerator:
         macro_h = macro_y2 - macro_y1
         macro_w = 240
 
-        if self.duration >= 5.2:
+        if 5.2 <= self.duration <= 15.0:
             macro_times = [0.55, 1.90, 3.60, 5.10]
+            macro_labels = [
+                f"BEAT 1: Airlock ({macro_times[0]:.2f}s)",
+                f"BEAT 2: Dialogue ({macro_times[1]:.2f}s)",
+                f"BEAT 3: Climax ({macro_times[2]:.2f}s)",
+                f"BEAT 4: Tail Anchor ({macro_times[3]:.2f}s)"
+            ]
         else:
             macro_times = [
-                0.10 * self.duration,
+                0.08 * self.duration,
                 0.35 * self.duration,
-                0.68 * self.duration,
-                0.92 * self.duration
+                0.65 * self.duration,
+                0.90 * self.duration
             ]
-
-        macro_labels = [
-            f"BEAT 1: Airlock ({macro_times[0]:.2f}s)",
-            f"BEAT 2: Dialogue ({macro_times[1]:.2f}s)",
-            f"BEAT 3: Climax ({macro_times[2]:.2f}s)",
-            f"BEAT 4: Tail Anchor ({macro_times[3]:.2f}s)"
-        ]
+            macro_labels = [
+                f"ACT 1: Hook ({macro_times[0]:.1f}s)",
+                f"ACT 2: Escalation ({macro_times[1]:.1f}s)",
+                f"ACT 3: Climax ({macro_times[2]:.1f}s)",
+                f"ACT 4: Payoff ({macro_times[3]:.1f}s)"
+            ]
 
         for i, t in enumerate(macro_times):
             x1 = i * macro_w
@@ -560,10 +565,10 @@ class SlowFastContactSheetGenerator:
         crop_h = roi_h - meter_h
 
         # 8 timestamps spanning speech onsets, peaks, valleys, and silent airlocks
-        if self.duration >= 5.2:
+        if 5.2 <= self.duration <= 15.0:
             roi_times = [0.40, 1.20, 1.80, 2.40, 3.10, 3.80, 4.40, 5.20]
         else:
-            roi_times = [float(f) for f in np.linspace(0.08 * self.duration, 0.94 * self.duration, 8)]
+            roi_times = [float(f) for f in np.linspace(0.06 * self.duration, 0.94 * self.duration, 8)]
 
         native_w, native_h = self.meta["width"], self.meta["height"]
         # Center-face/mouth bounding box

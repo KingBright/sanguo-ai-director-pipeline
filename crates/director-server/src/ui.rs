@@ -1417,7 +1417,7 @@ pub const INDEX_HTML: &str = r##"<!DOCTYPE html>
             </div>
             <div class="flex justify-between text-[10px] font-mono text-zinc-500 mt-1">
               <span>当前额度 / 总配额: ${(flow.total_credits || 10000).toLocaleString()} 点</span>
-              <span>账号: ${flow.account || 'yuanyang749@gmail.com'}</span>
+              <span>账号: ${flow.account || 'jl.kingbright@gmail.com'}</span>
             </div>
           </div>
 
