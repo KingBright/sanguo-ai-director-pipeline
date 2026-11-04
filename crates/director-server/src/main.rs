@@ -27,8 +27,9 @@ use director_core::{
     ProjectSummary, SceneSpec, SpatialRoom, StoryboardCompiler, StyleLock, WorkspacePaths,
 };
 use director_engines::{
-    ColabBridgeRunner, CreditReport, FlowEngine, FlowMusicEngine, H3Engine, JobStatus, LocalGpuStatus,
-    MusicGenerateResult, RenderJob, RenderQueue, SumeEngine,
+    ColabBridgeRunner, CreditReport, FlowEngine, FlowMusicEngine, H3Engine, JobStatus,
+    LaneUtilization, LocalGpuStatus, MusicGenerateResult, ParallelConcurrencyConfig, RenderJob,
+    RenderQueue, SumeEngine,
 };
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -189,7 +190,15 @@ pub struct QuotaSummaryResponse {
     pub colab: ColabQuotaSummary,
     pub flow_video: FlowVideoQuotaSummary,
     pub flow_music: FlowMusicQuotaSummary,
+    pub lane_utilization: LaneUtilization,
+    pub concurrency_config: ParallelConcurrencyConfig,
     pub updated_at: String,
+}
+
+#[derive(Debug, Serialize)]
+struct ConcurrencyStatusResponse {
+    config: ParallelConcurrencyConfig,
+    utilization: LaneUtilization,
 }
 
 #[derive(Debug, Deserialize)]
@@ -214,6 +223,8 @@ struct SystemStatusResponse {
     pending_approvals_count: usize,
     agent_conversation_id: String,
     quota_summary: QuotaSummaryResponse,
+    lane_utilization: LaneUtilization,
+    concurrency_config: ParallelConcurrencyConfig,
 }
 
 #[derive(Debug, Serialize)]
@@ -495,6 +506,7 @@ async fn main() -> anyhow::Result<()> {
         .route("/api/v1/system/status", get(api_system_status))
         .route("/api/v1/system/policy", put(api_update_policy))
         .route("/api/v1/quota/summary", get(api_quota_summary))
+        .route("/api/v1/queue/concurrency", get(api_get_concurrency).post(api_update_concurrency))
         .route("/api/v1/music/generate", post(api_generate_music))
         .route("/api/v1/episodes", get(api_list_episodes).post(api_create_episode))
         .route("/api/v1/episodes/:id", get(api_get_episode))
@@ -595,7 +607,8 @@ async fn auth_middleware(
             || path == "/api/v1/mcp"
             || path == "/api/v1/agent/mcp-webhook"
             || path == "/api/v1/quota/summary"
-            || path == "/api/v1/music/generate")
+            || path == "/api/v1/music/generate"
+            || path == "/api/v1/queue/concurrency")
     {
         return next.run(req).await;
     }
@@ -681,6 +694,8 @@ async fn api_system_status(State(state): State<AppState>) -> Json<SystemStatusRe
         .filter(|j| j.status == JobStatus::PendingApproval)
         .count();
     let quota_summary = build_quota_summary(&state).await;
+    let lane_utilization = state.queue.get_lane_utilization().await;
+    let concurrency_config = state.queue.concurrency_config.read().await.clone();
 
     Json(SystemStatusResponse {
         studio_name: director_core::config::SYSTEM_TITLE_CN.to_string(),
@@ -699,6 +714,8 @@ async fn api_system_status(State(state): State<AppState>) -> Json<SystemStatusRe
         pending_approvals_count,
         agent_conversation_id: state.agent_conversation_id.read().await.clone(),
         quota_summary,
+        lane_utilization,
+        concurrency_config,
     })
 }
 
@@ -856,10 +873,15 @@ async fn build_quota_summary(state: &AppState) -> QuotaSummaryResponse {
         source: if music_status.has_oauth_token { "Google Labs OAuth Session" } else { "Local ACE-Step 1.5 + Curated Studio Engine" }.to_string(),
     };
 
+    let lane_utilization = state.queue.get_lane_utilization().await;
+    let concurrency_config = state.queue.concurrency_config.read().await.clone();
+
     QuotaSummaryResponse {
         colab,
         flow_video,
         flow_music,
+        lane_utilization,
+        concurrency_config,
         updated_at: now_cst.format("%Y-%m-%d %H:%M:%S CST").to_string(),
     }
 }
@@ -867,6 +889,25 @@ async fn build_quota_summary(state: &AppState) -> QuotaSummaryResponse {
 async fn api_quota_summary(State(state): State<AppState>) -> Json<QuotaSummaryResponse> {
     let summary = build_quota_summary(&state).await;
     Json(summary)
+}
+
+async fn api_get_concurrency(State(state): State<AppState>) -> Json<ConcurrencyStatusResponse> {
+    let config = state.queue.concurrency_config.read().await.clone();
+    let utilization = state.queue.get_lane_utilization().await;
+    Json(ConcurrencyStatusResponse { config, utilization })
+}
+
+async fn api_update_concurrency(
+    State(state): State<AppState>,
+    Json(req): Json<ParallelConcurrencyConfig>,
+) -> Json<serde_json::Value> {
+    state.queue.update_concurrency_config(req).await;
+    let utilization = state.queue.get_lane_utilization().await;
+    Json(serde_json::json!({
+        "ok": true,
+        "message": "并发通道调度池配置已更新",
+        "utilization": utilization
+    }))
 }
 
 async fn api_generate_music(
@@ -2216,21 +2257,18 @@ async fn api_approve_job(
 fn spawn_job_worker(state: AppState, job: RenderJob) {
     tokio::spawn(async move {
         let paths = state.current_paths().await;
-        // If local GPU (H3), acquire exclusive GPU mutex so two family members never OOM Strix Halo
-        let _gpu_guard = if job.engine == "h3" {
-            state
-                .queue
-                .update_job_status(
-                    &job.id,
-                    JobStatus::Running,
-                    "🖥️ 正在等待本机 Strix Halo 96GB GPU 队列锁...",
-                    None,
-                    None,
-                )
-                .await;
-            Some(state.queue.gpu_lock.lock().await)
-        } else {
-            None
+        let lane = match job.engine.as_str() {
+            "h3" => "local_rocm",
+            "flow" => "flow",
+            "sume" => "sume",
+            "colab" => "colab_g4",
+            _ => {
+                if job.model.contains("tts") || job.model.contains("music") {
+                    "audio_tts"
+                } else {
+                    "flow"
+                }
+            }
         };
 
         state
@@ -2238,9 +2276,23 @@ fn spawn_job_worker(state: AppState, job: RenderJob) {
             .update_job_status(
                 &job.id,
                 JobStatus::Running,
+                format!("🚦 正在排队等待 [{}] 高并发通道槽位...", lane),
+                None,
+                None,
+            )
+            .await;
+
+        // Acquire lane permit from the high-concurrency semaphore pool
+        let _lane_permit = state.queue.acquire_lane_permit(lane).await;
+
+        state
+            .queue
+            .update_job_status(
+                &job.id,
+                JobStatus::Running,
                 format!(
-                    "🎬 正在执行渲染 ({} | 模型: {} | 预演: {})...",
-                    job.episode_id, job.model, job.dry_run
+                    "🎬 正在并发执行渲染 (通道: {} | {} | 模型: {} | 预演: {})...",
+                    lane, job.episode_id, job.model, job.dry_run
                 ),
                 None,
                 None,

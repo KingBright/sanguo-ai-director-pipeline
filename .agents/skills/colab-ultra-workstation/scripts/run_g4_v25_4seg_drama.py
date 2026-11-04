@@ -41,28 +41,48 @@ SEG_META = {
 }
 
 
-def is_comfy_up() -> bool:
+def is_comfy_up(port: int = 8188) -> bool:
     try:
-        urllib.request.urlopen(f"{API_URL}/system_stats", timeout=3)
+        urllib.request.urlopen(f"http://127.0.0.1:{port}/system_stats", timeout=3)
         return True
     except Exception:
         return False
 
 
-def ensure_comfy_running() -> None:
-    if is_comfy_up():
-        print("⚡ ComfyUI 已在 127.0.0.1:8188 运行中！", flush=True)
-        return
+def ensure_comfy_running(ports: Optional[List[int]] = None) -> List[int]:
+    if ports is None:
+        ports = [8188, 8189]
+    live_ports = [p for p in ports if is_comfy_up(p)]
+    if live_ports:
+        print(f"⚡ ComfyUI 已在端口 {live_ports} 运行中！", flush=True)
+        return live_ports
     launcher = Path("/tmp/launch_g4_comfyui_fast.py")
     if not launcher.exists():
         launcher = Path("/content/drive/MyDrive/AI_Workstation/scripts/launch_g4_comfyui_fast.py")
-    print("🚀 正在启动 launch_g4_comfyui_fast.py (v2.2 双通道 NVMe 极速常驻模式)...", flush=True)
-    subprocess.run([sys.executable, "-u", str(launcher), "--profile", "scheme_a"], check=True)
+    if not launcher.exists():
+        launcher = Path(__file__).resolve().parent / "launch_g4_comfyui_fast.py"
+    print(f"🚀 正在启动 launch_g4_comfyui_fast.py (--workers {len(ports)} --base-port {min(ports)} G4 双实例满血模式)...", flush=True)
+    subprocess.run(
+        [
+            sys.executable,
+            "-u",
+            str(launcher),
+            "--profile",
+            "scheme_a",
+            "--workers",
+            str(len(ports)),
+            "--base-port",
+            str(min(ports)),
+        ],
+        check=True,
+    )
     for _ in range(60):
-        if is_comfy_up():
-            return
+        live_ports = [p for p in ports if is_comfy_up(p)]
+        if live_ports:
+            print(f"⚡ ComfyUI 实例就绪: {live_ports}", flush=True)
+            return live_ports
         time.sleep(2)
-    raise RuntimeError("❌ ComfyUI 启动超时，请检查 /tmp/comfyui.log")
+    raise RuntimeError("❌ ComfyUI 启动超时，请检查 /tmp/comfyui*.log")
 
 
 def find_asset_file(fname: str) -> Optional[Path]:
@@ -353,10 +373,11 @@ def sync_inputs_to_local_ssd(wf: dict) -> None:
             shutil.copy2(patch_src, bunny_dir / bname)
 
 
-def submit_and_wait(workflow: dict, label: str) -> dict:
+def submit_prompt(workflow: dict, label: str, port: int = 8188) -> str:
+    url = f"http://127.0.0.1:{port}"
     payload = json.dumps({"prompt": workflow}).encode("utf-8")
     req = urllib.request.Request(
-        f"{API_URL}/prompt",
+        f"{url}/prompt",
         data=payload,
         headers={"Content-Type": "application/json"},
         method="POST",
@@ -365,20 +386,27 @@ def submit_and_wait(workflow: dict, label: str) -> dict:
         resp = json.loads(urllib.request.urlopen(req, timeout=15).read().decode())
     except urllib.error.HTTPError as e:
         err_body = e.read().decode("utf-8", errors="ignore")
-        raise RuntimeError(f"❌ 提交工作流失败 ({label}): HTTP {e.code} -> {err_body}") from e
+        raise RuntimeError(f"❌ 提交工作流失败 ({label}) [port={port}]: HTTP {e.code} -> {err_body}") from e
 
     if resp.get("node_errors"):
-        raise RuntimeError(f"❌ 节点参数校验失败 ({label}): {json.dumps(resp['node_errors'], ensure_ascii=False)}")
+        raise RuntimeError(f"❌ 节点参数校验失败 ({label}) [port={port}]: {json.dumps(resp['node_errors'], ensure_ascii=False)}")
 
     prompt_id = resp["prompt_id"]
-    print(f"🎬 [{label}] 已提交队列 | prompt_id={prompt_id}", flush=True)
+    print(f"🎬 [{label}] 已提交至队列 (127.0.0.1:{port}) | prompt_id={prompt_id}", flush=True)
+    return prompt_id
+
+
+def wait_for_prompt(prompt_id: str, label: str, port: int = 8188, timeout_sec: int = 3600) -> dict:
+    url = f"http://127.0.0.1:{port}"
     t0 = time.time()
     last_log_len = 0
+    log_candidates = [Path(f"/tmp/comfyui_{port}.log"), Path("/tmp/comfyui.log")]
+    log_path = next((p for p in log_candidates if p.exists()), None)
 
-    while True:
-        time.sleep(4)
-        if Path("/tmp/comfyui.log").exists():
-            log_txt = Path("/tmp/comfyui.log").read_text(errors="ignore")
+    while time.time() - t0 < timeout_sec:
+        time.sleep(2.0)
+        if log_path and log_path.exists():
+            log_txt = log_path.read_text(errors="ignore")
             if len(log_txt) > last_log_len:
                 new_lines = [
                     l.strip()
@@ -386,18 +414,27 @@ def submit_and_wait(workflow: dict, label: str) -> dict:
                     if any(k in l for k in ["%", "it/s", "s/it", "Prompt executed", "Error", "Exception", "MiniMax", " join match", "BUNNY"])
                 ]
                 if new_lines:
-                    print(f"  [{time.time()-t0:.0f}s] " + " | ".join(new_lines[-2:]), flush=True)
+                    print(f"  [{label} @ {port}][{time.time()-t0:.0f}s] " + " | ".join(new_lines[-2:]), flush=True)
                 last_log_len = len(log_txt)
 
-        hist_raw = urllib.request.urlopen(f"{API_URL}/history/{prompt_id}", timeout=10).read().decode()
-        hist = json.loads(hist_raw)
-        if prompt_id in hist:
-            entry = hist[prompt_id]
-            status = entry.get("status", {})
-            if status.get("status_str") == "error":
-                raise RuntimeError(f"❌ 执行报错 ({label}): {json.dumps(status, ensure_ascii=False)}")
-            print(f"✅ [{label}] 渲染完成！耗时: {time.time() - t0:.1f}s", flush=True)
-            return entry
+        try:
+            hist_raw = urllib.request.urlopen(f"{url}/history/{prompt_id}", timeout=5).read().decode()
+            hist = json.loads(hist_raw)
+            if prompt_id in hist:
+                entry = hist[prompt_id]
+                status = entry.get("status", {})
+                if status.get("status_str") == "error":
+                    raise RuntimeError(f"❌ 执行报错 ({label}) [port={port}]: {json.dumps(status, ensure_ascii=False)}")
+                print(f"✅ [{label}] 渲染完成！耗时: {time.time() - t0:.1f}s", flush=True)
+                return entry
+        except urllib.error.URLError:
+            pass
+    raise TimeoutError(f"❌ [{label}] 执行超时 ({timeout_sec}s)")
+
+
+def submit_and_wait(workflow: dict, label: str, port: int = 8188) -> dict:
+    prompt_id = submit_prompt(workflow, label, port=port)
+    return wait_for_prompt(prompt_id, label, port=port)
 
 
 def stitch_available_segments(prefix: str, out_mp4_name: str, expected_segs: List[int] = [1, 2, 3, 4]) -> Optional[Path]:
@@ -458,6 +495,7 @@ def inject_latent_checkpoints_and_slice(
     prefix: str,
     start_seg: int = 1,
     end_seg: int = 4,
+    prequeue_mode: bool = False,
 ) -> None:
     """Attach H3SaveAVLatent checkpoints (~5MB each on Drive) and optionally slice graph to run only [start_seg..end_seg]."""
     for old_save in ("901", "902", "903", "904"):
@@ -496,8 +534,11 @@ def inject_latent_checkpoints_and_slice(
                         continue
                     wf.pop(str(nid_int), None)
                 wf.pop(f"90{s_drop}", None)
-        elif has_ckpt_nodes and ckpt_path.exists():
-            print(f"⚡ 命中云盘潜变量断点存档: {ckpt_path}，自动跳过前 {prev_s} 段 (耗时 0.05s)！", flush=True)
+        elif has_ckpt_nodes and (ckpt_path.exists() or prequeue_mode):
+            if ckpt_path.exists():
+                print(f"⚡ 命中云盘潜变量断点存档: {ckpt_path}，自动跳过前 {prev_s} 段 (耗时 0.05s)！", flush=True)
+            else:
+                print(f"⚡ [Zero-Idle] 提前挂载上游断点 {ckpt_name} (将在 Seg {prev_s} 潜变量落地后 <50ms 内热唤醒)", flush=True)
             for s_drop in range(1, start_seg):
                 for nid_int in seg_node_ranges[s_drop]:
                     if nid_int in (22, 23, 24):
@@ -519,6 +560,152 @@ def inject_latent_checkpoints_and_slice(
             for nid_int in seg_node_ranges[s_drop]:
                 wf.pop(str(nid_int), None)
             wf.pop(f"90{s_drop}", None)
+
+
+def run_zero_idle_pipeline(
+    base_wf: dict,
+    obj_info: dict,
+    prefix: str,
+    start_s: int,
+    end_s: int,
+    ports: List[int],
+    out_mp4: str,
+) -> None:
+    print(f"\n⚡ ============================================================", flush=True)
+    print(f"⚡ [Zero-Idle Pre-Queue] 启动 G4 满血双流调度 (分镜 {start_s}..{end_s} | 端口: {ports})", flush=True)
+    print(f"⚡ ============================================================", flush=True)
+
+    # 1. Slicing workflows for each segment
+    seg_workflows: Dict[int, dict] = {}
+    for s in range(start_s, end_s + 1):
+        wf_s = copy.deepcopy(base_wf)
+        inject_latent_checkpoints_and_slice(wf_s, obj_info, prefix, start_seg=s, end_seg=s, prequeue_mode=True)
+        seg_workflows[s] = wf_s
+
+    # 2. Pre-stage ALL audio/image inputs for all segments into NVMe SSD upfront
+    print(f"📦 [Zero-Idle] 提前预热分镜 [{start_s}..{end_s}] 全部输入素材至 NVMe SSD (/content/ComfyUI/input)...", flush=True)
+    for s in range(start_s, end_s + 1):
+        sync_inputs_to_local_ssd(seg_workflows[s])
+    print(f"✅ 素材预热完毕！GPU 执行阶段 0 I/O 停顿！", flush=True)
+
+    # 3. Determine dependencies
+    latent_dir = DRIVE_COMFY / "output" / "latents"
+    has_existing_ckpt = lambda prev_s: (latent_dir / f"{prefix}_Seg0{prev_s}_av_latent.pt").exists()
+
+    def get_dependency(s: int) -> Optional[int]:
+        if s <= start_s:
+            return None
+        if SEG_META[s]["ctx"] is None:
+            return None
+        prev_s = s - 1
+        if has_existing_ckpt(prev_s):
+            return None
+        return prev_s
+
+    # 4. Dispatch and monitor loop
+    completed_segs = set()
+    running_tasks: Dict[str, dict] = {}
+    dispatched_segs = set()
+    port_idx = 0
+
+    def dispatch_seg(s: int, target_port: int) -> str:
+        label = f"MiniMax-H3 Seg0{s} ({prefix})"
+        pid = submit_prompt(seg_workflows[s], label=label, port=target_port)
+        running_tasks[pid] = {
+            "seg_id": s,
+            "port": target_port,
+            "start": time.time(),
+            "label": label,
+        }
+        dispatched_segs.add(s)
+        print(f"🚀 [Zero-Idle] 分镜 {s} 已派发至端口 {target_port} | prompt_id={pid} | queue_remaining > 0", flush=True)
+        return pid
+
+    # Dispatch all initial independent segments immediately across available ports
+    for s in range(start_s, end_s + 1):
+        if s not in dispatched_segs and get_dependency(s) is None:
+            target_port = ports[port_idx % len(ports)]
+            port_idx += 1
+            dispatch_seg(s, target_port)
+
+    # High frequency relay loop (< 50ms)
+    t_start = time.time()
+    last_log_print = time.time()
+    last_log_lens: Dict[int, int] = {p: 0 for p in ports}
+
+    while len(completed_segs) < (end_s - start_s + 1):
+        # 1. Poll history for finished prompts
+        for pid, tinfo in list(running_tasks.items()):
+            p = tinfo["port"]
+            s = tinfo["seg_id"]
+            lbl = tinfo["label"]
+            url = f"http://127.0.0.1:{p}"
+            try:
+                hist_raw = urllib.request.urlopen(f"{url}/history/{pid}", timeout=2).read().decode()
+                hist = json.loads(hist_raw)
+                if pid in hist:
+                    entry = hist[pid]
+                    status = entry.get("status", {})
+                    if status.get("status_str") == "error":
+                        raise RuntimeError(f"❌ 分镜 {s} 执行报错 ({lbl}) [port={p}]: {json.dumps(status, ensure_ascii=False)}")
+                    completed_segs.add(s)
+                    dt = time.time() - tinfo["start"]
+                    print(f"✅ [Zero-Idle] 分镜 {s} 渲染完成！[端口 {p}, 耗时: {dt:.1f}s]", flush=True)
+                    del running_tasks[pid]
+            except urllib.error.URLError:
+                pass
+
+        # 2. Check for newly ready latents to fire dependent segments within < 50ms!
+        for s in range(start_s + 1, end_s + 1):
+            if s not in dispatched_segs:
+                dep_s = get_dependency(s)
+                if dep_s is None:
+                    continue
+                ckpt_p1 = latent_dir / f"{prefix}_Seg0{dep_s}_av_latent.pt"
+                ckpt_p2 = LOCAL_COMFY / "output" / "latents" / f"{prefix}_Seg0{dep_s}_av_latent.pt"
+                ckpt_p3 = Path(f"/tmp/{prefix}_Seg0{dep_s}_av_latent.pt")
+
+                latent_landed = (
+                    (ckpt_p1.exists() and ckpt_p1.stat().st_size > 1024)
+                    or (ckpt_p2.exists() and ckpt_p2.stat().st_size > 1024)
+                    or (ckpt_p3.exists() and ckpt_p3.stat().st_size > 1024)
+                    or (dep_s in completed_segs)
+                )
+
+                if latent_landed:
+                    target_port = ports[port_idx % len(ports)]
+                    port_idx += 1
+                    sz = (ckpt_p1.stat().st_size / (1024**2)) if ckpt_p1.exists() else 0.0
+                    print(
+                        f"⚡ [Zero-Idle <50ms Relay] Seg0{dep_s} AV_LATENT 已就位 ({sz:.2f} MB) -> 立即触发 Seg0{s} 提交至端口 {target_port}!",
+                        flush=True,
+                    )
+                    dispatch_seg(s, target_port)
+
+        # 3. Stream periodic log progress
+        if time.time() - last_log_print > 3.0:
+            for p in ports:
+                candidates = [Path(f"/tmp/comfyui_{p}.log"), Path("/tmp/comfyui.log")]
+                lp = next((c for c in candidates if c.exists()), None)
+                if lp:
+                    txt = lp.read_text(errors="ignore")
+                    old_len = last_log_lens.get(p, 0)
+                    if len(txt) > old_len:
+                        new_lines = [
+                            l.strip()
+                            for l in txt[old_len:].splitlines()
+                            if any(k in l for k in ["%", "it/s", "s/it", "Prompt executed", "MiniMax", " join match", "BUNNY"])
+                        ]
+                        if new_lines:
+                            print(f"  [Port {p} @ {time.time()-t_start:.0f}s] " + " | ".join(new_lines[-2:]), flush=True)
+                        last_log_lens[p] = len(txt)
+            last_log_print = time.time()
+
+        # High-frequency sleep: 40ms satisfies < 50ms requirement
+        time.sleep(0.04)
+
+    print(f"🎉 全部分镜 [{start_s}..{end_s}] 零空闲流水线执行完毕！总用时: {time.time() - t_start:.1f}s", flush=True)
+    stitch_available_segments(prefix, out_mp4, expected_segs=list(range(start_s, end_s + 1)))
 
 
 def main() -> None:
@@ -545,13 +732,17 @@ def main() -> None:
     parser.add_argument("--fps", type=float, default=24.0, help="Video frame rate for audio-to-video lip sync (default: 24.0)")
     parser.add_argument("--auto-frame-sync", action="store_true", default=True, help="Auto calculate exact frame count from audio duration: round(audio_duration * fps)")
     parser.add_argument("--snap-17k5", action="store_true", default=False, help="Snap calculated frames to MiniMax-H3 legal F = 17k + 5")
+    parser.add_argument("--prequeue-all", action="store_true", default=False, help="Zero-idle pre-queueing & dual-worker load balancing across ComfyUI instances")
+    parser.add_argument("--ports", default="8188,8189", help="Comma-separated ComfyUI worker ports (default: 8188,8189)")
     args = parser.parse_args()
 
     start_s = args.only_seg if args.only_seg else args.start_seg
     end_s = args.only_seg if args.only_seg else args.end_seg
 
     t_start = time.time()
-    ensure_comfy_running()
+    target_ports = [int(p.strip()) for p in args.ports.split(",") if p.strip()]
+    live_ports = ensure_comfy_running(target_ports)
+    primary_port = live_ports[0]
 
     wf_path = Path(args.workflow)
     if not wf_path.exists():
@@ -563,15 +754,17 @@ def main() -> None:
     prefix = apply_config_and_cli_overrides(wf, args)
     out_mp4 = args.out_mp4 or (json.loads(Path(args.config).read_text(encoding="utf-8")).get("output_mp4") if args.config and Path(args.config).exists() else None) or f"{prefix}_Master.mp4"
 
-    obj_info = json.loads(urllib.request.urlopen(f"{API_URL}/object_info", timeout=15).read().decode())
+    obj_info = json.loads(urllib.request.urlopen(f"http://127.0.0.1:{primary_port}/object_info", timeout=15).read().decode())
     patch_bypass_bunny_if_needed(wf, obj_info)
-    inject_latent_checkpoints_and_slice(wf, obj_info, prefix, start_seg=start_s, end_seg=end_s)
 
-    # Stage only the active LoadImage / LoadAudio files required by the sliced graph
-    sync_inputs_to_local_ssd(wf)
-
-    submit_and_wait(wf, f"MiniMax-H3 Seg[{start_s}..{end_s}] ({prefix})")
-    stitch_available_segments(prefix, out_mp4)
+    if args.prequeue_all:
+        run_zero_idle_pipeline(wf, obj_info, prefix, start_s=start_s, end_s=end_s, ports=live_ports, out_mp4=out_mp4)
+    else:
+        inject_latent_checkpoints_and_slice(wf, obj_info, prefix, start_seg=start_s, end_seg=end_s)
+        # Stage only the active LoadImage / LoadAudio files required by the sliced graph
+        sync_inputs_to_local_ssd(wf)
+        submit_and_wait(wf, f"MiniMax-H3 Seg[{start_s}..{end_s}] ({prefix})", port=primary_port)
+        stitch_available_segments(prefix, out_mp4, expected_segs=list(range(start_s, end_s + 1)))
 
     print(f"🎉 ALL_V25_DONE (总用时 {time.time() - t_start:.1f}s)", flush=True)
 

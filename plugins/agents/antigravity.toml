@@ -6,10 +6,10 @@ kind = "antigravity"
 command = ""
 args_template = ["send-message", "--title", "Director Task", "{conversation_id}", "{prompt}"]
 capabilities = ["expand_micro_acting", "decompose_storyboard", "demand_dispatch", "polish_scene"]
-enabled = true
-priority = 100
+enabled = false
+priority = 40
 os_targets = ["macos", "linux", "windows"]
-description = "Antigravity Agent bridge connecting Web UI & Pipeline to local AI Agent session"
+description = "Paused: local Antigravity quota cooling down; toggle enabled=true when quota resets"
 model = "gemini-4-argon"
 
 [env]

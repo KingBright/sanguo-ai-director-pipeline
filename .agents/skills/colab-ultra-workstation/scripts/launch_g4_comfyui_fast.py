@@ -40,7 +40,7 @@ LOCAL_COMFY = Path("/content/ComfyUI")
 FAST_MODELS = Path("/content/fast_models")
 NODES_BUNDLE_ARCHIVE = DRIVE_COMFY / "custom_nodes_bundle.tar.gz"
 
-# Channel A: pulled via Google Drive v3 API (~150 MB/s, 64 streams)
+# Channel A: pulled via Google Drive v3 API (~150 MB/s, aria2c -x 16 -s 16, 64 streams total)
 DRIVE_CHANNEL_MODELS = [
     ("vae", "minimax_h3_video_vae_fp16.safetensors"),
     ("vae", "minimax_h3_audio_vae_fp32.safetensors"),
@@ -433,7 +433,7 @@ def wire_hybrid_models_dir() -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="G4 Tri-Parallel NVMe Fast Boot Launcher v2.2")
+    parser = argparse.ArgumentParser(description="G4 Tri-Parallel NVMe Fast Boot Launcher v2.5")
     parser.add_argument(
         "--profile",
         choices=["scheme_a", "scheme_b", "all"],
@@ -444,6 +444,24 @@ def main() -> None:
         "--refresh-nodes",
         action="store_true",
         help="Force re-sync custom_nodes from Drive and rebuild custom_nodes_bundle.tar.gz",
+    )
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=2,
+        help="Number of parallel ComfyUI server instances on G4 (default: 2 for 96GB GDDR7 + 188GB DDR5)",
+    )
+    parser.add_argument(
+        "--base-port",
+        type=int,
+        default=8188,
+        help="Base HTTP port for worker instances (default: 8188 -> 8188, 8189, ...)",
+    )
+    parser.add_argument(
+        "--reserve-vram",
+        type=float,
+        default=2.0,
+        help="Reserve VRAM in GB per instance for CUDA Unified Memory spillover protection (default: 2.0)",
     )
     args = parser.parse_args()
 
@@ -459,7 +477,7 @@ def main() -> None:
         drive_script_dst.parent.mkdir(parents=True, exist_ok=True)
         if Path(__file__).resolve() != drive_script_dst.resolve():
             shutil.copy2(__file__, drive_script_dst)
-            print(f"✅ 已自动同步最新 v2.2 启动引擎至云盘: {drive_script_dst}", flush=True)
+            print(f"✅ 已自动同步最新 v2.5 启动引擎至云盘: {drive_script_dst}", flush=True)
     except Exception as exc:
         print(f"⚠️ 同步云盘启动脚本跳过: {exc}", flush=True)
 
@@ -487,7 +505,7 @@ def main() -> None:
 
     wire_hybrid_models_dir()
 
-    print("=== [3/3] 启动 ComfyUI (--highvram --disable-mmap --fast) + Cloudflare 隧道 ===", flush=True)
+    print(f"=== [3/3] 启动 {args.workers} 个并发 ComfyUI 实例 (端口 {args.base_port}..{args.base_port + args.workers - 1}) + Cloudflare 隧道 ===", flush=True)
     if not Path("/usr/local/bin/cloudflared").exists():
         sh(
             "wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 "
@@ -497,33 +515,59 @@ def main() -> None:
     sh("pkill -f 'python3 main.py' || true")
     sh("pkill -f 'cloudflared tunnel' || true")
 
-    comfy_log = open("/tmp/comfyui.log", "w")
-    subprocess.Popen(
-        [
+    worker_ports = [args.base_port + i for i in range(args.workers)]
+    worker_procs = []
+
+    launch_env = os.environ.copy()
+    launch_env["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+    launch_env["CUDA_MODULE_LOADING"] = "LAZY"
+
+    for i, port in enumerate(worker_ports):
+        log_file = Path(f"/tmp/comfyui_{port}.log")
+        comfy_log = open(log_file, "w")
+        cmd = [
             "python3",
             "main.py",
             "--listen",
             "127.0.0.1",
             "--port",
-            "8188",
+            str(port),
             "--highvram",
             "--disable-mmap",
             "--fast",
-        ],
-        cwd=str(LOCAL_COMFY),
-        stdout=comfy_log,
-        stderr=subprocess.STDOUT,
-    )
+            "--reserve-vram",
+            str(args.reserve_vram),
+        ]
+        p = subprocess.Popen(
+            cmd,
+            cwd=str(LOCAL_COMFY),
+            stdout=comfy_log,
+            stderr=subprocess.STDOUT,
+            env=launch_env,
+        )
+        worker_procs.append((port, p, log_file))
+        if port == args.base_port:
+            main_sym = Path("/tmp/comfyui.log")
+            if main_sym.is_symlink() or main_sym.exists():
+                try:
+                    main_sym.unlink()
+                except Exception:
+                    pass
+            try:
+                os.symlink(log_file, main_sym)
+            except Exception:
+                pass
+        print(f"  🚀 [Worker {i+1}/{args.workers}] 启动 ComfyUI 实例: 127.0.0.1:{port} (--reserve-vram {args.reserve_vram}G, 日志: {log_file})", flush=True)
 
     cf_log = open("/tmp/cloudflared.log", "w")
     subprocess.Popen(
-        ["/usr/local/bin/cloudflared", "tunnel", "--url", "http://127.0.0.1:8188"],
+        ["/usr/local/bin/cloudflared", "tunnel", "--url", f"http://127.0.0.1:{args.base_port}"],
         stdout=cf_log,
         stderr=subprocess.STDOUT,
     )
 
     cf_url = None
-    comfy_ready = False
+    ready_workers = set()
     for _ in range(90):
         time.sleep(1.5)
         if not cf_url and Path("/tmp/cloudflared.log").exists():
@@ -531,18 +575,23 @@ def main() -> None:
             m = re.search(r"https://[a-zA-Z0-9-]+\.trycloudflare\.com", txt)
             if m:
                 cf_url = m.group(0)
-        if not comfy_ready and Path("/tmp/comfyui.log").exists():
-            if "To see the GUI go to:" in Path("/tmp/comfyui.log").read_text(errors="ignore"):
-                comfy_ready = True
-        if cf_url and comfy_ready:
+
+        for port, _, log_file in worker_procs:
+            if port not in ready_workers and log_file.exists():
+                if "To see the GUI go to:" in log_file.read_text(errors="ignore"):
+                    ready_workers.add(port)
+                    print(f"  ⚡ [Worker 127.0.0.1:{port}] 就绪 (Stage-1 编码与 Stage-2 采样重叠执行保护就位)！", flush=True)
+
+        if cf_url and len(ready_workers) == len(worker_ports):
             break
 
     print("\n" + "=" * 68, flush=True)
     print(
-        f"🎉 ComfyUI v2.1 (G4 96GB Blackwell 三路全并发极速模式) 已就绪: {comfy_ready} | 冷启动总耗时: {time.time() - t_boot:.1f}s",
+        f"🎉 ComfyUI v2.5 (G4 96GB Blackwell {args.workers}-Worker 并发满血架构) 已就绪: {len(ready_workers)}/{len(worker_ports)} 实例 | 冷启动总耗时: {time.time() - t_boot:.1f}s",
         flush=True,
     )
-    print(f"🌐 您的专属 ComfyUI 网页工作台地址: {cf_url}", flush=True)
+    print(f"📡 本地监听端口: {', '.join(str(p) for p in worker_ports)} (Stage-1 编码/解码与 Stage-2 DiT 采样双流并发)", flush=True)
+    print(f"🌐 主工作台 Cloudflare 地址: {cf_url}", flush=True)
     print("=" * 68, flush=True)
 
 

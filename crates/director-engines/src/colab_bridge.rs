@@ -62,6 +62,27 @@ impl ColabBridgeRunner {
         Ok(stdout)
     }
 
+    /// Invokes the `colab_av_bridge.py` script with parallel worker and session pool support.
+    pub async fn run_av_bridge_parallel(
+        &self,
+        parallel_workers: usize,
+        session_pool: Option<&[&str]>,
+        extra_args: &[&str],
+    ) -> anyhow::Result<String> {
+        let workers_str = parallel_workers.to_string();
+        let mut args: Vec<&str> = vec!["--parallel-workers", &workers_str];
+        let pool_str;
+        if let Some(pool) = session_pool {
+            if !pool.is_empty() {
+                pool_str = pool.join(",");
+                args.push("--session-pool");
+                args.push(&pool_str);
+            }
+        }
+        args.extend_from_slice(extra_args);
+        self.run_av_bridge(&args).await
+    }
+
     /// Invokes the `colab_tts_client.py` script to synthesize speech with natural emotion.
     pub async fn run_tts_client(
         &self,

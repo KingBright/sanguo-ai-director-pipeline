@@ -197,6 +197,7 @@ fn test_agent_plugin_registry_builtin_and_load() {
     let plugins = registry.list_plugins();
 
     // Verify all core builtin adapters are registered
+    assert!(registry.get_plugin("deepseek-harness").is_some(), "DeepSeek Harness plugin missing");
     assert!(registry.get_plugin("antigravity").is_some(), "Antigravity plugin missing");
     assert!(registry.get_plugin("codex").is_some(), "Codex plugin missing");
     assert!(registry.get_plugin("claude-code").is_some(), "Claude Code plugin missing");
@@ -204,8 +205,9 @@ fn test_agent_plugin_registry_builtin_and_load() {
     assert!(registry.get_plugin("colab-operator").is_some(), "Colab operator missing");
     assert!(registry.get_plugin("openai-http").is_some(), "OpenAI HTTP missing");
 
-    // Test priority sorting (antigravity=100 > codex=90 > claude-code=85 > gemini-cli=80)
+    // Test priority sorting (deepseek-harness=110 > codex=90 > claude-code=85 > gemini-cli=80 > antigravity=40)
     assert!(plugins[0].priority >= plugins[1].priority);
+    assert_eq!(plugins[0].id, "deepseek-harness");
 
     // Test loading sample manifests from workspace plugins/agents/
     let ws_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))

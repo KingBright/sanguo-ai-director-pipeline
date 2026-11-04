@@ -778,6 +778,84 @@ pub const INDEX_HTML: &str = r##"<!DOCTYPE html>
           <div id="queueQuotaCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <!-- Cards populated dynamically by renderQuotaDashboard -->
           </div>
+
+          <!-- Multi-Lane High-Concurrency Dispatcher Status & Tuning Panel -->
+          <div class="p-4 rounded-xl bg-zinc-900/90 border border-white/[0.08] space-y-3.5 shadow-md">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/[0.06] pb-2.5">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span class="text-xs font-semibold text-zinc-200">全通道高并发信号量调度池 (Multi-Lane Concurrency Pool)</span>
+                <span class="text-[10px] text-zinc-500 font-mono hidden md:inline">拒绝串行排队 · 满载压榨云端与显卡算力</span>
+              </div>
+              <button onclick="saveConcurrencyConfig()" class="px-2.5 py-1 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-medium transition flex items-center gap-1 shadow-sm">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                <span>保存并发配置</span>
+              </button>
+            </div>
+
+            <!-- Live Lane Badges Strip -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 font-mono text-xs">
+              <div class="p-2.5 rounded-lg bg-zinc-950/70 border border-amber-500/20 space-y-1">
+                <div class="text-[10px] text-amber-400 font-medium">Flow 视频并发槽</div>
+                <div class="flex items-baseline justify-between">
+                  <span id="laneBadgeFlow" class="text-sm font-bold text-amber-300">0 / 8 槽</span>
+                  <span class="text-[10px] text-zinc-500">云端批处理</span>
+                </div>
+              </div>
+              <div class="p-2.5 rounded-lg bg-zinc-950/70 border border-sky-500/20 space-y-1">
+                <div class="text-[10px] text-sky-400 font-medium">Colab G4 并发流</div>
+                <div class="flex items-baseline justify-between">
+                  <span id="laneBadgeColab" class="text-sm font-bold text-sky-300">0 / 4 槽</span>
+                  <span class="text-[10px] text-zinc-500">单卡多流+多实例</span>
+                </div>
+              </div>
+              <div class="p-2.5 rounded-lg bg-zinc-950/70 border border-indigo-500/20 space-y-1">
+                <div class="text-[10px] text-indigo-400 font-medium">Sume API 并发槽</div>
+                <div class="flex items-baseline justify-between">
+                  <span id="laneBadgeSume" class="text-sm font-bold text-indigo-300">0 / 8 槽</span>
+                  <span class="text-[10px] text-zinc-500">多模态路由</span>
+                </div>
+              </div>
+              <div class="p-2.5 rounded-lg bg-zinc-950/70 border border-purple-500/20 space-y-1">
+                <div class="text-[10px] text-purple-400 font-medium">TTS/Music 并发槽</div>
+                <div class="flex items-baseline justify-between">
+                  <span id="laneBadgeAudio" class="text-sm font-bold text-purple-300">0 / 6 槽</span>
+                  <span class="text-[10px] text-zinc-500">语音与配乐</span>
+                </div>
+              </div>
+              <div class="p-2.5 rounded-lg bg-zinc-950/70 border border-emerald-500/20 space-y-1 col-span-2 sm:col-span-1">
+                <div class="text-[10px] text-emerald-400 font-medium">Local ROCm 预取槽</div>
+                <div class="flex items-baseline justify-between">
+                  <span id="laneBadgeRocm" class="text-sm font-bold text-emerald-300">0 / 2 槽</span>
+                  <span class="text-[10px] text-zinc-500">双流重叠预取</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tuning Form Inputs -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 text-xs font-mono pt-1">
+              <div class="space-y-1">
+                <label class="text-[10px] text-zinc-400">Flow 并发上限</label>
+                <input id="cfgFlowConcurrency" type="number" min="1" max="32" value="8" class="w-full px-2.5 py-1.5 field-input text-xs" />
+              </div>
+              <div class="space-y-1">
+                <label class="text-[10px] text-zinc-400">Colab G4 并发流</label>
+                <input id="cfgColabConcurrency" type="number" min="1" max="16" value="4" class="w-full px-2.5 py-1.5 field-input text-xs" />
+              </div>
+              <div class="space-y-1">
+                <label class="text-[10px] text-zinc-400">Sume API 并发上限</label>
+                <input id="cfgSumeConcurrency" type="number" min="1" max="32" value="8" class="w-full px-2.5 py-1.5 field-input text-xs" />
+              </div>
+              <div class="space-y-1">
+                <label class="text-[10px] text-zinc-400">TTS/配乐并发上限</label>
+                <input id="cfgAudioConcurrency" type="number" min="1" max="16" value="6" class="w-full px-2.5 py-1.5 field-input text-xs" />
+              </div>
+              <div class="space-y-1 col-span-2 sm:col-span-1">
+                <label class="text-[10px] text-zinc-400">Local ROCm 预取流</label>
+                <input id="cfgRocmConcurrency" type="number" min="1" max="8" value="2" class="w-full px-2.5 py-1.5 field-input text-xs" />
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
@@ -1517,6 +1595,65 @@ pub const INDEX_HTML: &str = r##"<!DOCTYPE html>
       if (modalCards) modalCards.innerHTML = html;
       const updatedEl = document.getElementById('queueQuotaUpdated');
       if (updatedEl && q.updated_at) updatedEl.textContent = `更新时间: ${q.updated_at}`;
+
+      if (q.lane_utilization) {
+        const u = q.lane_utilization;
+        const bFlow = document.getElementById('laneBadgeFlow');
+        if (bFlow) bFlow.textContent = `${u.flow_active} / ${u.flow_max} 槽`;
+        const bColab = document.getElementById('laneBadgeColab');
+        if (bColab) bColab.textContent = `${u.colab_g4_active} / ${u.colab_g4_max} 槽`;
+        const bSume = document.getElementById('laneBadgeSume');
+        if (bSume) bSume.textContent = `${u.sume_active} / ${u.sume_max} 槽`;
+        const bAudio = document.getElementById('laneBadgeAudio');
+        if (bAudio) bAudio.textContent = `${u.audio_tts_active} / ${u.audio_tts_max} 槽`;
+        const bRocm = document.getElementById('laneBadgeRocm');
+        if (bRocm) bRocm.textContent = `${u.local_rocm_active} / ${u.local_rocm_max} 槽`;
+      }
+
+      if (q.concurrency_config) {
+        const c = q.concurrency_config;
+        const iFlow = document.getElementById('cfgFlowConcurrency');
+        if (iFlow && !iFlow.matches(':focus')) iFlow.value = c.flow_concurrency;
+        const iColab = document.getElementById('cfgColabConcurrency');
+        if (iColab && !iColab.matches(':focus')) iColab.value = c.colab_g4_concurrency;
+        const iSume = document.getElementById('cfgSumeConcurrency');
+        if (iSume && !iSume.matches(':focus')) iSume.value = c.sume_concurrency;
+        const iAudio = document.getElementById('cfgAudioConcurrency');
+        if (iAudio && !iAudio.matches(':focus')) iAudio.value = c.audio_tts_concurrency;
+        const iRocm = document.getElementById('cfgRocmConcurrency');
+        if (iRocm && !iRocm.matches(':focus')) iRocm.value = c.local_rocm_concurrency;
+      }
+    }
+
+    async function saveConcurrencyConfig() {
+      const flow_concurrency = parseInt(document.getElementById('cfgFlowConcurrency').value) || 8;
+      const colab_g4_concurrency = parseInt(document.getElementById('cfgColabConcurrency').value) || 4;
+      const sume_concurrency = parseInt(document.getElementById('cfgSumeConcurrency').value) || 8;
+      const audio_tts_concurrency = parseInt(document.getElementById('cfgAudioConcurrency').value) || 6;
+      const local_rocm_concurrency = parseInt(document.getElementById('cfgRocmConcurrency').value) || 2;
+
+      try {
+        const res = await fetch('/api/v1/queue/concurrency', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            flow_concurrency,
+            colab_g4_concurrency,
+            sume_concurrency,
+            audio_tts_concurrency,
+            local_rocm_concurrency
+          })
+        });
+        const data = await res.json();
+        if (res.ok && data.ok) {
+          showToast('✅ 全通道并发调度池配置已保存生效！');
+          await refreshQuotaSummary();
+        } else {
+          showToast('保存并发配置失败', 'error');
+        }
+      } catch (e) {
+        showToast('保存配置异常', 'error');
+      }
     }
 
     async function refreshQuotaSummary() {
