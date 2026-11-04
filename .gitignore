@@ -53,3 +53,6 @@ tmp/
 # OS metadata
 .DS_Store
 Thumbs.db
+
+.director_server.pid
+.director_server.log
