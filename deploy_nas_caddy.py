@@ -61,11 +61,11 @@ if ref["name"] == "octendra.hackerlife.fun":
 existing_studio = [r for r in records if r["name"] == "studio.hackerlife.fun"]
 if not existing_studio:
     cf_api(f"zones/{zone_id}/dns_records", desired, method="POST")
-    print(f"âœ?Created DNS {desired['type']} studio.hackerlife.fun -> {desired['content']} (proxied={desired['proxied']})")
+    print(f"âœ… Created DNS {desired['type']} studio.hackerlife.fun -> {desired['content']} (proxied={desired['proxied']})")
 else:
     rec_id = existing_studio[0]["id"]
     cf_api(f"zones/{zone_id}/dns_records/{rec_id}", desired, method="PUT")
-    print(f"âœ?Updated DNS {desired['type']} studio.hackerlife.fun -> {desired['content']} (proxied={desired['proxied']})")
+    print(f"âœ… Updated DNS {desired['type']} studio.hackerlife.fun -> {desired['content']} (proxied={desired['proxied']})")
 
 # Write /etc/caddy/sites/sanguo-studio.caddy
 site_path = pathlib.Path("/etc/caddy/sites/sanguo-studio.caddy")
@@ -73,7 +73,10 @@ site_content = """# Sanguo Director Studio (Rust L1-L5 Family AI Video Productio
 studio.hackerlife.fun {
     import cloudflare_dns
     encode zstd gzip
-    reverse_proxy 192.168.2.222:18443 {
+    reverse_proxy 192.168.2.223:18443 192.168.2.222:18443 192.168.2.156:18443 {
+        lb_policy first
+        lb_try_duration 3s
+        fail_duration 10s
         flush_interval -1
         header_up Host {host}
         header_up X-Real-IP {remote_host}
@@ -84,13 +87,13 @@ studio.hackerlife.fun {
 """
 site_path.write_text(site_content)
 site_path.chmod(0o644)
-print(f"âœ?Wrote {site_path}")
+print(f"âœ… Wrote {site_path}")
 
 # Validate and reload Caddy
 caddy_bin = "/usr/local/bin/caddy" if pathlib.Path("/usr/local/bin/caddy").exists() else "caddy"
 subprocess.run([caddy_bin, "validate", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"], check=True)
 subprocess.run(["systemctl", "reload", "caddy"], check=True)
-print("âœ?Caddy validated and reloaded successfully!")
+print("âœ… Caddy validated and reloaded successfully!")
 '''
 
 def main():
