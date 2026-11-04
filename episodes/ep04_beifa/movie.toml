@@ -2,7 +2,7 @@
 schema_version = 1
 title = "第4集：诸葛北伐·出师表与祁山军议"
 project = "sanguo_ep04_beifa"
-output_dir = "C:/Users/Liang/Downloads/sanguo/output/raw_clips/ep04_beifa"
+output_dir = "output/raw_clips/ep04_beifa"
 
 [style]
 look = "cinematic, 8k film grain, photorealistic, dramatic Rembrandt chiaroscuro lighting"
@@ -90,6 +90,17 @@ shot_count = 3
 trim_end_sec = 0.15
 foley_cue = "Howling mountain wind, snapping silk war banners, marching iron armor and war drums"
 bgm_mood = "Epic Three Kingdoms Northern Expedition orchestral war drums and guqin"
+facial_progression = "commanding Chancellor's noble profile, sword eyebrows poised under GuanJin, eyes burning with dedication, jaw steady"
+prop_interaction = "fingers resting lightly on ceremonial jade tally at waist"
+listener_reaction = "thousands of marching spearmen advance in lockstep, chests heaving in cold mist"
+env_micro_physics = "mountain wind whipping crimson silk banners, freezing breath plumes rising from infantry ranks, frost on timber watchtowers"
+sub_beat_emotions = ["solemn_resolve:0.40", "historical_grandeur:0.75", "imperial_call_to_arms:0.90"]
+micro_beats = [
+    "During 00:00.000–00:01.100 (Beat 1: Subtext & Preparatory Airlock) — Dawn light crests snowy Qinling ridges, ranks of bronze halberds held silent and motionless, wind howling through silk banners.",
+    "During 00:01.100–00:02.425 (Beat 2: Opening Delivery & Micro-Expression Shift) — War drums rumble across the valley, Chancellor's majestic voiceover resonates across mountain passes.",
+    "During 00:02.425–00:03.200 (Beat 3: Climax Accent & Active Listener Reaction) — Spearmen advance in thunderous unison, armor plates clinking in rhythm, massive 'HAN' flag snapping forward.",
+    "During 00:03.200–00:03.750 (Beat 4: Latent Relay & Environmental Tail Anchor) — Mountain fog rolls over stone battlements, breath mist drifting in dawn rays, monumental cinematic scale."
+]
 
 [[scenes]]
 id = "ep04_02_ziwu_debate"
@@ -115,6 +126,17 @@ shot_count = 4
 trim_end_sec = 0.15
 foley_cue = "Quiet command tent interior, clink of bronze scale armor, hand striking wooden sand table edge"
 bgm_mood = "Tense military council strings and low war drum pulse"
+facial_progression = "Wei Yan's glabella knits fiercely with tactical hunger, nostrils flare with aggressive inhalation, jaw masseter contracts as he snaps his iron bracer"
+prop_interaction = "iron gauntlet slaps down on wooden edge of sand table with tactile resonance, finger stabbing Ziwu Valley contour"
+listener_reaction = "Chancellor Zhuge Liang listens in quiet contemplation, crane fan resting motionless across forearm, eyes discerning risks"
+env_micro_physics = "flickering oil torch flame casting dancing orange chiaroscuro shadows across clay sand table, fine dust drifting above wooden rafters"
+sub_beat_emotions = ["tactical_urgency:0.55", "bold_gambit:0.80", "commanding_conviction:0.90"]
+micro_beats = [
+    "During 00:00.000–00:01.100 (Beat 1: Subtext & Preparatory Airlock) — Wei Yan steps up to sand table, gauntlets clenched, staring fixedly at mountain pass, lips closed under heavy mustache.",
+    "During 00:01.100–00:02.425 (Beat 2: Opening Delivery & Micro-Expression Shift) — Upper torso lunges forward, iron bracer smacks sand table edge, voice erupting with bold tactical petition.",
+    "During 00:02.425–00:03.200 (Beat 3: Climax Accent & Active Listener Reaction) — Gauntlet finger drives into Ziwu pass representation; Chancellor Zhuge Liang narrows eyes in deep calculation, feather fan unmoving.",
+    "During 00:03.200–00:03.750 (Beat 4: Latent Relay & Environmental Tail Anchor) — Torchlight flickers on iron breastplate, heavy breathing steadies, tension crackling in silent tent."
+]
 
 [[scenes]]
 id = "ep04_03_chushi_vision"
@@ -140,3 +162,14 @@ shot_count = 4
 trim_end_sec = 0.15
 foley_cue = "Soft crackle of oil candle flame, gentle rustle of bamboo scroll and feather fan"
 bgm_mood = "Solemn emotional guqin and warm orchestral swell"
+facial_progression = "Zhuge Liang's tired squinting brow glabella relaxes completely, eyes widening in crystal clarity through convex lens, soft compassionate smile touches lips"
+prop_interaction = "fingers delicately adjust brass temples of eyeglasses onto nose bridge, holding bamboo slip closer"
+listener_reaction = "GuYuan steps back respectfully with clasped hands, watching historical chancellor with reverent emotional breath"
+env_micro_physics = "candle wick flickering gently in brass saucer, warm amber light glinting through lens curvature, subtle incense smoke curling upward"
+sub_beat_emotions = ["weary_strain:0.35", "revelatory_clarity:0.75", "sublime_triumph:0.90"]
+micro_beats = [
+    "During 00:00.000–00:01.100 (Beat 1: Subtext & Preparatory Airlock) — Chancellor squints at bamboo scroll held far out, weary eye fatigue visible, candlelight trembling on ink, lips closed.",
+    "During 00:01.100–00:02.425 (Beat 2: Opening Delivery & Micro-Expression Shift) — Puts on convex glasses, brow glabella unfurls in instant relief, gentle smile dawning with crisp delivery.",
+    "During 00:02.425–00:03.200 (Beat 3: Climax Accent & Active Listener Reaction) — Hand lifts feather fan in grand sweeping gesture; GuYuan bows in silent awe, candle reflections shining in lenses.",
+    "During 00:03.200–00:03.750 (Beat 4: Latent Relay & Environmental Tail Anchor) — Clear gaze fixes on distant map of Chang'an, warm tungsten glow bathing white crane robes, profound historical destiny."
+]

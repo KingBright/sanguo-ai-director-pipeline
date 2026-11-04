@@ -1,0 +1,16 @@
+# Google Antigravity & DeepSeek Harness AgentAPI Bridge Plugin Manifest
+id = "antigravity"
+name = "Google Antigravity Agent (AgentAPI / DSH)"
+kind = "antigravity"
+# Set custom command or leave empty to allow auto-discovery across macOS/Linux/Windows
+command = ""
+args_template = ["send-message", "--title", "Director Task", "{conversation_id}", "{prompt}"]
+capabilities = ["expand_micro_acting", "decompose_storyboard", "demand_dispatch", "polish_scene"]
+enabled = true
+priority = 100
+os_targets = ["macos", "linux", "windows"]
+description = "Antigravity Agent bridge connecting Web UI & Pipeline to local AI Agent session"
+model = "gemini-4-argon"
+
+[env]
+# ANTIGRAVITY_LOG = "debug"

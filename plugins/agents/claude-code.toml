@@ -1,0 +1,15 @@
+# Anthropic Claude Code Agent Plugin Manifest
+id = "claude-code"
+name = "Anthropic Claude Code Agent"
+kind = "claude_code"
+command = "claude"
+args_template = ["-p", "{prompt}"]
+capabilities = ["expand_micro_acting", "decompose_storyboard", "demand_dispatch", "polish_scene"]
+enabled = true
+priority = 85
+os_targets = ["macos", "linux", "windows"]
+description = "Anthropic Claude Code CLI non-interactive task runner"
+model = "claude-3-7-sonnet"
+
+[env]
+# ANTHROPIC_LOG = "info"

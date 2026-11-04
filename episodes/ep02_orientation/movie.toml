@@ -2,7 +2,7 @@
 schema_version = 1
 title = "第2集：栈道辨时·急赴祁山"
 project = "sanguo_ep02_orientation"
-output_dir = "C:/Users/Liang/Downloads/sanguo/output/raw_clips/ep02_orientation"
+output_dir = "output/raw_clips/ep02_orientation"
 
 [style]
 look = "cinematic, 8k film grain, photorealistic, dramatic Rembrandt chiaroscuro lighting"
@@ -68,6 +68,17 @@ camera_motion = "28mm wide handheld tracking along perilous cliffside mud trail"
 style_variant = "tense"
 speaker = "Soldier"
 line = "拉不住了！车轴断了，粮车要坠崖了！"
+facial_progression = "exhausted soldiers' brow glabella contorts with strain, lower eyelids squint against driving rain, jaw masseter clenches desperately"
+prop_interaction = "calloused wet hands gripping soaked hemp ropes with whitening knuckles"
+listener_reaction = "straining comrades shout with neck tendons bulging as mud shifts beneath their straw sandals"
+env_micro_physics = "driving cold mountain rain droplets splashing off muddy wood, breath mist pluming in freezing mountain air, gravel trickling over cliff edge"
+sub_beat_emotions = ["urgent_alarm:0.40", "strain_struggle:0.75", "desperate_shout:0.90"]
+micro_beats = [
+    "During 00:00.000–00:01.100 (Beat 1: Subtext & Preparatory Airlock) — Soldiers heave with locked gazes, wet leather straps straining under dead weight, lips closed in agony.",
+    "During 00:01.100–00:02.425 (Beat 2: Opening Delivery & Micro-Expression Shift) — Wood splinters with loud crack, lead soldier gasps for air with wide pupils, shouting desperate alarm.",
+    "During 00:02.425–00:03.200 (Beat 3: Climax Accent & Active Listener Reaction) — Cart wheel tilts over precipice, comrades dig heels into mud, masseter muscles bulging under strain.",
+    "During 00:03.200–00:03.750 (Beat 4: Latent Relay & Environmental Tail Anchor) — Mud cascades into gorge, freezing breath mist clouds camera lens, rope fibers fraying under tension."
+]
 
 [[scenes]]
 id = "ep02_02_officer_despair"
@@ -87,6 +98,17 @@ characters = ["OfficerWang"]
 style_variant = "tense"
 speaker = "OfficerWang"
 line = "山道塌陷，粮车坠崖！误了祁山大营军期，丞相军法如山，你我皆要斩首！"
+facial_progression = "forehead veins throb, brow furrow deepens, lower eyelids widen in panic, jaw snaps shut on word delivery"
+prop_interaction = "clenched fist gripping wrapped sword hilt, chopping sword pommel into pine beam with sharp tactile impact"
+listener_reaction = "subordinate soldiers flinch with hunched shoulders, averting gaze in dread"
+env_micro_physics = "rain droplets flying off sword blade, breath mist bursting from mouth with each spoken word, mud splattering"
+sub_beat_emotions = ["furious_outburst:0.50", "pause:300ms", "dread_of_execution:0.85"]
+micro_beats = [
+    "During 00:00.000–00:01.100 (Beat 1: Subtext & Preparatory Airlock) — OfficerWang glares at tilted cart, chest expanding with rapid heavy breath, jaw tightened, lips sealed.",
+    "During 00:01.100–00:02.425 (Beat 2: Opening Delivery & Micro-Expression Shift) — Upper torso lunges forward, sword hilt drawn, shouting military law consequence with razor articulation.",
+    "During 00:02.425–00:03.200 (Beat 3: Climax Accent & Active Listener Reaction) — Blade chops into wood post with tactile vibration; soldiers cringe and avert eyes in mortal dread.",
+    "During 00:03.200–00:03.750 (Beat 4: Latent Relay & Environmental Tail Anchor) — Cold rain washes over steely sword edge, chest panting steadily, eyes burning with desperate resolution."
+]
 
 [[scenes]]
 id = "ep02_03_guyuan_leverage"
@@ -106,6 +128,17 @@ characters = ["GuYuan"]
 style_variant = "tense"
 speaker = "GuYuan"
 line = "慌什么！三人一组砍巨木作支点，藤索绕树作动滑轮，听我口令同时发力！"
+facial_progression = "composed eye-line shifts sharply assessing the incline, brow glabella relaxes from tension into analytical focus, jaw sets firmly with authoritative command"
+prop_interaction = "left hand holds crane feather fan steady across chest, right hand extends gesturing dynamic pulley lever geometry"
+listener_reaction = "panicked logistics officer @OfficerWang pauses sword mid-air, jaw dropping in sudden disbelief"
+env_micro_physics = "mountain mist swirling around white crane robe hem, light pine needle spray, subtle breath mist"
+sub_beat_emotions = ["calm_rebuke:0.35", "analytical_instruction:0.65", "commanding_rally:0.80"]
+micro_beats = [
+    "During 00:00.000–00:01.100 (Beat 1: Subtext & Preparatory Airlock) — GuYuan steps from fog, eye-line surveying terrain angle, feather fan resting composedly against chest, lips closed.",
+    "During 00:01.100–00:02.425 (Beat 2: Opening Delivery & Micro-Expression Shift) — Gestures with authoritative clarity, posture tall and grounded, projecting calm physics directions in crisp Mandarin.",
+    "During 00:02.425–00:03.200 (Beat 3: Climax Accent & Active Listener Reaction) — Fan sweeps forward indicating the fulcrum; soldiers snap to attention, energized by sudden scientific clarity.",
+    "During 00:03.200–00:03.750 (Beat 4: Latent Relay & Environmental Tail Anchor) — Mist curls past crane embroidery, eyeglasses catching clean ambient light, steady breath rhythm."
+]
 
 [[scenes]]
 id = "ep02_04_cart_rescued"
@@ -125,6 +158,17 @@ characters = ["GuYuan", "OfficerWang"]
 style_variant = "epic"
 speaker = "OfficerWang"
 line = "对岸魏军暗哨竟被先生目中寒光惊退！先生身披鹤氅，莫非是天降神人？！"
+facial_progression = "calm demeanor gives way to piercing vigilance behind glasses, lower eyelids tighten scanning opposite ridge, mouth remains firmly closed"
+prop_interaction = "feather fan held at rest against hip, hands still and poised"
+listener_reaction = "OfficerWang drops to one knee with knuckles pressed together in awe, chest heaving"
+env_micro_physics = "shaft of golden sun piercing mountain mist, glinting twin refractions through convex glass, dust settling on stone road"
+sub_beat_emotions = ["relieved_triumph:0.40", "reverent_awe:0.75", "spiritual_shock:0.90"]
+micro_beats = [
+    "During 00:00.000–00:01.100 (Beat 1: Subtext & Preparatory Airlock) — Cart locks onto stone foundation, GuYuan stands poised, sunlight glinting off optical glass lenses, lips closed.",
+    "During 00:01.100–00:02.425 (Beat 2: Opening Delivery & Micro-Expression Shift) — OfficerWang falls to one knee, looking up with tremulous reverent gaze, delivering spoken awe.",
+    "During 00:02.425–00:03.200 (Beat 3: Climax Accent & Active Listener Reaction) — Twin optical reflections flash across gorge; distant enemy scouts stumble backward in panic.",
+    "During 00:03.200–00:03.750 (Beat 4: Latent Relay & Environmental Tail Anchor) — Sunlight bathes white crane robes, lens flare gently fades into mountain mist, silent grandeur."
+]
 
 [[scenes]]
 id = "ep02_05_bamboo_slip_year"
@@ -144,6 +188,17 @@ characters = ["GuYuan"]
 style_variant = "tense"
 speaker = "GuYuan"
 line = "建兴六年春……督运汉中粮料，发祁山中军？！"
+facial_progression = "pupils dilate sharply behind convex lens, eyebrows rise in shock, lower lip parts in silent realization"
+prop_interaction = "fingers trembling slightly as thumb brushes over clerical ink strokes on aged bamboo slip"
+listener_reaction = "background rain sounds hush into deafening silence as temporal reality dawns"
+env_micro_physics = "droplet of sweat dripping from hairline onto bamboo edge, optical refraction through glass curvature, dust motes"
+sub_beat_emotions = ["hesitant_whisper:0.35", "pause:400ms", "overwhelming_shock:0.90"]
+micro_beats = [
+    "During 00:00.000–00:01.100 (Beat 1: Subtext & Preparatory Airlock) — Thumb caresses dry bamboo string binding, breath held in suspended silence, eyes scanning clerical ink strokes.",
+    "During 00:01.100–00:02.425 (Beat 2: Opening Delivery & Micro-Expression Shift) — Convex lens edge magnifies characters '建兴六年', low voice trembles in disbelieving whisper.",
+    "During 00:02.425–00:03.200 (Beat 3: Climax Accent & Active Listener Reaction) — Realization strikes like thunder, pulse thumping visibly at throat tendon, knuckles whitening on bamboo.",
+    "During 00:03.200–00:03.750 (Beat 4: Latent Relay & Environmental Tail Anchor) — Rain drop hits edge of bamboo slip, lens reflects gloomy gray sky, deep temporal chills."
+]
 
 [[scenes]]
 id = "ep02_06_countdown_alarm"
@@ -163,3 +218,14 @@ characters = ["GuYuan"]
 style_variant = "epic"
 speaker = "GuYuan"
 line = "建兴六年春！张郃五万铁骑已出关中，马谡马上就要去守街亭了！快备快马，带我见丞相！"
+facial_progression = "brow glabella deeply furrowed, jaw masseter clamped tight in emergency resolve, piercing eye-line locked forward"
+prop_interaction = "hands roll bamboo slip with sharp snap and thrust it into inner robe sash, gripping fan handle tightly"
+listener_reaction = "OfficerWang scrambles to his feet, eyes wide with adrenaline, saluting sharply"
+env_micro_physics = "gale-force wind whipping cloak collar, red war banners snapping in freezing air, mist racing over jagged peaks"
+sub_beat_emotions = ["alarm_realization:0.60", "urgent_command:0.85", "resolute_determination:0.95"]
+micro_beats = [
+    "During 00:00.000–00:01.100 (Beat 1: Subtext & Preparatory Airlock) — GuYuan stares ahead as historical timeline clicks together, deep chest inhalation, jaw setting like iron.",
+    "During 00:01.100–00:02.425 (Beat 2: Opening Delivery & Micro-Expression Shift) — Torso straightens with sudden fierce authority, voice booming across cliff trail, ordering urgent mobilization.",
+    "During 00:02.425–00:03.200 (Beat 3: Climax Accent & Active Listener Reaction) — Bamboo slip stowed swiftly, OfficerWang and guards spring to their feet, shouting allegiance.",
+    "During 00:03.200–00:03.750 (Beat 4: Latent Relay & Environmental Tail Anchor) — Camera ascends into freezing clouds over Qishan fortress, war banners billowing in tempest wind."
+]

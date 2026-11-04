@@ -5,6 +5,7 @@ use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 use tokio::process::Command;
 
 use director_core::{
+    agent_plugin::{AgentPluginRegistry, AgentTaskRequest},
     config::{builtin_style_presets, builtin_voice_presets},
     AcousticSpace, CharacterProfile, ContinuityProp, DirectorLinter, FactSheet, MasteringEngine,
     MovieManifest, ProfilesToml, ProjectMeta, SceneSpec, SpatialRoom, StoryboardCompiler,
@@ -12,39 +13,21 @@ use director_core::{
 };
 
 /// Default conversation ID of the active Antigravity agent session
+#[allow(dead_code)]
 pub const DEFAULT_CONVERSATION_ID: &str = "e2e3111c-e08d-41d4-8bec-b19c04139f88";
 
-/// Proxy Bridge that forwards family demands from the Web UI directly to the Antigravity Agent
-/// via `agentapi.bat send-message`, prompting the Agent to use its MCP tools (`aether-director-studio`)
-/// to modify scripts, scenes, and manifests on the platform.
-pub async fn send_demand_to_antigravity_agent(
+/// Proxy Bridge that forwards creator/family demands from the Web UI through the cross-platform
+/// AgentPluginRegistry (supporting Antigravity, Codex, Claude Code, etc. across macOS, Linux, and Windows).
+pub async fn send_demand_to_agent_registry(
+    registry: &AgentPluginRegistry,
     conversation_id: &str,
     member_name: &str,
     episode_id: &str,
     scene_id: Option<&str>,
     demand_text: &str,
     server_port: u16,
+    preferred_plugin: Option<&str>,
 ) -> anyhow::Result<String> {
-    let user_profile = std::env::var("USERPROFILE").unwrap_or_else(|_| "C:\\Users\\Liang".to_string());
-    let agentapi_main = PathBuf::from(&user_profile)
-        .join(".gemini")
-        .join("antigravity")
-        .join("bin")
-        .join("agentapi.bat");
-    let agentapi_ide = PathBuf::from(&user_profile)
-        .join(".gemini")
-        .join("antigravity-ide")
-        .join("bin")
-        .join("agentapi.bat");
-
-    let bin = if agentapi_main.exists() {
-        agentapi_main
-    } else if agentapi_ide.exists() {
-        agentapi_ide
-    } else {
-        anyhow::bail!("找不到 Antigravity agentapi.bat 桥接程序");
-    };
-
     let target_scope = match scene_id {
         Some(sc) if !sc.is_empty() => format!("剧集 `{}` 的镜头 `{}`", episode_id, sc),
         _ => format!("剧集 `{}`", episode_id),
@@ -58,25 +41,44 @@ pub async fn send_demand_to_antigravity_agent(
         请你立即通过工作室 MCP 工具（或 HTTP 接口 `http://127.0.0.1:{server_port}/api/v1/mcp`）读取并直接修改当前项目上的对应剧本 (`script.md`)、分镜配置 (`movie.toml`) 或角色/空间资产，确保 100% 符合 L1-L5 导演门禁规范（0 Error），完成后调用 `studio_notify_reply` 将修改结果同步推送到网页端！"
     );
 
-    let out = Command::new("cmd")
-        .args([
-            "/C",
-            &bin.to_string_lossy(),
-            "send-message",
-            "--title",
-            &format!("家人需求: {}", member_name),
-            conversation_id,
-            &structured_prompt,
-        ])
-        .output()
-        .await?;
+    let req = AgentTaskRequest {
+        task_type: "demand_dispatch".to_string(),
+        prompt: structured_prompt,
+        workspace_dir: None,
+        preferred_plugin: preferred_plugin.map(|s| s.to_string()),
+        conversation_id: Some(conversation_id.to_string()),
+        extra_context: None,
+    };
 
-    let stdout = String::from_utf8_lossy(&out.stdout).to_string();
-    let stderr = String::from_utf8_lossy(&out.stderr).to_string();
-    if !out.status.success() {
-        anyhow::bail!("agentapi 调用返回异常: {} {}", stdout, stderr);
+    let resp = registry.dispatch_task(&req).await?;
+    if resp.status == "error" {
+        anyhow::bail!("Agent 插件 `{}` 执行异常: {}", resp.plugin_id, resp.output);
     }
-    Ok(stdout)
+    Ok(format!("[{}] {}", resp.plugin_id, resp.output))
+}
+
+/// Backward-compatible bridge forwarding directly via default Antigravity plugin or registered plugins.
+#[allow(dead_code)]
+pub async fn send_demand_to_antigravity_agent(
+    conversation_id: &str,
+    member_name: &str,
+    episode_id: &str,
+    scene_id: Option<&str>,
+    demand_text: &str,
+    server_port: u16,
+) -> anyhow::Result<String> {
+    let registry = AgentPluginRegistry::new();
+    send_demand_to_agent_registry(
+        &registry,
+        conversation_id,
+        member_name,
+        episode_id,
+        scene_id,
+        demand_text,
+        server_port,
+        Some("antigravity"),
+    )
+    .await
 }
 
 /// Runs the JSON-RPC 2.0 MCP Server over `stdio` (`director-server.exe mcp-stdio`)

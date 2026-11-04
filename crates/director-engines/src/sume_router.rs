@@ -22,12 +22,7 @@ pub struct SumeEngine {
 impl SumeEngine {
     pub fn new(base_dir: impl Into<PathBuf>) -> Self {
         let base_dir = base_dir.into();
-        let venv_py = PathBuf::from("C:/Users/Liang/minimax/.venv/Scripts/python.exe");
-        let python_bin = if venv_py.exists() {
-            venv_py
-        } else {
-            PathBuf::from("python")
-        };
+        let python_bin = crate::platform::resolve_python_bin(Some(&base_dir));
         Self {
             base_dir,
             python_bin,

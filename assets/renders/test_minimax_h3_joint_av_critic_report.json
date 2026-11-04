@@ -1,0 +1,81 @@
+{
+  "video_path": "/Users/jinliang/Workspace/sanguo-ai-director-pipeline/assets/renders/test_minimax_h3_joint_av.mp4",
+  "overall_score": 75.5,
+  "micro_acting_score": 100.0,
+  "lip_sync_score": 30.1,
+  "visual_fidelity_score": 100.0,
+  "passed": false,
+  "issues": [
+    "Phantom mouth movement during silent airlock/tail (ratio: 0.85)"
+  ],
+  "re_render_recommendation": "Verify 1.1s silent preparatory airlock and ensure mouth closes firmly on speech pause.",
+  "quantitative_metrics": {
+    "video_path": "/Users/jinliang/Workspace/sanguo-ai-director-pipeline/assets/renders/test_minimax_h3_joint_av.mp4",
+    "duration_sec": 1.62,
+    "fps": 24.0,
+    "resolution": "896x512",
+    "beat_motion_scores": [
+      {
+        "beat_name": "Beat 1: Airlock",
+        "time_range": "0.00s–0.33s",
+        "mean_motion": 4.664,
+        "peak_motion": 6.537,
+        "stutter_ratio": 1.4,
+        "freeze_detected": false,
+        "hold_pop_detected": false
+      },
+      {
+        "beat_name": "Beat 2: Dialogue",
+        "time_range": "0.33s–0.89s",
+        "mean_motion": 7.468,
+        "peak_motion": 8.868,
+        "stutter_ratio": 1.19,
+        "freeze_detected": false,
+        "hold_pop_detected": false
+      },
+      {
+        "beat_name": "Beat 3: Climax",
+        "time_range": "0.89s–1.33s",
+        "mean_motion": 10.082,
+        "peak_motion": 11.947,
+        "stutter_ratio": 1.18,
+        "freeze_detected": false,
+        "hold_pop_detected": false
+      },
+      {
+        "beat_name": "Beat 4: Tail Anchor",
+        "time_range": "1.33s–1.62s",
+        "mean_motion": 16.127,
+        "peak_motion": 17.613,
+        "stutter_ratio": 1.09,
+        "freeze_detected": false,
+        "hold_pop_detected": false
+      }
+    ],
+    "overall_motion_score": 100.0,
+    "av_lip_sync_score": 30.1,
+    "speech_correlation": -0.151,
+    "silence_suppression_score": 15.0,
+    "anti_fog_contrast_score": 100.0,
+    "head_contrast": 38.1,
+    "tail_contrast": 55.85,
+    "contrast_drift_pct": 46.6,
+    "head_sharpness": 12.04,
+    "tail_sharpness": 17.13,
+    "sharpness_drift_pct": 42.3,
+    "anomalies": [
+      "Phantom mouth movement during silent airlock/tail (ratio: 0.85)"
+    ]
+  },
+  "slowfast_sheet_path": "/Users/jinliang/Workspace/sanguo-ai-director-pipeline/assets/renders/test_minimax_h3_joint_av_critic_sheet.jpg",
+  "sheet_file_size_kb": 85.02,
+  "token_cost_estimate": {
+    "raw_video_tokens_default": 10031,
+    "gemini_low_res_video_tokens": 213,
+    "slowfast_contact_sheet_tokens": 258,
+    "token_reduction_vs_raw_pct": 97.4,
+    "token_reduction_vs_low_pct": -21.1
+  },
+  "evaluator_mode": "offline-physics-deterministic",
+  "evaluation_timestamp": "2026-11-04 23:44:08"
+}

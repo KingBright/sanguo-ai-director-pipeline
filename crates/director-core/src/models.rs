@@ -287,6 +287,19 @@ pub struct SceneSpec {
     pub emotion_mode: Option<String>, // "natural" | "t8mars_explosive" | "t8mars_fury" | "t8mars_weeping"
     #[serde(default)]
     pub character_card: Option<String>, // "Name|Role Title" for staggered glassmorphic intro card
+    // 4-Beat Micro-Acting & Detail Density Fields
+    #[serde(default)]
+    pub micro_beats: Vec<String>, // explicit 4-beat temporal descriptions
+    #[serde(default)]
+    pub facial_progression: Option<String>, // concrete facial muscle progression: brow glabella, lower eyelids, nostrils, jaw masseter, lip corner
+    #[serde(default)]
+    pub prop_interaction: Option<String>, // tactile hand & prop interaction
+    #[serde(default)]
+    pub listener_reaction: Option<String>, // non-speaking character's physiological reaction
+    #[serde(default)]
+    pub env_micro_physics: Option<String>, // candle wick, rain droplets, breath mist, fabric sway
+    #[serde(default)]
+    pub sub_beat_emotions: Vec<String>, // intra-line multi-emotion arc for TTS, e.g. ["cold_laugh:0.45", "pause:350ms", "angry:0.65"]
 }
 
 fn default_framing() -> String {

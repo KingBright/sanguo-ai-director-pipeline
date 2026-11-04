@@ -7,6 +7,10 @@ edition.workspace = true
 name = "director-server"
 path = "src/main.rs"
 
+[[bin]]
+name = "director-mcp"
+path = "src/bin/director-mcp.rs"
+
 [dependencies]
 director-core = { path = "../director-core" }
 director-engines = { path = "../director-engines" }

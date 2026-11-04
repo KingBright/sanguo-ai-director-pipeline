@@ -1,0 +1,15 @@
+# OpenAI Codex CLI Agent Plugin Manifest
+id = "codex"
+name = "OpenAI Codex CLI Agent"
+kind = "codex"
+command = "codex"
+args_template = ["exec", "--skip-git-repo-check", "{prompt}"]
+capabilities = ["expand_micro_acting", "decompose_storyboard", "demand_dispatch", "polish_scene"]
+enabled = true
+priority = 90
+os_targets = ["macos", "linux", "windows"]
+description = "Autonomous coding and creative prompt generation through OpenAI Codex CLI"
+model = "gpt-5-codex"
+
+[env]
+# CODEX_COLOR = "never"

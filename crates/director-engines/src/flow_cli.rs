@@ -50,23 +50,10 @@ impl FlowEngine {
     fn get_env(&self) -> HashMap<String, String> {
         let mut env: HashMap<String, String> = std::env::vars().collect();
         if !env.contains_key("CHROME_BINARY") {
-            let local_app = std::env::var("LOCALAPPDATA").unwrap_or_default();
-            let pw_chrome = PathBuf::from(&local_app)
-                .join("ms-playwright")
-                .join("chromium-1228")
-                .join("chrome-win64")
-                .join("chrome.exe");
-            let edge_path =
-                PathBuf::from("C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe");
-            if pw_chrome.exists() {
+            if let Some(browser) = crate::platform::resolve_browser_bin() {
                 env.insert(
                     "CHROME_BINARY".to_string(),
-                    pw_chrome.to_string_lossy().to_string(),
-                );
-            } else if edge_path.exists() {
-                env.insert(
-                    "CHROME_BINARY".to_string(),
-                    edge_path.to_string_lossy().to_string(),
+                    browser.to_string_lossy().to_string(),
                 );
             }
         }
@@ -74,11 +61,7 @@ impl FlowEngine {
     }
 
     pub async fn get_credits_and_status(&self) -> CreditReport {
-        let local_app = std::env::var("LOCALAPPDATA").unwrap_or_default();
-        let cache_file = PathBuf::from(local_app)
-            .join("ffroliva")
-            .join("gflow-cli")
-            .join("credits_cache.json");
+        let cache_file = crate::platform::resolve_gflow_credits_cache();
 
         let mut bal = 0i64;
         let mut last_spent = None;

@@ -2,6 +2,7 @@
 
 use std::convert::Infallible;
 use std::net::SocketAddr;
+use std::path::PathBuf;
 use std::time::Duration;
 
 use axum::{
@@ -16,6 +17,9 @@ use axum::{
     Router,
 };
 use director_core::{
+    agent_plugin::{
+        current_os, AgentPluginManifest, AgentPluginRegistry, AgentTaskRequest, AgentTaskResponse,
+    },
     config::{builtin_style_presets, builtin_voice_presets},
     llm_assistant::{AiStoryboardRequest, AiWriterAssistant},
     AcousticSpace, CharacterProfile, ContinuityProp, DirectorLinter, EpisodeSummary, FactSheet,
@@ -23,8 +27,8 @@ use director_core::{
     ProjectSummary, SceneSpec, SpatialRoom, StoryboardCompiler, StyleLock, WorkspacePaths,
 };
 use director_engines::{
-    CreditReport, FlowEngine, H3Engine, JobStatus, LocalGpuStatus, RenderJob, RenderQueue,
-    SumeEngine,
+    ColabBridgeRunner, CreditReport, FlowEngine, H3Engine, JobStatus, LocalGpuStatus, RenderJob,
+    RenderQueue, SumeEngine,
 };
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -62,6 +66,8 @@ pub struct AppState {
     pub port: u16,
     pub agent_conversation_id: Arc<RwLock<String>>,
     pub agent_demands: Arc<RwLock<Vec<AgentDemandItem>>>,
+    pub agent_registry: Arc<RwLock<AgentPluginRegistry>>,
+    pub colab_runner: ColabBridgeRunner,
 }
 
 impl AppState {
@@ -259,6 +265,26 @@ struct SubmitAgentDemandRequest {
     episode_id: String,
     scene_id: Option<String>,
     demand_text: String,
+    preferred_plugin: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct RegisterPluginRequest {
+    manifest: AgentPluginManifest,
+}
+
+#[derive(Debug, Deserialize)]
+struct AgentDispatchRequest {
+    task_type: Option<String>,
+    prompt: String,
+    preferred_plugin: Option<String>,
+    workspace_dir: Option<String>,
+    conversation_id: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct VideoCriticRequest {
+    video_path: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -330,6 +356,18 @@ async fn main() -> anyhow::Result<()> {
     let conv_id = std::env::var("ANTIGRAVITY_CONVERSATION_ID")
         .unwrap_or_else(|_| mcp::DEFAULT_CONVERSATION_ID.to_string());
 
+    let mut reg = AgentPluginRegistry::new();
+    let plugins_dir = base_dir.join("plugins").join("agents");
+    let loaded_count = reg.load_from_dir(&plugins_dir);
+    tracing::info!(
+        "Discovered {} agent plugins ({} loaded from {})",
+        reg.list_plugins().len(),
+        loaded_count,
+        plugins_dir.display()
+    );
+    let agent_registry = Arc::new(RwLock::new(reg));
+    let colab_runner = ColabBridgeRunner::new(&base_dir);
+
     let state = AppState {
         root_dir: base_dir.clone(),
         active_project: Arc::new(RwLock::new(initial_proj)),
@@ -343,6 +381,8 @@ async fn main() -> anyhow::Result<()> {
         port,
         agent_conversation_id: Arc::new(RwLock::new(conv_id)),
         agent_demands: Arc::new(RwLock::new(Vec::new())),
+        agent_registry,
+        colab_runner,
     };
 
     // Nest static file serving with automatic HTTP 206 Partial Content Range support for Safari / WeChat / NAS
@@ -353,6 +393,10 @@ async fn main() -> anyhow::Result<()> {
         .route("/api/v1/auth/check", get(api_auth_check))
         .route("/mcp", post(api_mcp_http))
         .route("/api/v1/mcp", post(api_mcp_http))
+        .route("/api/v1/plugins", get(api_list_plugins))
+        .route("/api/v1/plugins/register", post(api_register_plugin))
+        .route("/api/v1/agent/dispatch", post(api_agent_dispatch))
+        .route("/api/v1/critic/evaluate", post(api_critic_evaluate))
         .route("/api/v1/projects", get(api_list_projects).post(api_create_project))
         .route("/api/v1/projects/select", post(api_select_project))
         .route("/api/v1/system/status", get(api_system_status))
@@ -997,26 +1041,31 @@ async fn api_submit_agent_demand(
         episode_id: req.episode_id.clone(),
         scene_id: req.scene_id.clone(),
         demand_text: req.demand_text.clone(),
-        status: "sent_to_antigravity".to_string(),
+        status: "sent_to_agent".to_string(),
         agent_reply: None,
     };
 
-    match mcp::send_demand_to_antigravity_agent(
+    let reg = state.agent_registry.read().await;
+    match mcp::send_demand_to_agent_registry(
+        &reg,
         &conv_id,
         &member_name,
         &req.episode_id,
         req.scene_id.as_deref(),
         &req.demand_text,
         state.port,
+        req.preferred_plugin.as_deref(),
     )
     .await
     {
-        Ok(_) => {
+        Ok(reply) => {
+            item.status = "sent_to_agent".to_string();
+            item.agent_reply = Some(reply);
             state.queue.emit(
                 "agent_demand_sent",
                 Some(item.id.clone()),
                 format!(
-                    "📨 已通过代理将 `{}` 的改稿需求直达 Antigravity，正在通过 MCP 修改剧本...",
+                    "📨 已通过跨平台 AgentPluginRegistry 将 `{}` 的改稿需求直达本地 Agent，正在通过 MCP 修改剧本...",
                     member_name
                 ),
                 None,
@@ -1030,6 +1079,127 @@ async fn api_submit_agent_demand(
 
     state.agent_demands.write().await.insert(0, item.clone());
     Ok(Json(item))
+}
+
+async fn api_list_plugins(State(state): State<AppState>) -> Json<serde_json::Value> {
+    let reg = state.agent_registry.read().await;
+    let plugins = reg.list_plugins();
+    let current_platform = current_os();
+    let enriched: Vec<_> = plugins
+        .into_iter()
+        .map(|p| {
+            let available = p.is_available_on_current_os() && p.check_binary_exists();
+            serde_json::json!({
+                "id": p.id,
+                "name": p.name,
+                "kind": p.kind,
+                "command": p.command,
+                "args_template": p.args_template,
+                "capabilities": p.capabilities,
+                "enabled": p.enabled,
+                "priority": p.priority,
+                "os_targets": p.os_targets,
+                "description": p.description,
+                "model": p.model,
+                "is_available_on_os": p.is_available_on_current_os(),
+                "binary_exists": p.check_binary_exists(),
+                "available": available,
+            })
+        })
+        .collect();
+
+    Json(serde_json::json!({
+        "os_platform": current_platform,
+        "plugin_count": enriched.len(),
+        "plugins": enriched,
+    }))
+}
+
+async fn api_register_plugin(
+    State(state): State<AppState>,
+    Json(req): Json<RegisterPluginRequest>,
+) -> Result<Json<serde_json::Value>, (StatusCode, String)> {
+    let mut reg = state.agent_registry.write().await;
+    let id = req.manifest.id.clone();
+    reg.register_plugin(req.manifest);
+    Ok(Json(serde_json::json!({
+        "status": "success",
+        "message": format!("Successfully registered/updated plugin `{}`", id),
+        "plugin_id": id
+    })))
+}
+
+async fn api_agent_dispatch(
+    State(state): State<AppState>,
+    Json(req): Json<AgentDispatchRequest>,
+) -> Result<Json<AgentTaskResponse>, (StatusCode, String)> {
+    let task_type = req
+        .task_type
+        .unwrap_or_else(|| "expand_micro_acting".to_string());
+    let default_conv_id = state.agent_conversation_id.read().await.clone();
+    let task_req = AgentTaskRequest {
+        task_type: task_type.clone(),
+        prompt: req.prompt.clone(),
+        workspace_dir: req
+            .workspace_dir
+            .clone()
+            .or_else(|| Some(state.root_dir.to_string_lossy().to_string())),
+        preferred_plugin: req.preferred_plugin.clone(),
+        conversation_id: req.conversation_id.or(Some(default_conv_id)),
+        extra_context: None,
+    };
+
+    let reg = state.agent_registry.read().await;
+    match reg.dispatch_task(&task_req).await {
+        Ok(resp) if resp.status == "success" => Ok(Json(resp)),
+        other => {
+            // Automatic fallback to local AiWriterAssistant 4-beat micro-acting expansion
+            let err_summary = match &other {
+                Ok(r) => r.output.clone(),
+                Err(e) => e.to_string(),
+            };
+            let fallback_output = format!(
+                "【Local AiWriterAssistant 4-Beat Micro-Acting Fallback】\n\
+                During 00:00.000–00:01.100 (Beat 1: Subtext & Preparatory Airlock) — Eye-line shifts with subtle pupil dilation; visible chest inhalation expands ribcage; brow glabella micro-tension; lips naturally closed with zero vocalization.\n\
+                During 00:01.100–00:02.425 (Beat 2: Opening Delivery & Micro-Expression Shift) — Subtle upper-torso lean forward keeping headroom comfortable inside frame; nasolabial crease deepens; crisp Mandarin articulation begins.\n\
+                During 00:02.425–00:03.200 (Beat 3: Climax Accent, Tactile Prop Force & Active Listener Reaction) — Peak vocal projection (+8dB surge) and masseter muscle flex; tactile fingers clench firmly onto prop contours; silent listener exhibits sharp pupil contraction.\n\
+                During 00:03.200–00:03.750 (Beat 4: Emotional Resonance & Environmental Micro-Physics Tail Anchor) — Lips close cleanly for 22f latent relay while chest breathing, piercing gaze along steady eye-line axis, and subtle environmental micro-physics continue naturally.\n\n\
+                (Note: Native plugin dispatch notice: {})",
+                err_summary
+            );
+            Ok(Json(AgentTaskResponse {
+                plugin_id: "ai_writer_assistant_fallback".to_string(),
+                status: "fallback".to_string(),
+                output: fallback_output,
+                elapsed_ms: 1,
+                os_platform: current_os().to_string(),
+            }))
+        }
+    }
+}
+
+async fn api_critic_evaluate(
+    State(state): State<AppState>,
+    Json(req): Json<VideoCriticRequest>,
+) -> Result<Json<serde_json::Value>, (StatusCode, String)> {
+    let mut v_path = PathBuf::from(&req.video_path);
+    if !v_path.is_absolute() {
+        v_path = state.root_dir.join(&v_path);
+    }
+    if !v_path.exists() {
+        return Err((
+            StatusCode::NOT_FOUND,
+            format!("Video file not found: {}", v_path.display()),
+        ));
+    }
+
+    match state.colab_runner.run_video_quality_critic(&v_path).await {
+        Ok(report) => Ok(Json(report)),
+        Err(e) => Err((
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Video quality critic failed: {}", e),
+        )),
+    }
 }
 
 async fn api_mcp_webhook(

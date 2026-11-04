@@ -162,6 +162,34 @@ impl AiWriterAssistant {
             }
         }
 
+        // 6. Ensure L4 4-Beat Micro-Acting fields if missing
+        if scene.micro_beats.is_empty() && scene.facial_progression.is_none() {
+            scene.facial_progression = Some(
+                "brow glabella tightens with subtle inhalation, lower eyelids narrow into focused resolve, jaw masseter flexes with controlled speech"
+                    .to_string(),
+            );
+            if !scene.props.is_empty() && scene.prop_interaction.is_none() {
+                scene.prop_interaction = Some(format!(
+                    "firm tactile finger grip resting along the contours of {}",
+                    scene.props[0]
+                ));
+            }
+            if scene.env_micro_physics.is_none() {
+                scene.env_micro_physics = Some(
+                    "flickering lantern flame micro-tremor, subtle fabric sway, and delicate breath mist"
+                        .to_string(),
+                );
+            }
+            if scene.line.is_some() && scene.sub_beat_emotions.is_empty() {
+                scene.sub_beat_emotions = vec![
+                    "composed_inhalation:0.30".to_string(),
+                    "pause:250ms".to_string(),
+                    "resolute_delivery:0.75".to_string(),
+                ];
+            }
+            notes.push("🎭 [L4 四节拍微表演护航] 已自动补全面部微表情肌肉渐变、手部触觉交互与环境微物理".to_string());
+        }
+
         (scene, notes)
     }
 
@@ -237,6 +265,7 @@ impl AiWriterAssistant {
             style_variant: Some(if is_modern { "modern".to_string() } else { "epic".to_string() }),
             speaker: Some("Narrator".to_string()),
             line: Some("夜幕降临，故事在灯火与风声交织的空间中悄然展开。".to_string()),
+            env_micro_physics: Some("wind rustling through mountain trees, gentle breath mist and drifting dusk fog".to_string()),
             ..Default::default()
         });
 
@@ -316,6 +345,17 @@ impl AiWriterAssistant {
                 style_variant: Some(if is_modern { "modern".to_string() } else { "tense".to_string() }),
                 speaker: Some(speaker),
                 line: Some(spoken_line),
+                facial_progression: Some(
+                    "brow glabella tightens with subtle inhalation, lower eyelids narrow into focused resolve, jaw masseter flexes with controlled speech".to_string()
+                ),
+                env_micro_physics: Some(
+                    "flickering lantern flame micro-tremor, subtle fabric sway, and delicate breath mist".to_string()
+                ),
+                sub_beat_emotions: vec![
+                    "composed_inhalation:0.30".to_string(),
+                    "pause:250ms".to_string(),
+                    "resolute_delivery:0.75".to_string(),
+                ],
                 ..Default::default()
             });
         }

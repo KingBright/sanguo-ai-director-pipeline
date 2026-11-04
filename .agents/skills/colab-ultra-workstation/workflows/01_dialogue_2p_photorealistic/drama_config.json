@@ -30,32 +30,177 @@
     {
       "seg_id": 1,
       "speaker": "role1",
-      "line": "这份底牌一旦交出去，就再也收不回来了。",
+      "line": "[cold_laugh:0.35]这份底牌一旦交出去，|[pause:280ms]|[whisper:0.55]就再也收不回来了。",
       "seed": 2026102201,
-      "tail_lock_image": null
+      "tail_lock_image": null,
+      "sub_beat_emotions": [
+        {
+          "beat": 1,
+          "timing": "0.0s-0.8s",
+          "phase": "preparatory_airlock",
+          "description": "Pre-speech eye focus, micro-intake of breath, still silence, atmospheric fluorescent hum"
+        },
+        {
+          "beat": 2,
+          "timing": "0.8s-2.5s",
+          "phase": "opening_micro_expression",
+          "tag": "[cold_laugh:0.35]",
+          "emotion": "cold_laugh",
+          "alpha": 0.35,
+          "text": "这份底牌一旦交出去，",
+          "acting": "Cold cynical smirk at lip corner, lifting level gaze from dossier directly into Chen Mo's eyes"
+        },
+        {
+          "beat": 3,
+          "timing": "2.5s-4.2s",
+          "phase": "climax_prop_force_listener_reaction",
+          "tag": "[pause:280ms]|[whisper:0.55]",
+          "pause_ms": 280,
+          "emotion": "whisper",
+          "alpha": 0.55,
+          "text": "就再也收不回来了。",
+          "acting": "Index finger presses down firmly onto black paper dossier edge, vocal timbre drops into a dangerous controlled whisper; Chen Mo's jaw muscles twitch and his eyelids narrow"
+        },
+        {
+          "beat": 4,
+          "timing": "4.2s-5.0s",
+          "phase": "breathing_gaze_aftermath",
+          "description": "Lips firmly seal, measured exhalation, unbroken piercing eye contact locking Chen Mo in dead room silence"
+        }
+      ],
+      "prompt": "subject_definitions:\n<Subject 1> is the 35-year-old Chinese female senior law partner in <Picture 1>, with natural unretouched East Asian facial features, low hair bun held by a black claw clip with loose temple strands, wearing a dark charcoal blazer over a black crew-neck top.\n<Subject 2> is the 40-year-old Chinese man in <Picture 2>, with authentic East Asian facial features, subtle under-eye fatigue and light stubble, short black hair, wearing a dark grey wool blazer over an unbuttoned dark shirt.\n<Audio 1> is the voice-timbre reference for <Subject 1> (S1), providing only her physical female alto vocal identity and not the target dialogue.\n\nsummary:\n[reference generation + audio reference] Inside a Chinese office conference room at night with flat 4000K fluorescent ceiling light, frosted glass partitions, and horizontal venetian blinds, <Subject 1> on the left and <Subject 2> on the right sit across a wooden conference table with a black thermos, open laptop, and stacked paper dossiers. <Subject 1> (S1) delivers an intense 4-Beat psychological confrontation using the vocal timbre of <Audio 1>, while <Subject 2> listens across the table in silent physiological tension.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - exact facial bone structure, skin texture, claw-clip hair bun, and dark charcoal blazer from <Picture 1> are strictly preserved on the left side of the frame facing right.\n<Subject 2> (appears in [Shot 1]): fully_preserved - exact facial bone structure, light stubble, and dark grey wool blazer from <Picture 2> are strictly preserved on the right side of the frame facing left, keeping his lips closed throughout this clip.\n<Audio 1>: reference - its physical speaker vocal timbre guides <Subject 1> (S1)'s newly performed Mandarin dialogue without copying the original signal.\n\ndetailed_description:\nr34l1sm, Facial Realism, unretouched candid documentary film still, 50mm f/4 medium-deep focus, flat 4000K Chinese office overhead lighting, natural matte skin texture with visible real pores, zero oily shine, Rec.709 neutral cinema color grade. Medium two-shot across wooden conference table.\n[4-BEAT INTRA-SHOT PROGRESSION]:\n- Beat 1 (0.0s-0.8s, Preparatory Airlock): Dead room silence with subtle fluorescent ballast hum. <Subject 1> sits motionless, gaze anchored on the black dossier folder between them, chest expanding in a subtle, deliberate intake of breath.\n- Beat 2 (0.8s-2.5s, Opening Micro-Expression & Posture Shift): Her eyes flick up to lock onto <Subject 2>. A faint cynical smirk creases her right lip corner ([cold_laugh:0.35]) as she begins speaking: <d>[Mandarin]这份底牌一旦交出去，</d>.\n- Beat 3 (2.5s-4.2s, Climax Hand-Prop Force & Listener Physiological Reaction): A 280ms breath pause ([pause:280ms]) before her voice drops into a suppressed, dangerous whisper ([whisper:0.55]): <d>[Mandarin]就再也收不回来了。</d>. Her right index finger presses down hard on the edge of the paper dossier, flexing her knuckle. Across the table, <Subject 2>'s jaw muscles tighten visibly, eyes narrowing without blinking.\n- Beat 4 (4.2s-5.0s, Breathing & Gaze Aftermath): <Subject 1>'s lips seal tightly. A slow exhalation settles her chest, her unblinking piercing stare drilling into <Subject 2> as the silence reverberates."
     },
     {
       "seg_id": 2,
       "speaker": "role2",
-      "line": "我等这一天，已经等得太久了。",
+      "line": "[sigh]|[calm:0.40]我等这一天，|[pause:220ms]|[melancholic:0.55]已经等得太久了。",
       "seed": 2026102202,
-      "tail_lock_image": null
+      "tail_lock_image": null,
+      "sub_beat_emotions": [
+        {
+          "beat": 1,
+          "timing": "0.0s-0.8s",
+          "phase": "preparatory_airlock",
+          "tag": "[sigh]",
+          "description": "Subtle suppressed nasal sigh, unbuttoned collar shifting as shoulders drop half an inch, eyes anchored on dossier"
+        },
+        {
+          "beat": 2,
+          "timing": "0.8s-2.3s",
+          "phase": "opening_micro_expression",
+          "tag": "[calm:0.40]",
+          "emotion": "calm",
+          "alpha": 0.40,
+          "text": "我等这一天，",
+          "acting": "Chin lifts slowly, posture straightening with profound stoic calm, low resonant baritone delivery"
+        },
+        {
+          "beat": 3,
+          "timing": "2.3s-4.1s",
+          "phase": "climax_prop_force_listener_reaction",
+          "tag": "[pause:220ms]|[melancholic:0.55]",
+          "pause_ms": 220,
+          "emotion": "melancholic",
+          "alpha": 0.55,
+          "text": "已经等得太久了。",
+          "acting": "Right hand clamps the black metal thermos on the desk, knuckles whitening under suppressed emotional weight; Lin Wei's brow tightens a fraction of a millimeter as she holds her breath"
+        },
+        {
+          "beat": 4,
+          "timing": "4.1s-5.0s",
+          "phase": "breathing_gaze_aftermath",
+          "description": "Slow controlled nasal out-breath, unblinking eye contact, fingers easing on thermos, dense unresolved silence"
+        }
+      ],
+      "prompt": "subject_definitions:\n<Subject 1> is the 35-year-old Chinese female senior law partner in <Picture 1>, with natural unretouched East Asian facial features, low hair bun held by a black claw clip, wearing a dark charcoal blazer over a black crew-neck top.\n<Subject 2> is the 40-year-old Chinese man in <Picture 2>, with authentic East Asian facial features, subtle under-eye fatigue and light stubble, short black hair, wearing a dark grey wool blazer over an unbuttoned dark shirt.\n<Audio 1> is the voice-timbre reference for <Subject 2> (S2), providing only his physical male baritone vocal identity and not the target dialogue or emotional delivery.\n\nsummary:\n[reference generation + audio reference] Seamlessly continuing the same medium two-shot across the wooden conference table inside the 4000K office conference room, <Subject 2> (S2) seated on the right responds to <Subject 1> seated on the left in a 4-Beat performance arc of suppressed melancholy and resolute calm guided by the vocal timbre of <Audio 1>.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - exact facial identity, claw-clip hair bun, and dark charcoal blazer from <Picture 1> are strictly preserved on the left side of the frame facing right, keeping her lips closed and listening silently.\n<Subject 2> (appears in [Shot 1]): fully_preserved - exact facial identity, light stubble, and dark grey wool blazer from <Picture 2> are strictly preserved on the right side of the frame facing left.\n<Audio 1>: reference - its physical speaker timbre guides <Subject 2> (S2)'s newly performed Mandarin dialogue, while emotional inflection, volume, and pacing follow this shot's local performance direction without copying the original signal.\n\ndetailed_description:\nr34l1sm, Facial Realism, unretouched candid documentary film still, 50mm f/4 medium-deep focus, flat 4000K Chinese office overhead lighting, natural matte skin texture with real pores, zero oily shine, Rec.709 neutral color. Medium two-shot across table.\n[4-BEAT INTRA-SHOT PROGRESSION]:\n- Beat 1 (0.0s-0.8s, Preparatory Airlock): <Subject 2> releases a faint suppressed nasal sigh ([sigh]), his shoulders dropping half an inch as his collar shifts slightly, eyes lingering on the wooden tabletop.\n- Beat 2 (0.8s-2.3s, Opening Micro-Expression & Posture Shift): He lifts his chin with steady, stoic composure ([calm:0.40]), deep baritone voice resonating through the still room: <d>[Mandarin]我等这一天，</d>.\n- Beat 3 (2.3s-4.1s, Climax Hand-Prop Force & Listener Physiological Reaction): A 220ms cadence pause ([pause:220ms]) transitions into heavy melancholic conviction ([melancholic:0.55]): <d>[Mandarin]已经等得太久了。</d>. His right hand grips the black metal thermos on the desk, knuckles bleaching white from sustained grip tension. Across the table, <Subject 1>'s eyebrows contract by a millimeter, her breath held.\n- Beat 4 (4.1s-5.0s, Breathing & Gaze Aftermath): Slow nasal exhalation. <Subject 2> maintains direct, unflinching eye contact as his fingers gradually relax on the thermos body, heavy silence hanging in the air."
     },
     {
       "seg_id": 3,
       "speaker": "role1",
-      "line": "你知不知道这样做，会毁掉我们所有人！",
+      "line": "[angry:0.65]你知不知道这样做，|[pause:300ms]|[cold_laugh:0.45]会毁掉我们所有人！",
       "seed": 2026102609,
       "tail_lock_image": "seg3_tail_lock_1344x768.png",
       "tail_lock_frames": [107, 136],
-      "tail_lock_strengths": [0.90, 0.95]
+      "tail_lock_strengths": [0.90, 0.95],
+      "sub_beat_emotions": [
+        {
+          "beat": 1,
+          "timing": "0.0s-0.8s",
+          "phase": "preparatory_airlock",
+          "description": "Sharp airlock intake of breath pulling spine erect, pupils dilate, nostrils flare, hands flattening on table"
+        },
+        {
+          "beat": 2,
+          "timing": "0.8s-2.5s",
+          "phase": "opening_micro_expression",
+          "tag": "[angry:0.65]",
+          "emotion": "angry",
+          "alpha": 0.65,
+          "text": "你知不知道这样做，",
+          "acting": "Torso leans aggressively forward over table, explosive fierce alto attack, jaw jutting with urgent accusation"
+        },
+        {
+          "beat": 3,
+          "timing": "2.5s-4.3s",
+          "phase": "climax_prop_force_listener_reaction",
+          "tag": "[pause:300ms]|[cold_laugh:0.45]",
+          "pause_ms": 300,
+          "emotion": "cold_laugh",
+          "alpha": 0.45,
+          "text": "会毁掉我们所有人！",
+          "acting": "Open palm strikes wooden conference table with sharp kinetic force, face twisting into bitter cynical sneer, voice climbing to furious peak; Chen Mo flinches back imperceptibly, eyes widening under sudden shock"
+        },
+        {
+          "beat": 4,
+          "timing": "4.3s-5.0s",
+          "phase": "breathing_gaze_aftermath",
+          "description": "Rapid heavy chest heaving from vocal outburst, loose temple hair quivering, ferocious side-profile glare refusing to yield"
+        }
+      ],
+      "prompt": "subject_definitions:\n<Subject 1> is the 35-year-old Chinese female senior law partner in <Picture 1>, with natural unretouched East Asian facial features in a clean right-facing side profile, low hair bun held by a black claw clip, wearing a dark charcoal blazer over a black crew-neck top.\n<Subject 2> is the 40-year-old Chinese man in <Picture 2>, with authentic East Asian facial features, subtle under-eye fatigue and light stubble, short black hair, wearing a dark grey wool blazer over an unbuttoned dark shirt.\n<Audio 1> is the voice-timbre reference for <Subject 1> (S1), providing only her physical female alto vocal identity and not the target dialogue or calm emotional delivery.\n\nsummary:\n[reference generation + audio reference] Seamlessly continuing the exact same static medium two-shot across the wooden conference table inside the 4000K office conference room, <Subject 1> (S1) seated on the left strictly maintains her right-facing side profile while executing a fierce 4-Beat emotional explosion of righteous fury and kinetic table impact, while <Subject 2> reels in silent reaction.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - exact right-facing side-profile head angle (only right cheek and right eye visible, chin held level), claw-clip hair bun, and dark charcoal blazer from <Picture 1> are strictly preserved on the left side facing right toward <Subject 2>, never turning toward camera.\n<Subject 2> (appears in [Shot 1]): fully_preserved - exact facial identity, light stubble, and dark grey wool blazer from <Picture 2> are strictly preserved on the right side facing left, keeping lips closed.\n<Audio 1>: reference - its physical female speaker timbre guides <Subject 1> (S1)'s newly performed dialogue, while the loud volume, sharp attack, and furious anger follow this shot's performance direction.\n\ndetailed_description:\nr34l1sm, Facial Realism, unretouched candid documentary film still, 50mm f/4 medium-deep focus, flat 4000K Chinese office overhead lighting, natural matte skin texture with visible pores, Rec.709 neutral color. Medium two-shot side profile framing.\n[4-BEAT INTRA-SHOT PROGRESSION]:\n- Beat 1 (0.0s-0.8s, Preparatory Airlock): <Subject 1> takes a sharp, audible breath intake that jerks her spine upright. Pupils dilate, nostrils flaring as both palms flatten against the conference table.\n- Beat 2 (0.8s-2.5s, Opening Micro-Expression & Posture Shift): Leaning aggressively forward over the desk, her alto voice breaks out into furious accusation ([angry:0.65]): <d>[Mandarin]你知不知道这样做，</d>.\n- Beat 3 (2.5s-4.3s, Climax Hand-Prop Force & Listener Physiological Reaction): After a 300ms tension pause ([pause:300ms]), her face contorts into a bitter, cynical sneer ([cold_laugh:0.45]) as her open right hand slams down hard onto the wooden tabletop with blunt kinetic force, projecting at maximum vocal volume: <d>[Mandarin]会毁掉我们所有人！</d>. <Subject 2> twitches back imperceptibly, his eyes widening in visceral shock.\n- Beat 4 (4.3s-5.0s, Breathing & Gaze Aftermath): Heavy, rapid chest heaving from the explosive vocal delivery. A loose strand of hair trembles against her right cheekbone, her unyielding side-profile glare refusing to break away."
     },
     {
       "seg_id": 4,
       "speaker": "role2",
-      "line": "有些真相一旦揭开，就没有回头路了！",
+      "line": "[cold_laugh:0.30]有些真相一旦揭开，|[pause:250ms]|[angry:0.70]就没有回头路了！",
       "seed": 2026102204,
-      "tail_lock_image": null
+      "tail_lock_image": null,
+      "sub_beat_emotions": [
+        {
+          "beat": 1,
+          "timing": "0.0s-0.8s",
+          "phase": "preparatory_airlock",
+          "description": "Eyelids lower for a split second absorbing her shout before snapping open, neck tendons tightening with surge of adrenaline"
+        },
+        {
+          "beat": 2,
+          "timing": "0.8s-2.4s",
+          "phase": "opening_micro_expression",
+          "tag": "[cold_laugh:0.30]",
+          "emotion": "cold_laugh",
+          "alpha": 0.30,
+          "text": "有些真相一旦揭开，",
+          "acting": "Cold humorless smirk creases his cheek, upper lip curls, chilling baritone delivery"
+        },
+        {
+          "beat": 3,
+          "timing": "2.4s-4.2s",
+          "phase": "climax_prop_force_listener_reaction",
+          "tag": "[pause:250ms]|[angry:0.70]",
+          "pause_ms": 250,
+          "emotion": "angry",
+          "alpha": 0.70,
+          "text": "就没有回头路了！",
+          "acting": "Shifts entire body weight forward, right fist slams down hard on table dossier, erupting into full baritone fury; Lin Wei flinches back an inch against chair, lips parting in shock"
+        },
+        {
+          "beat": 4,
+          "timing": "4.2s-5.0s",
+          "phase": "breathing_gaze_aftermath",
+          "description": "Knuckles trembling against table, ragged warm breath exhalation, unblinking cinematic standoff at climax"
+        }
+      ],
+      "prompt": "subject_definitions:\n<Subject 1> is the 35-year-old Chinese female senior law partner in <Picture 1>, with natural unretouched East Asian facial features, low hair bun held by a black claw clip, wearing a dark charcoal blazer over a black crew-neck top.\n<Subject 2> is the 40-year-old Chinese man in <Picture 2>, with authentic East Asian facial features, subtle under-eye fatigue and light stubble, short black hair, wearing a dark grey wool blazer over an unbuttoned dark shirt.\n<Audio 1> is the voice-timbre reference for <Subject 2> (S2), providing only his physical male baritone vocal identity and not the target dialogue or calm emotional delivery.\n\nsummary:\n[reference generation + audio reference] Seamlessly continuing the medium two-shot confrontation across the wooden conference table inside the 4000K office conference room, <Subject 2> (S2) on the right unleashes a 4-Beat climactic counter-eruption of cold mockery, fist table-slam impact, and explosive baritone fury toward <Subject 1>.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - exact facial identity, claw-clip hair bun, and dark charcoal blazer from <Picture 1> are strictly preserved on the left side facing right, watching in stunned silence.\n<Subject 2> (appears in [Shot 1]): fully_preserved - exact facial identity, light stubble, and dark grey wool blazer from <Picture 2> are strictly preserved on the right side facing left.\n<Audio 1>: reference - its physical speaker timbre guides <Subject 2> (S2)'s newly performed dialogue, while the loud volume, fierce attack, and furious emotional delivery strictly follow this shot's performance direction.\n\ndetailed_description:\nr34l1sm, Facial Realism, unretouched candid documentary film still, 50mm f/4 medium-deep focus, flat 4000K Chinese office overhead lighting, natural matte skin texture with visible real pores, Rec.709 neutral color. Medium two-shot confrontation.\n[4-BEAT INTRA-SHOT PROGRESSION]:\n- Beat 1 (0.0s-0.8s, Preparatory Airlock): <Subject 2> absorbs the echo of her outburst. His eyelids flutter shut for a fraction of a second, then snap open with dangerous intensity, neck tendons visibly contracting.\n- Beat 2 (0.8s-2.4s, Opening Micro-Expression & Posture Shift): A chilling, humorless smirk creases his right cheek ([cold_laugh:0.30]) as he delivers his cold opening: <d>[Mandarin]有些真相一旦揭开，</d>.\n- Beat 3 (2.4s-4.2s, Climax Hand-Prop Force & Listener Physiological Reaction): A 250ms cadence pause ([pause:250ms]) before he shifts his entire torso forward and slams his right fist flat onto the table dossier with thunderous force, erupting into full-volume baritone fury ([angry:0.70]): <d>[Mandarin]就没有回头路了！</d>. Across the table, <Subject 1> flinches backward against her chair backrest, lips parting in shock.\n- Beat 4 (4.2s-5.0s, Breathing & Gaze Aftermath): His right fist remains planted on the dossier, knuckles trembling slightly with adrenaline. Ragged exhalations heave his chest as their gazes lock in an immovable cinematic standoff."
     }
   ]
 }

@@ -23,10 +23,32 @@ pub struct H3Engine {
 impl H3Engine {
     pub fn new(base_dir: impl Into<PathBuf>) -> Self {
         let base_dir = base_dir.into();
+        let python_bin = crate::platform::resolve_python_bin(Some(&base_dir));
+
+        let home = std::env::var("HOME")
+            .or_else(|_| std::env::var("USERPROFILE"))
+            .unwrap_or_default();
+        let home_path = PathBuf::from(&home);
+
+        let model_dir = if let Ok(dir) = std::env::var("MINIMAX_H3_MODEL_DIR") {
+            PathBuf::from(dir)
+        } else {
+            let candidates = [
+                base_dir.join("models").join("MiniMax-H3"),
+                home_path.join("minimax").join("MiniMax-H3"),
+                PathBuf::from("C:/Users/Liang/minimax/MiniMax-H3"),
+            ];
+            candidates
+                .iter()
+                .find(|p| p.exists())
+                .cloned()
+                .unwrap_or_else(|| base_dir.join("models").join("MiniMax-H3"))
+        };
+
         Self {
             base_dir,
-            python_bin: PathBuf::from("C:/Users/Liang/minimax/.venv/Scripts/python.exe"),
-            model_dir: PathBuf::from("C:/Users/Liang/minimax/MiniMax-H3"),
+            python_bin,
+            model_dir,
         }
     }
 

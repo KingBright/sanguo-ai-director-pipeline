@@ -290,6 +290,44 @@ impl StoryboardCompiler {
                     lines.push(format!("character_card = {}", escape_toml_str(v)));
                 }
             }
+            if !sc.micro_beats.is_empty() {
+                let mb_str = sc
+                    .micro_beats
+                    .iter()
+                    .map(|b| escape_toml_str(b))
+                    .collect::<Vec<_>>()
+                    .join(", ");
+                lines.push(format!("micro_beats = [{}]", mb_str));
+            }
+            if let Some(ref v) = sc.facial_progression {
+                if !v.is_empty() {
+                    lines.push(format!("facial_progression = {}", escape_toml_str(v)));
+                }
+            }
+            if let Some(ref v) = sc.prop_interaction {
+                if !v.is_empty() {
+                    lines.push(format!("prop_interaction = {}", escape_toml_str(v)));
+                }
+            }
+            if let Some(ref v) = sc.listener_reaction {
+                if !v.is_empty() {
+                    lines.push(format!("listener_reaction = {}", escape_toml_str(v)));
+                }
+            }
+            if let Some(ref v) = sc.env_micro_physics {
+                if !v.is_empty() {
+                    lines.push(format!("env_micro_physics = {}", escape_toml_str(v)));
+                }
+            }
+            if !sc.sub_beat_emotions.is_empty() {
+                let sbe_str = sc
+                    .sub_beat_emotions
+                    .iter()
+                    .map(|e| escape_toml_str(e))
+                    .collect::<Vec<_>>()
+                    .join(", ");
+                lines.push(format!("sub_beat_emotions = [{}]", sbe_str));
+            }
         }
 
         lines.join("\n") + "\n"
@@ -443,6 +481,14 @@ impl StoryboardCompiler {
         })
     }
 
+    pub fn compile_h3_prompt_block(
+        &self,
+        sc: &SceneSpec,
+        fact_sheet: &crate::models::FactSheet,
+    ) -> serde_json::Value {
+        self.compile_h3_v25_prompt(sc, fact_sheet)
+    }
+
     /// Compiles a scene into the official MiniMax-H3 v2.5 / V9 `Ref2VA` 6-Block Prompt Protocol
     /// with `Speech-Active Gating`, `T8mars` Emotion Decoupling, `17k + 5` Golden Frame Contract,
     /// `$17k$` Pose Anchor Phase Alignment, `V9_TailLock`, and `MotionContext` relay flags.
@@ -542,9 +588,23 @@ impl StoryboardCompiler {
             subject_lines.push("- Primary cinema scene with photorealistic optics and natural physical motion.".to_string());
         }
 
+        // Snap duration to zero-audio-overhang Golden Frames (39, 90, 141, 192)
+        let target_frames = ((if sc.duration == 0 { 4 } else { sc.duration }) * 24) as i32;
+        let golden_candidates = [39, 90, 141, 192];
+        let golden_frames = *golden_candidates
+            .iter()
+            .min_by_key(|&&g| (g - target_frames).abs())
+            .unwrap_or(&90);
+
         retention_lines.push(
-            "- Maintain stable head orientation with head held completely level and stationary unless explicitly motivated, and keep zero screen text or subtitles.".to_string(),
+            "- Maintain natural headroom and axis preservation keeping full head and shoulders comfortably inside the frame with natural micro-movements and steady eye-line axis, and keep zero screen text or subtitles.".to_string(),
         );
+        if !sc.sub_beat_emotions.is_empty() {
+            retention_lines.push(format!(
+                "- Sub-beat emotion trajectory: {}.",
+                sc.sub_beat_emotions.join(" -> ")
+            ));
+        }
 
         let summary_line = if has_speech && !image_refs.is_empty() {
             "[reference generation + audio reference] Joint audio-visual cinema shot with frame-accurate lip synchronization and locked 3D spatial continuity."
@@ -554,8 +614,8 @@ impl StoryboardCompiler {
             "[text to audio-video generation] Photorealistic cinema shot with synchronized diegetic soundscape."
         };
 
-        // 3. Detailed Description with 1.1s Airlock + <d>[Mandarin]...</d> + T8mars + 1.3s Tail Anchor + LaoZhang1982 Locks
-        let airlock = "For the first 1.1 seconds, the subject holds a composed preparatory posture with lips naturally closed.";
+        // 3. Detailed Description with 4-Beat Micro-Acting Timeline + <d>[Mandarin]...</d> + T8mars + LaoZhang1982 Locks
+        let four_beat_desc = self.compile_4beat_micro_acting_description(sc, golden_frames);
         let dialogue_clause = match (sc.speaker.as_deref(), sc.line.as_deref()) {
             (Some(_sp), Some(ln)) if !ln.trim().is_empty() && sc.dialogue_mode.as_deref() != Some("vo") => {
                 let phonetic_ln = normalize_chinese_phonetics_for_av(ln.trim());
@@ -573,7 +633,7 @@ impl StoryboardCompiler {
             }
             _ => " 台词锁：没有台词的人完全不出声，不加任何语气词或笑声。".to_string(),
         };
-        let tail_anchor = "For the final 1.3 seconds, after the speech concludes, the lips close naturally and the posture settles into a stationary hold.";
+
         let cam_line = sc
             .camera_motion
             .as_deref()
@@ -592,26 +652,17 @@ impl StoryboardCompiler {
             .unwrap_or("Natural room acoustics, crisp fabric movement, and clear vocal presence.");
 
         let prompt_6block = format!(
-            "subject_definitions:\n{}\n\nsummary: {}\n\nretention_analysis:\n{}\n\ndetailed_description:\n{} {}{}{} {} {}\n\noverall_soundscape: {}\n\nnon_diegetic_music: None. 只有环境音效，不要音乐。纯净画面，无字幕，画面中不要出现任何字幕、文字或水印。",
+            "subject_definitions:\n{}\n\nsummary: {}\n\nretention_analysis:\n{}\n\ndetailed_description:\n{}\nBase Action & Blocking: {}{}{}\nCamera Motion: {}\n\noverall_soundscape: {}\n\nnon_diegetic_music: None. 只有环境音效，不要音乐。纯净画面，无字幕，画面中不要出现任何字幕、文字或水印。",
             subject_lines.join("\n"),
             summary_line,
             retention_lines.join("\n"),
-            airlock,
+            four_beat_desc,
             sc.action.trim(),
             pose_clause,
             dialogue_clause,
-            tail_anchor,
             cam_line,
             soundscape
         );
-
-        // Snap duration to zero-audio-overhang Golden Frames (39, 90, 141, 192)
-        let target_frames = ((if sc.duration == 0 { 4 } else { sc.duration }) * 24) as i32;
-        let golden_candidates = [39, 90, 141, 192];
-        let golden_frames = *golden_candidates
-            .iter()
-            .min_by_key(|&&g| (g - target_frames).abs())
-            .unwrap_or(&90);
 
         let snapped_indices: Vec<i32> = if !sc.keyframe_indices.is_empty() {
             sc.keyframe_indices
@@ -749,6 +800,128 @@ impl StoryboardCompiler {
         std::fs::write(output_file, content)?;
         Ok(output_file.to_path_buf())
     }
+
+    /// Compiles a 4-beat micro-acting temporal performance description with explicit
+    /// timestamped windows (Beat 1 airlock, Beat 2 delivery, Beat 3 climax & listener reaction, Beat 4 latent resonance).
+    pub fn compile_4beat_micro_acting_description(
+        &self,
+        sc: &SceneSpec,
+        golden_frames: i32,
+    ) -> String {
+        let dur_sec = (golden_frames as f64) / 24.0;
+        let airlock_sec = 1.100f64.min(dur_sec * 0.35);
+        let tail_sec = 1.300f64.min(dur_sec * 0.35);
+        let speech_end = (dur_sec - tail_sec).max(airlock_sec + 0.4);
+        let mid_sec = airlock_sec + (speech_end - airlock_sec) * 0.5;
+
+        let b1_time = format!("During 00:00.000–{}", format_mmss_ms(airlock_sec));
+        let b2_time = format!(
+            "During {}–{}",
+            format_mmss_ms(airlock_sec),
+            format_mmss_ms(mid_sec)
+        );
+        let b3_time = format!(
+            "During {}–{}",
+            format_mmss_ms(mid_sec),
+            format_mmss_ms(speech_end)
+        );
+        let b4_time = format!(
+            "During {}–{}",
+            format_mmss_ms(speech_end),
+            format_mmss_ms(dur_sec)
+        );
+
+        if sc.micro_beats.len() == 4 {
+            let mut formatted = Vec::new();
+            let times = [&b1_time, &b2_time, &b3_time, &b4_time];
+            for (i, beat) in sc.micro_beats.iter().enumerate() {
+                if beat.starts_with("During ") {
+                    formatted.push(beat.clone());
+                } else {
+                    let title = match i {
+                        0 => "Beat 1: Subtext & Preparatory Airlock",
+                        1 => "Beat 2: Opening Delivery & Micro-Expression Shift",
+                        2 => "Beat 3: Climax Accent, Tactile Prop Force & Active Listener Reaction",
+                        _ => "Beat 4: Emotional Resonance & Environmental Micro-Physics Tail Anchor",
+                    };
+                    formatted.push(format!("{} ({}) — {}", times[i], title, beat));
+                }
+            }
+            if !sc.sub_beat_emotions.is_empty() {
+                formatted.push(format!(
+                    "Sub-beat emotion trajectory: [{}].",
+                    sc.sub_beat_emotions.join(" -> ")
+                ));
+            }
+            return formatted.join("\n");
+        }
+
+        let prop_b1 = sc
+            .prop_interaction
+            .as_deref()
+            .filter(|s| !s.is_empty())
+            .map(|p| format!("tactile hand contact with prop: {}.", p))
+            .unwrap_or_else(|| "hands establish resting tactile grip with steady fingers.".to_string());
+
+        let facial_b2 = sc
+            .facial_progression
+            .as_deref()
+            .filter(|s| !s.is_empty())
+            .unwrap_or("brow glabella micro-tension deepens, lower eyelids narrow into focused gaze, nasolabial lines define initial emotion");
+
+        let listener_b3 = sc
+            .listener_reaction
+            .as_deref()
+            .filter(|s| !s.is_empty())
+            .map(|l| format!(" Non-speaking character physiological reaction: {}.", l))
+            .unwrap_or_else(|| {
+                if sc.characters.len() >= 2 {
+                    " Non-speaking character exhibits involuntary physiological reaction with sharp pupil contraction and neck tension.".to_string()
+                } else {
+                    String::new()
+                }
+            });
+
+        let env_b4 = sc
+            .env_micro_physics
+            .as_deref()
+            .filter(|s| !s.is_empty())
+            .unwrap_or("candle wick flame micro-tremor, subtle fabric sway, and delicate atmospheric breath mist");
+
+        let b1 = format!(
+            "{} (Beat 1: Subtext & Preparatory Airlock) — Eye-line shift with subtle pupil dilation, visible chest inhalation causing micro-expansion of ribs, brow/jaw micro-tension, {}; lips naturally closed with zero vocalization.",
+            b1_time, prop_b1
+        );
+        let b2 = format!(
+            "{} (Beat 2: Opening Delivery & Micro-Expression Shift) — Subtle upper-torso lean forward keeping headroom comfortably inside frame, initial facial muscle transition ({}), crisp Mandarin articulation begins.",
+            b2_time, facial_b2
+        );
+        let b3 = format!(
+            "{} (Beat 3: Climax Accent, Tactile Prop Force & Active Listener Reaction) — Peak vocal & facial muscle intensity (masseter flexing, jaw clenching), tactile hand/prop interaction climax;{}.",
+            b3_time, listener_b3
+        );
+        let b4 = format!(
+            "{} (Beat 4: Emotional Resonance & Environmental Micro-Physics Tail Anchor) — Lips close cleanly for 22f latent relay while chest breathing, piercing gaze along steady eye-line axis, and environmental micro-physics ({}) continue naturally.",
+            b4_time, env_b4
+        );
+
+        let mut lines = vec![b1, b2, b3, b4];
+        if !sc.sub_beat_emotions.is_empty() {
+            lines.push(format!(
+                "Sub-beat emotion trajectory: [{}].",
+                sc.sub_beat_emotions.join(" -> ")
+            ));
+        }
+        lines.join("\n")
+    }
+}
+
+/// Formats seconds into mm:ss.sss timestamp format (e.g., 00:01.100).
+pub fn format_mmss_ms(sec: f64) -> String {
+    let clamped = sec.max(0.0);
+    let mins = (clamped / 60.0).floor() as u32;
+    let rem = clamped - (mins as f64 * 60.0);
+    format!("{:02}:{:06.3}", mins, rem)
 }
 
 /// Converts rare Chinese characters, classical names, and stroke-dense literary words into

@@ -1,0 +1,15 @@
+# Google Colab Ultra Cloud GPU Dispatch Plugin Manifest
+id = "colab-ultra"
+name = "Google Colab Ultra Cloud GPU Workstation"
+kind = "custom_cli"
+command = "colab"
+args_template = ["run", "{prompt}"]
+capabilities = ["cloud_gpu_dispatch", "demand_dispatch", "tts_generation", "video_generation"]
+enabled = true
+priority = 70
+os_targets = ["macos", "linux", "windows"]
+description = "Cloud GPU dispatch to Google Colab Ultra L4/A100 instances for video rendering and neural audio synthesis"
+model = "colab-l4-24gb"
+
+[env]
+COLAB_AUTO_SHUTDOWN = "true"

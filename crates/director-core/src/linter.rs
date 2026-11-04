@@ -588,7 +588,7 @@ impl DirectorLinter {
                             "画面提示词包含否定式防转头描述『{}』，Qwen3-VL 文本编码器会激活 `turning face` 动作向量导致尾段转头漂移。",
                             neg_leak
                         ),
-                        suggestion: "请改用纯正向静止描述：`with head held completely level and stationary` 或 `gaze locked steadily forward`。".to_string(),
+                        suggestion: "请改用自然头部构图与正向视线描述：保持自然微动、视线稳定锁定前方 (keeping full head and shoulders comfortably inside the frame with natural micro-movements and steady eye-line axis) 或 gaze locked steadily forward。".to_string(),
                     });
                 }
             }
@@ -608,6 +608,46 @@ impl DirectorLinter {
                     scene_id: sc_id.clone(),
                     message: "90° 正侧脸镜头 (`_side` / `90-degree side profile`) 中使用了双侧复数五官词（`both eyes` / `furrowed brows` / `wide eyes`），会诱发模型强行把脸拧回正面以展示双眼！".to_string(),
                     suggestion: "在正侧脸镜头中请一律使用单侧五官描述：`visible brow`、`visible eye`、`profile jawline`。".to_string(),
+                });
+            }
+
+            // Rule H3-5: L4-微表演与四节拍细节密度锁 (4-Beat Micro-Acting & Detail Density Lock)
+            let has_timestamped_beats = !sc.micro_beats.is_empty()
+                || action_lower.contains("during 00:")
+                || action_lower.contains("during 00:00")
+                || action_lower.contains("00:00.000");
+
+            let has_rich_micro_fields = sc.facial_progression.is_some()
+                || sc.prop_interaction.is_some()
+                || sc.listener_reaction.is_some()
+                || sc.env_micro_physics.is_some();
+
+            let has_anatomical_cues = [
+                "glabella",
+                "eyelid",
+                "masseter",
+                "nostril",
+                "inhalation",
+                "pupil",
+                "eye-line",
+                "micro-expression",
+                "micro-acting",
+                "tactile",
+                "neck tension",
+                "chest breathing",
+                "breath mist",
+                "lip corner",
+            ]
+            .iter()
+            .any(|cue| action_lower.contains(cue));
+
+            if !has_timestamped_beats && !has_rich_micro_fields && !has_anatomical_cues {
+                issues.push(LintIssue {
+                    level: "WARNING".to_string(),
+                    layer: "L4-微表演与四节拍细节密度锁".to_string(),
+                    scene_id: sc_id.clone(),
+                    message: "分镜缺少 L4 四节拍微表演时间轴 (micro_beats / During 00:00) 或微表情/道具触觉/环境微物理细节密度描述。".to_string(),
+                    suggestion: "请配置 `micro_beats` 四节拍、`facial_progression` 面部肌肉渐变、`prop_interaction` 触觉手势交互或解剖级微表情词汇（如 glabella, eyelid, masseter, tactile 等），以激发大模型微表演潜力。".to_string(),
                 });
             }
         }
