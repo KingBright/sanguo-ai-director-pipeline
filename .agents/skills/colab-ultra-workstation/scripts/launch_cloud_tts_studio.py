@@ -35,6 +35,29 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
+try:
+    from chinese_normalizer import normalize_chinese_text_for_tts
+except ImportError:
+    try:
+        from scripts.chinese_normalizer import normalize_chinese_text_for_tts
+    except ImportError:
+        def normalize_chinese_text_for_tts(s: str) -> str:
+            return s
+
+EMOTION_PRESETS = {
+    "happy": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+    "angry": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+    "sad": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+    "fearful": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
+    "afraid": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
+    "disgusted": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0],
+    "melancholic": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0],
+    "surprised": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0],
+    "calm": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+    "cold_laugh": [0.15, 0.45, 0.0, 0.0, 0.40, 0.0, 0.0, 0.20],
+    "whisper": [0.0, 0.0, 0.15, 0.0, 0.0, 0.25, 0.0, 0.85],
+}
+
 if os.path.isdir("/content/drive/My Drive") and not os.path.exists("/content/drive/MyDrive"):
     os.symlink("/content/drive/My Drive", "/content/drive/MyDrive")
 
@@ -385,12 +408,27 @@ def run_lounge_duel_mature(cfg: dict) -> dict:
 
     # Step 2: Synthesize the 4 dialogue lines using the selected engine mode
     # IndexTTS-2 emotion vectors: [happy, angry, sad, afraid, disgusted, melancholic, surprised, calm]
-    lines_spec = [
+    custom_emo = cfg.get("emotion")
+    custom_emo_vec = None
+    if custom_emo in EMOTION_PRESETS:
+        custom_emo_vec = EMOTION_PRESETS[custom_emo]
+    elif cfg.get("emo_vector"):
+        try:
+            custom_emo_vec = json.loads(cfg["emo_vector"]) if isinstance(cfg["emo_vector"], str) else cfg["emo_vector"]
+        except Exception:
+            pass
+
+    default_lines = [
         ("line1_linwei.wav", "linwei", "这份底牌一旦交出去，就再也收不回来了。", 2.55, [0.0, 0.0, 0.05, 0.0, 0.0, 0.15, 0.0, 0.65], 601),
         ("line2_chenmo.wav", "chenmo", "我等这一天，已经等得太久了。", 1.55, [0.0, 0.0, 0.15, 0.0, 0.0, 0.25, 0.0, 0.55], 602),
         ("line3_chenmo.wav", "chenmo", "有些真相一旦揭开，就没有回头路了。", 2.48, [0.0, 0.08, 0.15, 0.0, 0.0, 0.30, 0.0, 0.45], 603),
         ("line4_linwei.wav", "linwei", "那我更要看清楚。", 1.70, [0.0, 0.10, 0.0, 0.0, 0.0, 0.10, 0.0, 0.65], 604),
     ]
+    lines_spec = []
+    for fname, role, txt, max_dur, emo_vec, l_seed in default_lines:
+        active_vec = custom_emo_vec if custom_emo_vec else emo_vec
+        norm_txt = normalize_chinese_text_for_tts(txt)
+        lines_spec.append((fname, role, norm_txt, max_dur, active_vec, l_seed))
 
     line_wavs = {}
     line_meta = {}
@@ -623,6 +661,15 @@ def main() -> None:
     parser.add_argument("--linwei-ref-wav", type=str, default="", help="Custom reference WAV path for Lin Wei")
     parser.add_argument("--chenmo-ref-wav", type=str, default="", help="Custom reference WAV path for Chen Mo")
     parser.add_argument("--temperature", type=float, default=0.42, help="Sampling temperature (default 0.42)")
+    parser.add_argument(
+        "--emotion",
+        choices=["happy", "angry", "sad", "fearful", "afraid", "surprised", "calm", "cold_laugh", "whisper", "disgusted", "melancholic"],
+        default="",
+        help="Emotion preset for IndexTTS 2.5 (angry, sad, happy, fearful, surprised, calm, cold_laugh, whisper)",
+    )
+    parser.add_argument("--emo-alpha", type=float, default=0.40, help="Emotion strength/alpha weight (default: 0.40)")
+    parser.add_argument("--emo-vector", type=str, default="", help="Custom 8D emotion vector e.g. '[0,1,0,0,0,0,0,0]'")
+    parser.add_argument("--emo-text", type=str, default="", help="Emotion text description or prompt")
     args = parser.parse_args()
 
     if args.start_daemon and not args.run_preset:
@@ -640,6 +687,14 @@ def main() -> None:
             cfg["linwei_ref_wav"] = args.linwei_ref_wav
         if args.chenmo_ref_wav:
             cfg["chenmo_ref_wav"] = args.chenmo_ref_wav
+        if args.emotion:
+            cfg["emotion"] = args.emotion
+        if args.emo_alpha is not None:
+            cfg["emo_alpha"] = args.emo_alpha
+        if args.emo_vector:
+            cfg["emo_vector"] = args.emo_vector
+        if args.emo_text:
+            cfg["emo_text"] = args.emo_text
         trigger_preset(args.run_preset, cfg)
         return
 

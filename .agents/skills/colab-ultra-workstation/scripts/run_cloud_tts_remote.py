@@ -19,16 +19,16 @@ import tempfile
 import time
 from pathlib import Path
 
-ROOT = Path("/Users/delroy/Documents/Playground/test001")
-SCRIPTS_DIR = ROOT / "colab-ultra-workstation/scripts"
+ROOT = Path.home() / "Workspace/colab-ultra-workstation"
+SCRIPTS_DIR = Path(__file__).resolve().parent
 LOCAL_TAKES_DIR = ROOT / "tts_takes"
-ARTIFACT_DIR = Path("/Users/delroy/.gemini/antigravity/brain/d4ba0448-57f4-477a-b8cc-1cb22bab61d2")
+ARTIFACT_DIR = Path.home() / ".gemini/antigravity/brain"
 COLAB_BIN = os.path.expanduser("~/.local/bin/colab")
 COLAB_PY = os.path.expanduser("~/.local/share/uv/tools/google-colab-cli/bin/python")
 
 ENV = dict(os.environ)
-ENV.setdefault("https_proxy", "http://127.0.0.1:7890")
-ENV.setdefault("http_proxy", "http://127.0.0.1:7890")
+ENV.setdefault("https_proxy", os.environ.get("https_proxy", "http://127.0.0.1:8228"))
+ENV.setdefault("http_proxy", os.environ.get("http_proxy", "http://127.0.0.1:8228"))
 ENV.setdefault("no_proxy", "localhost,127.0.0.1")
 
 
@@ -103,7 +103,16 @@ for i in range(4):
     return session_name
 
 
-def push_and_run_tts(session: str, mode: str = "hybrid", linwei_instruct: str = "", temperature: float = 0.42) -> None:
+def push_and_run_tts(
+    session: str,
+    mode: str = "hybrid",
+    linwei_instruct: str = "",
+    temperature: float = 0.42,
+    emotion: str = "",
+    emo_alpha: float = 0.40,
+    emo_vector: str = "",
+    emo_text: str = "",
+) -> None:
     studio_src = (SCRIPTS_DIR / "launch_cloud_tts_studio.py").read_bytes()
     b64_src = base64.b64encode(studio_src).decode("ascii")
 
@@ -132,6 +141,18 @@ cmd = [
 lin_inst = {json.dumps(linwei_instruct)}
 if lin_inst:
     cmd.extend(["--linwei-instruct", lin_inst])
+emo = {json.dumps(emotion)}
+if emo:
+    cmd.extend(["--emotion", emo])
+emo_a = {emo_alpha}
+if emo_a is not None:
+    cmd.extend(["--emo-alpha", str(emo_a)])
+emo_v = {json.dumps(emo_vector)}
+if emo_v:
+    cmd.extend(["--emo-vector", emo_v])
+emo_t = {json.dumps(emo_text)}
+if emo_t:
+    cmd.extend(["--emo-text", emo_t])
 p = subprocess.run(cmd)
 if p.returncode == 0:
     Path("/tmp/tts_job_done.flag").write_text("OK")
@@ -224,12 +245,31 @@ def main() -> None:
     )
     parser.add_argument("--linwei-instruct", type=str, default="", help="Custom voice design prompt for Lin Wei")
     parser.add_argument("--temperature", type=float, default=0.42, help="Sampling temperature (default: 0.42)")
+    parser.add_argument(
+        "--emotion",
+        choices=["happy", "angry", "sad", "fearful", "afraid", "surprised", "calm", "cold_laugh", "whisper", "disgusted", "melancholic"],
+        default="",
+        help="Emotion preset for IndexTTS 2.5 (angry, sad, happy, fearful, surprised, calm, cold_laugh, whisper)",
+    )
+    parser.add_argument("--emo-alpha", type=float, default=0.40, help="Emotion strength/alpha weight (default: 0.40)")
+    parser.add_argument("--emo-vector", type=str, default="", help="Custom 8D emotion vector e.g. '[0,1,0,0,0,0,0,0]'")
+    parser.add_argument("--emo-text", type=str, default="", help="Emotion text description or prompt")
+    parser.add_argument("--auto-normalize", action="store_true", default=True, help="Auto-normalize Chinese polyphones and numbers")
     parser.add_argument("--stop-after", action="store_true", help="Immediately stop cloud instance after pulling WAVs")
     args = parser.parse_args()
 
     sname = ensure_cloud_session(gpu=args.gpu)
     try:
-        push_and_run_tts(session=sname, mode=args.mode, linwei_instruct=args.linwei_instruct, temperature=args.temperature)
+        push_and_run_tts(
+            session=sname,
+            mode=args.mode,
+            linwei_instruct=args.linwei_instruct,
+            temperature=args.temperature,
+            emotion=args.emotion,
+            emo_alpha=args.emo_alpha,
+            emo_vector=args.emo_vector,
+            emo_text=args.emo_text,
+        )
         pull_wavs_to_local(session=sname)
     finally:
         if args.stop_after:

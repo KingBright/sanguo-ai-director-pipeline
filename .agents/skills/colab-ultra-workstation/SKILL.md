@@ -82,6 +82,19 @@ grep -q 'COLAB_DFS_DEFAULT=1' ~/.zshrc || echo 'export COLAB_DFS_DEFAULT=1' >> ~
      • 当前账户余额: XXX.XX CCU
      ```
 
+5. **音视频全套短剧生产流水线 (`scripts/colab_av_bridge.py`)**：
+   - **独立音频生成与情绪控制（零 ComfyUI 依赖）**：
+     - 支持 `IndexTTS 2.5`、`Qwen3-TTS`、`Fun-CosyVoice3` 与 `VoxCPM2`；
+     - 显式情绪预设：`--emotion {happy, angry, sad, fearful, surprised, calm, cold_laugh, whisper}`，支持 8D 情绪向量解耦、情绪参考音频与气音/冷笑调优。
+   - **广播级中文准确发音**：
+     - 内置 `chinese_normalizer.py` 驱动多音字消歧（`行/重/长/乐/朝/传/率/调/着/地/得/了`）、三国与短剧专名（诸葛亮/司马懿/丞相/北伐/街亭/陇右/祁山/羽扇纶巾）、年份/日期/百分比/负数/金额汉字化展开与字母级英文缩写保护。
+     - 块级时长（`0.12~0.90s/字`）与有效 RMS 能量校验，异常块自动重试。
+   - **音画同步与嘴型同步铁律**：
+     - **帧精确时长计算**：`exact_frames = round(audio_duration * fps)`，自动设定 MiniMax-H3 `length`，彻底消除台词与画面时长脱节。
+     - **纯净人声 AV_LATENT 注入**：24kHz/16kHz 纯净人声驱动 MiniMax-H3 角色自然唇形微动。
+     - **尾帧潜空间夹具 (`MiniMaxH3AddGuide`)**：在分段结尾挂载双帧夹具（`frame_idx=[107, 136]`），杜绝转场人脸漂移。
+     - **声学对齐字幕与人物铭牌 (`scripts/auto_subtitle_video.py`)**：分析 `130-3600Hz` 人声能量包络，10ms 精度对齐字幕与呼吸气口停顿。
+
 ## 5. 按需加载的专项领域参考文档 (Progressive Disclosure Routing)
 
 为保持主技能轻量高效，请根据用户的具体任务按需读取以下专项文档（未涉及对应领域时无需加载）：

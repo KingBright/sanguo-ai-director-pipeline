@@ -72,6 +72,35 @@ def find_asset_file(fname: str) -> Optional[Path]:
     return next((p for p in candidates if p.exists()), None)
 
 
+def get_audio_duration_and_frames(audio_name: str, fps: float = 24.0, snap_to_17k5: bool = False) -> Tuple[float, int]:
+    """Frame-exact audio duration calculation: exact_frames = round(audio_duration * fps).
+    Ensures 24kHz/16kHz clean speech conditioning for MiniMax-H3 AV_LATENT lip-sync driver.
+    """
+    candidates = [
+        LOCAL_COMFY / "input" / audio_name,
+        DRIVE_COMFY / "input" / audio_name,
+        Path("/tmp/tts_takes") / audio_name,
+        Path("/content/drive/MyDrive/MinimaxH3_Outputs/tts_takes") / audio_name,
+        Path(audio_name),
+    ]
+    for p in candidates:
+        if p.exists() and p.is_file():
+            try:
+                with wave.open(str(p), "rb") as wf:
+                    frames = wf.getnframes()
+                    sr = wf.getframerate()
+                    if sr > 0:
+                        dur = frames / float(sr)
+                        exact_frames = int(round(dur * fps))
+                        if snap_to_17k5:
+                            k = max(4, round((exact_frames - 5) / 17.0))
+                            exact_frames = int(17 * k + 5)
+                        return dur, exact_frames
+            except Exception:
+                pass
+    return 0.0, 124
+
+
 def remove_seg3_default_taillock(wf: dict) -> None:
     """Unhook hardcoded nodes 661/662/663 from Segment 3 if present."""
     for nid in ("661", "662", "663"):
@@ -206,9 +235,25 @@ def apply_config_and_cli_overrides(wf: dict, args) -> str:
 
         # Speaker voice wiring ("role1" / "1" -> node "12", "role2" / "2" -> node "13")
         spk = cli_speakers[seg_id - 1] if len(cli_speakers) >= seg_id else scfg.get("speaker")
+        voice_file = None
         if spk and r2v_nid in wf:
-            voice_node = "12" if str(spk).lower() in ("1", "role1", "s1", "female", "left") else "13"
+            is_r1 = str(spk).lower() in ("1", "role1", "s1", "female", "left")
+            voice_node = "12" if is_r1 else "13"
             wf[r2v_nid]["inputs"]["ref_audios.ref_audio_0"] = [voice_node, 0]
+            voice_file = r1_voice if is_r1 else r2_voice
+
+        # Frame-exact audio duration calculation: exact_frames = round(audio_duration * fps)
+        # Conditioning for MiniMax-H3 AV_LATENT joint audio-visual lip-sync driver
+        audio_name = scfg.get("audio") or voice_file
+        if audio_name and getattr(args, "auto_frame_sync", True):
+            dur, exact_frames = get_audio_duration_and_frames(
+                str(audio_name),
+                fps=getattr(args, "fps", 24.0),
+                snap_to_17k5=getattr(args, "snap_17k5", False),
+            )
+            if dur > 0 and r2v_nid in wf:
+                wf[r2v_nid]["inputs"]["length"] = exact_frames
+                print(f"⏱️ [音画同步] 第 {seg_id} 段音频: {audio_name} (时长={dur:.2f}s) -> 帧数设为 {exact_frames} (fps={getattr(args, 'fps', 24.0)})", flush=True)
 
         # Prompt or Mandarin line replacement
         if r2v_nid in wf:
@@ -497,6 +542,9 @@ def main() -> None:
     parser.add_argument("--only-seg", type=int, choices=[1, 2, 3, 4], default=None, help="Hot-swap only segment N (~3 min)")
     parser.add_argument("--start-seg", type=int, choices=[1, 2, 3, 4], default=1)
     parser.add_argument("--end-seg", type=int, choices=[1, 2, 3, 4], default=4)
+    parser.add_argument("--fps", type=float, default=24.0, help="Video frame rate for audio-to-video lip sync (default: 24.0)")
+    parser.add_argument("--auto-frame-sync", action="store_true", default=True, help="Auto calculate exact frame count from audio duration: round(audio_duration * fps)")
+    parser.add_argument("--snap-17k5", action="store_true", default=False, help="Snap calculated frames to MiniMax-H3 legal F = 17k + 5")
     args = parser.parse_args()
 
     start_s = args.only_seg if args.only_seg else args.start_seg
