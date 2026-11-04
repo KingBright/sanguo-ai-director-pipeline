@@ -1,0 +1,222 @@
+{
+  "project_id": "reborn_coder",
+  "episode_id": "ep01_zero_hour_rollback",
+  "title": "《重生之我是天才程序员》第一幕精修版：零点回档与第412行反杀",
+  "dramatic_premise": "2026机房窒息红警与特征哈希0x7F3A -> 瞳孔匹配转场回到2014年v1.0上线前9分钟 -> 副总赵坤当着投资人剽窃架构并准备点击合并后门PR -> 林辰SSH盲敲劫持大屏、当众反汇编第412行内存偏移一剑封喉",
+  "total_shots": 3,
+  "shots": [
+    {
+      "shot_id": "rc_ep01_s01_2026_betrayal_matchcut",
+      "beat_number": 1,
+      "beat_title": "强钩子：2026机房窒息红警 -> 2014发布会倒计时瞳孔匹配转场",
+      "shot_type": "Establishing",
+      "continuity_track": "track_b_hard_cut",
+      "golden_frames": 90,
+      "duration_sec": 3.75,
+      "lens_and_movement": "35mm anamorphic lens, fast dolly-in into extreme close-up of Lin Chen's eye reflecting red server alerts, snapping into warm 2014 fluorescent office light",
+      "axis_180_geography": "Camera-Left: glowing terminal monitor (`00:09:59` countdown) | Center: 25-year-old Lin Chen jolting upright at his mechanical keyboard | Camera-Right: glass conference room where investors gather",
+      "speaker": "LinChen",
+      "spoken_line": "哈希值 0x7F3A……二〇一四年八月十五号？！离 v1.0 主网合并还有九分钟！",
+      "subtext_motivation": "用『瞳孔里的红光倒影切换成2014年的终端时间戳』完成零废话跨时空转场，第一句话直接抛出精确的哈希值与9分钟生死倒计时。",
+      "emotion_mode": "t8mars_explosive",
+      "character_card": "林辰|核心架构师 · 记忆回档者",
+      "keyframe_anchors": [
+        {
+          "frame_idx": 0,
+          "timestamp_sec": 0.0,
+          "anchor_role": "StartLock_F0",
+          "strength": 1.0,
+          "pose_id": "full_single_P067_diag",
+          "camera_angle": "diag",
+          "body_blocking": "Lin Chen slumped forward over a dark desk in front of a glowing dual-monitor terminal, crimson warning reflections fading into 2014 warm desk lamp light.",
+          "facial_micro_expression": "Eyes snapping wide open in sudden shock, pupils dilated.",
+          "nano_pro_i2i_prompt": "16:9 widescreen ARRI Alexa 65 frame. Young Chinese software architect Lin Chen in a dark charcoal shirt jolts awake at a coding desk with dual monitors displaying Linux kernel code and a digital clock reading 23:50. Cinematic teal-and-amber lighting. Match pose full_single_P067_diag."
+        },
+        {
+          "frame_idx": 51,
+          "timestamp_sec": 2.12,
+          "anchor_role": "MidAction_17k",
+          "strength": 0.88,
+          "pose_id": "full_single_P002_front",
+          "camera_angle": "front",
+          "body_blocking": "Lin Chen sits bolt upright, both hands slamming onto the mechanical keyboard as he checks the `git log` hash on the left monitor.",
+          "facial_micro_expression": "Jaw set tight, cold razor-sharp focus replacing initial shock.",
+          "nano_pro_i2i_prompt": "16:9 widescreen 35mm medium close-up. Lin Chen sits bolt upright at his workstation, hands poised on a mechanical keyboard, green terminal reflections on his sharp focused face. Match pose full_single_P002_front."
+        },
+        {
+          "frame_idx": 85,
+          "timestamp_sec": 3.54,
+          "anchor_role": "V9_TailLock",
+          "strength": 0.9,
+          "pose_id": "full_single_P079_side",
+          "camera_angle": "diag",
+          "body_blocking": "Lin Chen turns his gaze 30 degrees toward the glass conference room on camera-right, fingers frozen over the Enter key.",
+          "facial_micro_expression": "Mouth closed, ice-cold piercing stare.",
+          "nano_pro_i2i_prompt": "16:9 widescreen medium close-up. Lin Chen at his dual-monitor desk looking sharply toward camera-right with mouth closed and cold determined eyes. Match pose full_single_P079_side."
+        }
+      ],
+      "micro_timeline": [
+        {
+          "window_sec": "00:00.000 - 00:00.850",
+          "phase_type": "Silent_Airlock",
+          "visual_trajectory": "Sharp intake of breath as Lin Chen snaps upright from the desk.",
+          "acoustic_cue": "Foley: sub-bass heartbeat cut to crisp fluorescent hum."
+        },
+        {
+          "window_sec": "00:00.850 - 00:02.950",
+          "phase_type": "Vocal_Climax",
+          "visual_trajectory": "His hands lock onto the mechanical keyboard at frame 51 as he reads the 2014 date.",
+          "acoustic_cue": "Foley: mechanical keyboard clack + <d>[Mandarin] Lin Chen realization</d>."
+        },
+        {
+          "window_sec": "00:02.950 - 00:03.750",
+          "phase_type": "Tail_Lock_Hold",
+          "visual_trajectory": "Gaze locks onto Zhao Kun in the conference room (`[68, 85]` V9 TailLock).",
+          "acoustic_cue": "Foley: tense ticking clock."
+        }
+      ]
+    },
+    {
+      "shot_id": "rc_ep01_s02_zhaokun_hypocrisy_ots",
+      "beat_number": 2,
+      "beat_title": "反派施压：赵坤在投资人面前假意邀功、准备合入后门代码",
+      "shot_type": "OTS_A",
+      "continuity_track": "track_b_hard_cut",
+      "golden_frames": 141,
+      "duration_sec": 5.88,
+      "lens_and_movement": "50mm anamorphic lens, OTS from behind Lin Chen standing in the conference room doorway toward Zhao Kun at the 85-inch presentation screen",
+      "axis_180_geography": "Foreground Left: Lin Chen holding a sleek black laptop | Center Background: 85-inch screen showing 'Merge PR #409' button | Camera-Right: Zhao Kun in tailored suit holding laser pointer before seated investors",
+      "speaker": "ZhaoKun",
+      "spoken_line": "各位投资人请看，这套底层清算模块是我连续熬了三个通宵独立重构的，现在我点击合并，星海支付正式上线！",
+      "subtext_motivation": "赵坤不仅剽窃了林辰的架构，还把后门藏在 PR #409 里，企图当着投资人的面既抢走股权又埋下十年后的炸弹。",
+      "emotion_mode": "natural",
+      "character_card": "赵坤|联合创始人 · 技术副总",
+      "keyframe_anchors": [
+        {
+          "frame_idx": 0,
+          "timestamp_sec": 0.0,
+          "anchor_role": "StartLock_F0",
+          "strength": 1.0,
+          "pose_id": "full_single_P015_diag",
+          "camera_angle": "diag",
+          "body_blocking": "Zhao Kun in a bespoke navy suit stands confidently beside the glowing 85-inch presentation screen on camera-right, right hand gesturing toward the 'Merge Pull Request #409' UI.",
+          "facial_micro_expression": "Smug, polished corporate smile, mouth closed before speaking.",
+          "nano_pro_i2i_prompt": "16:9 widescreen 50mm OTS shot in a modern glass-walled tech boardroom at night. Foreground left shows silhouette of Lin Chen holding a laptop. On camera-right stands smug executive Zhao Kun in a navy suit beside an 85-inch screen showing Git code merge UI. Match pose full_single_P015_diag."
+        },
+        {
+          "frame_idx": 51,
+          "timestamp_sec": 2.12,
+          "anchor_role": "MidAction_17k",
+          "strength": 0.86,
+          "pose_id": "upper80v2_P022_diag",
+          "camera_angle": "diag",
+          "body_blocking": "Zhao Kun raises the wireless presenter remote in his right hand, thumb hovering over the confirm button while boasting to the investors.",
+          "facial_micro_expression": "Arrogant triumphant grin, eyes glancing smugly toward Lin Chen at the door.",
+          "nano_pro_i2i_prompt": "16:9 widescreen 50mm shot. Zhao Kun in a navy suit raises a wireless presenter remote beside a large presentation screen, smiling smugly at seated venture capital investors. Match pose upper80v2_P022_diag."
+        },
+        {
+          "frame_idx": 136,
+          "timestamp_sec": 5.67,
+          "anchor_role": "V9_TailLock",
+          "strength": 0.9,
+          "pose_id": "full_single_P017_front",
+          "camera_angle": "diag",
+          "body_blocking": "Zhao Kun freezes as the large screen behind him suddenly flashes crimson 'SSH OVERRIDE: MERGE BLOCKED BY ROOT'.",
+          "facial_micro_expression": "Smile freezing on his lips, mouth closed, eyes narrowing in sudden confusion.",
+          "nano_pro_i2i_prompt": "16:9 widescreen 50mm shot. Zhao Kun stands frozen beside the boardroom screen as red terminal warning light illuminates his stunned face, mouth closed. Match pose full_single_P017_front."
+        }
+      ],
+      "micro_timeline": [
+        {
+          "window_sec": "00:00.000 - 00:01.100",
+          "phase_type": "Silent_Airlock",
+          "visual_trajectory": "Zhao Kun steps before the 85-inch screen, gesturing smoothly to the investors.",
+          "acoustic_cue": "Foley: quiet boardroom murmur."
+        },
+        {
+          "window_sec": "00:01.100 - 00:04.600",
+          "phase_type": "Vocal_Climax",
+          "visual_trajectory": "He boasts of writing the core engine himself and lifts the remote at frame 51.",
+          "acoustic_cue": "<d>[Mandarin] Zhao Kun boastful speech</d>."
+        },
+        {
+          "window_sec": "00:04.600 - 00:05.880",
+          "phase_type": "Tail_Lock_Hold",
+          "visual_trajectory": "Red SSH override alert flashes across his face (`[107, 136]` V9 TailLock).",
+          "acoustic_cue": "Foley: sharp digital alert chime."
+        }
+      ]
+    },
+    {
+      "shot_id": "rc_ep01_s03_linchen_live_decompile_counter",
+      "beat_number": 3,
+      "beat_title": "降维反杀：林辰盲敲终端劫持大屏，当众拆穿第 412 行内存后门",
+      "shot_type": "Hero_Climax",
+      "continuity_track": "track_b_hard_cut",
+      "golden_frames": 141,
+      "duration_sec": 5.88,
+      "lens_and_movement": "50mm anamorphic lens, medium shot on Lin Chen walking two steps into the boardroom while typing one-handed on his laptop, camera slowly arcing to reveal the projected C++ hex dump behind him",
+      "axis_180_geography": "Camera-Left/Center: Lin Chen holding laptop in left arm, right hand striking Enter | Background Center: 85-inch screen projecting disassembled pointer overflow at line 412 | Camera-Right: stunned investors",
+      "speaker": "LinChen",
+      "spoken_line": "你独立重构的？那请赵总向投资人解释一下，第 412 行这个指向海外匿名账户的未对齐指针偏移，也是你写的吗？",
+      "subtext_motivation": "林辰不跟赵坤吵架，直接用工程师最硬核的方式——当众投屏反汇编代码与资金劫持地址，一剑封喉！",
+      "emotion_mode": "t8mars_explosive",
+      "character_card": null,
+      "keyframe_anchors": [
+        {
+          "frame_idx": 0,
+          "timestamp_sec": 0.0,
+          "anchor_role": "StartLock_F0",
+          "strength": 1.0,
+          "pose_id": "full_single_P015_front",
+          "camera_angle": "low",
+          "body_blocking": "Lin Chen stands in the glass doorway cradling his open laptop on his left forearm, right index finger pressing the Enter key decisively.",
+          "facial_micro_expression": "Mouth closed, calm razor-sharp eyes locked on Zhao Kun.",
+          "nano_pro_i2i_prompt": "16:9 widescreen 50mm low-angle shot. Young Chinese tech architect Lin Chen stands in a modern boardroom holding an open laptop on his left arm, right finger pressing Enter, red-and-cyan code projected behind him. Match pose full_single_P015_front."
+        },
+        {
+          "frame_idx": 51,
+          "timestamp_sec": 2.12,
+          "anchor_role": "MidAction_17k",
+          "strength": 0.88,
+          "pose_id": "upper80v2_P022_low",
+          "camera_angle": "low",
+          "body_blocking": "Lin Chen tilts the laptop screen toward the seated investors while his right hand points sharply at line 412 highlighted in red on the giant 85-inch display.",
+          "facial_micro_expression": "Cold, commanding precision, delivering the surgical question.",
+          "nano_pro_i2i_prompt": "16:9 widescreen 50mm low-angle shot. Lin Chen holds his laptop in his left hand and points sharply with his right hand toward the highlighted red code block on the boardroom screen behind him. Match pose upper80v2_P022_low."
+        },
+        {
+          "frame_idx": 136,
+          "timestamp_sec": 5.67,
+          "anchor_role": "V9_TailLock",
+          "strength": 0.9,
+          "pose_id": "full_single_P022_front",
+          "camera_angle": "low",
+          "body_blocking": "Lin Chen snaps his laptop half-shut with a crisp click, standing tall and stationary under the cool boardroom spotlights.",
+          "facial_micro_expression": "Lips closed, unshakeable cold gaze locked on camera-right (`[107, 136]` V9 TailLock).",
+          "nano_pro_i2i_prompt": "16:9 widescreen 50mm low-angle shot. Lin Chen stands tall in the boardroom holding his laptop, mouth closed and gaze locked steadily toward camera-right under dramatic lighting. Match pose full_single_P022_front."
+        }
+      ],
+      "micro_timeline": [
+        {
+          "window_sec": "00:00.000 - 00:01.100",
+          "phase_type": "Silent_Airlock",
+          "visual_trajectory": "Lin Chen presses Enter; the giant screen behind him flips to line 412 hex dump.",
+          "acoustic_cue": "Foley: crisp Enter key strike + projector relay click."
+        },
+        {
+          "window_sec": "00:01.100 - 00:04.700",
+          "phase_type": "Vocal_Climax",
+          "visual_trajectory": "He points at line 412 at frame 51, exposing the hidden offshore pointer exploit.",
+          "acoustic_cue": "<d>[Mandarin] Lin Chen surgical counter-strike</d>."
+        },
+        {
+          "window_sec": "00:04.700 - 00:05.880",
+          "phase_type": "Tail_Lock_Hold",
+          "visual_trajectory": "Lin Chen holds his cold commanding gaze as the boardroom erupts in shock (`[107, 136]` V9 TailLock).",
+          "acoustic_cue": "Foley: dramatic low synth bass drop."
+        }
+      ]
+    }
+  ]
+}

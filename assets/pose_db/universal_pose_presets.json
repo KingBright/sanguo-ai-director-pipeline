@@ -1,0 +1,210 @@
+{
+  "modern_drama_confrontation": {
+    "name": "现代都市/律政/职场双人对峙 (Track A/B 180°轴线锁定)",
+    "genre": "modern_drama",
+    "description": "适用于现代职场、律政谈判、悬疑审讯、情感对峙。包含 90° 正侧脸特写锚点与双人同框锚点，自动匹配 H3 180度南侧轴线与静止头部锁定。",
+    "recommended_frames": 90,
+    "anchors": [
+      {
+        "pose_id": "pair60_P001_front",
+        "frame_idx": 0,
+        "strength": 1.0,
+        "role": "双人面对面建置 (Master Two-Shot)"
+      },
+      {
+        "pose_id": "upper80v2_P005_side",
+        "frame_idx": 51,
+        "strength": 0.88,
+        "role": "90°正侧脸冷静发问 (Profile Lock)"
+      },
+      {
+        "pose_id": "upper80v2_P012_front",
+        "frame_idx": 85,
+        "strength": 0.9,
+        "role": "正面微表情收束定格 (Silent Tail Anchor)"
+      }
+    ]
+  },
+  "modern_seated_table_slam": {
+    "name": "室内坐姿拍桌/决断 (遵守防越顶裁头耦合律)",
+    "genre": "modern_drama",
+    "description": "适用于董事会、审讯室、书房、中军帐坐姿决断。全程保持坐姿前倾 (Remaining Seated Forward Lean) 配合充足头顶留白，杜绝固定中景内起立裁头。",
+    "recommended_frames": 90,
+    "anchors": [
+      {
+        "pose_id": "full_single_P011_front",
+        "frame_idx": 0,
+        "strength": 1.0,
+        "role": "沉稳端坐凝视 (1.1s Silent Airlock)"
+      },
+      {
+        "pose_id": "full_single_P004_diag",
+        "frame_idx": 51,
+        "strength": 0.88,
+        "role": "上半身前倾撑案决断 (Seated Lean-In)"
+      },
+      {
+        "pose_id": "full_single_P011_diag",
+        "frame_idx": 85,
+        "strength": 0.9,
+        "role": "余韵定格闭口收尾 (1.3s Silent Tail)"
+      }
+    ]
+  },
+  "fashion_gravure_s_curve_flow": {
+    "name": "时尚写真/车展/模特多锚点流转 (S曲线 -> 仰头撩发 -> 回眸)",
+    "genre": "fashion_gravure",
+    "description": "适用于时尚大片、写真模特、电商服装展示。在 17k 相位点 (0 -> 51 -> 85) 平滑流转三套经典高张力姿态，零残影、零手部崩坏。",
+    "recommended_frames": 90,
+    "anchors": [
+      {
+        "pose_id": "full_sexy_P001_front",
+        "frame_idx": 0,
+        "strength": 1.0,
+        "role": "S型曲线叉腰立姿 (Start Anchor)"
+      },
+      {
+        "pose_id": "full_sexy_P002_diag",
+        "frame_idx": 51,
+        "strength": 0.86,
+        "role": "反身仰头双手撩发 (Mid 17k Anchor)"
+      },
+      {
+        "pose_id": "full_sexy_P003_side",
+        "frame_idx": 85,
+        "strength": 0.9,
+        "role": "侧身回眸凝视镜头 (Tail 17k Anchor)"
+      }
+    ]
+  },
+  "fashion_gravure_recline_allure": {
+    "name": "时尚居家/沙发/地毯慵懒卧姿流转 (斜坐 -> 托腮俯卧 -> 侧卧)",
+    "genre": "fashion_gravure",
+    "description": "适用于高级感室内写真、护肤品/家居广告、氛围感短片。",
+    "recommended_frames": 90,
+    "anchors": [
+      {
+        "pose_id": "full_sexy_P026_front",
+        "frame_idx": 0,
+        "strength": 1.0,
+        "role": "美人鱼斜坐姿态 (Start Anchor)"
+      },
+      {
+        "pose_id": "full_sexy_P064_diag",
+        "frame_idx": 51,
+        "strength": 0.86,
+        "role": "俯卧双手托腮微翘双腿 (Mid 17k Anchor)"
+      },
+      {
+        "pose_id": "full_sexy_P068_front",
+        "frame_idx": 85,
+        "strength": 0.9,
+        "role": "优雅侧卧舒展收尾 (Tail 17k Anchor)"
+      }
+    ]
+  },
+  "action_martial_proseam_valley": {
+    "name": "动作/武术/街舞 V3 ProSeam 动能波谷流转 (起势 -> 爆发 -> 蹬开分离)",
+    "genre": "action_kinetic",
+    "description": "遵循 V3 ProSeam 动能波谷法则：在分段尾帧强制进入物理分离或招式定格 (Kinetic Valley)，为下一段提供干净物理初速度。",
+    "recommended_frames": 90,
+    "anchors": [
+      {
+        "pose_id": "full_single_P035_diag",
+        "frame_idx": 0,
+        "strength": 1.0,
+        "role": "格斗戒备起势 (Combat Guard)"
+      },
+      {
+        "pose_id": "full_single_P038_side",
+        "frame_idx": 51,
+        "strength": 0.85,
+        "role": "正蹬/出拳爆发顶点 (Strike Impact)"
+      },
+      {
+        "pose_id": "full_single_P036_low",
+        "frame_idx": 85,
+        "strength": 0.9,
+        "role": "拉开距离沉身定格 (Kinetic Valley Separation)"
+      }
+    ]
+  },
+  "digital_human_explainer_koubo": {
+    "name": "数字人口播/财经科技解说/带货主播 (自然手势链)",
+    "genre": "digital_human_koubo",
+    "description": "适用于小林说式财经科技解说、产品评测、知识口播。采用上半身特写系姿态，手势随语义关键帧自然展开与收拢。",
+    "recommended_frames": 90,
+    "anchors": [
+      {
+        "pose_id": "upper80v2_P001_front",
+        "frame_idx": 0,
+        "strength": 1.0,
+        "role": "正面自信开场眼神锁定"
+      },
+      {
+        "pose_id": "upper80v2_P008_diag",
+        "frame_idx": 51,
+        "strength": 0.85,
+        "role": "单手展开强调核心论点"
+      },
+      {
+        "pose_id": "upper80v2_P003_front",
+        "frame_idx": 85,
+        "strength": 0.9,
+        "role": "双手微收从容定格收尾"
+      }
+    ]
+  },
+  "historical_epic_command_oath": {
+    "name": "历史权谋/古装剧将相决断与军令 (Historical Epic Command Preset)",
+    "genre": "historical_epic",
+    "description": "适用于历史正剧、古装权谋、中军帐授令与大将请战场景。结合低机位英雄仰拍与17k关键帧锚定。",
+    "recommended_frames": 90,
+    "anchors": [
+      {
+        "pose_id": "full_single_P001_low",
+        "frame_idx": 0,
+        "strength": 1.0,
+        "role": "统帅威严负手立姿 (Low-Angle Heroic Start)"
+      },
+      {
+        "pose_id": "full_single_P022_diag",
+        "frame_idx": 51,
+        "strength": 0.88,
+        "role": "单膝跪地抱拳请命 / 挥袖授令 (Mid 17k Anchor)"
+      },
+      {
+        "pose_id": "full_single_P002_front",
+        "frame_idx": 85,
+        "strength": 0.9,
+        "role": "目光如炬定格收束 (V9 TailLock Anchor)"
+      }
+    ]
+  },
+  "romance_couple_interaction": {
+    "name": "情感剧/偶像剧双人亲密互动与背靠背张力",
+    "genre": "romance_drama",
+    "description": "适用于情感短剧、MV、双人宿命感同框，直接调用 POSE-DB `2人絡み` 双人姿态系。",
+    "recommended_frames": 90,
+    "anchors": [
+      {
+        "pose_id": "pair60_P005_diag",
+        "frame_idx": 0,
+        "strength": 1.0,
+        "role": "双人宿命感同框"
+      },
+      {
+        "pose_id": "pair60_P002_front",
+        "frame_idx": 51,
+        "strength": 0.86,
+        "role": "缓慢靠近四目相对"
+      },
+      {
+        "pose_id": "pair60_P008_side",
+        "frame_idx": 85,
+        "strength": 0.9,
+        "role": "近距离侧颜凝视定格"
+      }
+    ]
+  }
+}

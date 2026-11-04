@@ -1,0 +1,191 @@
+# ============================================================================
+# AetherDirector Studio · L1-L5 & H3 v2.5 / V9 17k Keyframe Manifest
+# Project: sanguo | Episode: ep01_qishan_secret_lens
+# Title: 《三国：逆天改命》第一幕精修版：祁山急报与烛下玄机
+# ============================================================================
+schema_version = 1
+title = "第一幕精修版：祁山急报与烛下玄机"
+project = "sanguo"
+output_dir = "C:/Users/Liang/Downloads/sanguo/output/raw_clips/ep01_qishan_secret_lens"
+
+[[characters]]
+name = "ZhugeLiang"
+tier = "protagonist"
+appearance = "Chancellor Zhuge Liang at age 47 (First Northern Expedition, 228 AD), closely modeled after the iconic 1994 CCTV Three Kingdoms portrayal by Tang Guoqiang. Dignified handsome Chinese scholarly face, expressive sword-like eyebrows, deep intelligent eyes, straight nose, classic well-groomed three-stranded long black beard. Wearing the iconic tall teal silk GuanJin headdress and wide-sleeved white crane-patterned robe (HeChang) with blue-and-gold woven brocade trim, holding a white crane feather fan."
+voice = "alnilam"
+ref_image = "characters/images/zhugeliang_v2.jpg"
+
+[[characters]]
+name = "GuYuan"
+tier = "protagonist"
+appearance = "21-year-old youthful and handsome Chinese male advisor (sharp defined jawline, straight nose bridge, natural parted black hair, wearing sleek black-rimmed rectangular eyeglasses, dressed in white Hanfu scholar inner robe and dark-indigo crane-patterned cloak, carrying a matte-black hard-shell eyeglasses case with a spare convex lens)."
+voice = "rigel"
+ref_image = "characters/images/guyuan_ancient_v2.jpg"
+
+[[characters]]
+name = "MaSu"
+tier = "supporting"
+appearance = "Proud Chinese military advisor-general Ma Su in his late 30s, sharp haughty gaze, fair skin, trimmed beard, wearing ornate silver-scale Shu Han general armor with pristine white silk battle cloak and high military crest helmet."
+voice = "charon"
+ref_image = "characters/images/zhuge_liang.jpg"
+
+[[characters]]
+name = "OfficerWang"
+tier = "supporting"
+appearance = "Veteran Shu Han general Wang Ping in his late 30s, sturdy battle-hardened face with short stubble beard, wearing weathered heavy Shu Han leather and iron lamellar armor stained with mountain rain and mud."
+voice = "fenrir"
+ref_image = "characters/images/guyuan_ancient.jpg"
+
+# ----------------------------------------------------------------------------
+# Beat 1: 强钩子 · 暴雨急报撞帐 (90 Golden Frames = 3.75s, 17k Keyframes: [0, 51, 85])
+# ----------------------------------------------------------------------------
+[[scenes]]
+id = "sg_ep01_s01_storm_courier_hook"
+era = "ancient"
+action = "Low-angle 28mm anamorphic establishing shot from the rain-lashed entrance of the Shu Han Qishan command tent looking inward. At Frame 0, @OfficerWang in rain-drenched leather armor bursts through the heavy canvas tent flap from camera-left with Freezing mountain rain blowing outside, holding a blood-stained bamboo dispatch scroll high. At Frame 51, he drops heavily onto one knee in the center foreground before the clay sand table, thrusting the bamboo scroll forward with both hands. At Frame 85, he holds the kneeling posture steady with head bowed and mouth closed."
+framing = "establishing"
+aspect = "16:9"
+duration = 6
+model = "veo-quality"
+selected_model = "veo-quality"
+room_id = "qishan_command_tent"
+arc_phase = "phase_4_evidence_awakening"
+acoustic_space = "ancient_battlefield"
+camera_motion = "28mm anamorphic lens, low-angle tracking push-in from rain-lashed tent entrance toward center sand table"
+ref_image = "characters/images/guyuan_ancient.jpg"
+characters = ["OfficerWang"]
+speaker = "OfficerWang"
+line = "报！陇右八百里加急！张郃前锋已过渭水，截获魏军绝密调兵竹简！"
+pose_anchors = ["full_single_P035_diag", "full_single_P022_diag", "full_single_P022_front"]
+keyframe_indices = [0, 51, 85]
+keyframe_strengths = [1.0, 0.88, 0.90]
+continuity_track = "track_b_hard_cut"
+tail_lock_v9 = true
+emotion_mode = "t8mars_explosive"
+character_card = "王平|蜀汉裨将军 · 陇右前锋斥候统领"
+
+# ----------------------------------------------------------------------------
+# Beat 2: 人际施压 · 马谡傲慢请战催读 (141 Golden Frames = 5.88s, 17k Keyframes: [0, 51, 136])
+# ----------------------------------------------------------------------------
+[[scenes]]
+id = "sg_ep01_s02_masu_pressure_ots"
+era = "ancient"
+action = "50mm anamorphic over-the-shoulder shot from behind Zhuge Liang's left shoulder on camera-left toward @MaSu standing on camera-right behind the clay sand table of Jieting. At Frame 0, Ma Su in gleaming silver-scale armor stands proudly with chin slightly raised and lips closed. At Frame 51, Ma Su steps half a pace toward the sand table, clasping his hands in a confident military salute as he urges the Chancellor to read the bamboo scroll aloud. At Frame 136, Ma Su holds his clasped-hand salute stationary with head held completely level and mouth closed."
+framing = "medium"
+aspect = "16:9"
+duration = 6
+model = "veo-quality"
+selected_model = "veo-quality"
+room_id = "qishan_command_tent"
+arc_phase = "phase_4_evidence_awakening"
+acoustic_space = "ancient_tent_interior"
+camera_motion = "50mm anamorphic lens, over-the-shoulder slow tense push-in toward Ma Su on camera-right"
+ref_image = "characters/images/zhuge_liang.jpg"
+characters = ["MaSu"]
+speaker = "MaSu"
+line = "丞相！张郃何足道哉？请即刻宣读竹简，某愿立军令状屯兵街亭！"
+pose_anchors = ["full_single_P015_diag", "upper80v2_P016_diag", "upper80v2_P016_front"]
+keyframe_indices = [0, 51, 136]
+keyframe_strengths = [1.0, 0.86, 0.90]
+continuity_track = "track_b_hard_cut"
+tail_lock_v9 = true
+emotion_mode = "natural"
+character_card = "马谡|蜀汉参军 · 抚军从事"
+
+# ----------------------------------------------------------------------------
+# Beat 3: 隐秘危机 · 丞相展简失焦推远 (141 Golden Frames = 5.88s, 17k Keyframes: [0, 51, 136])
+# ----------------------------------------------------------------------------
+[[scenes]]
+id = "sg_ep01_s03_zhuge_hidden_presbyopia_crisis"
+era = "ancient"
+action = "85mm anamorphic portrait reverse shot on 47-year-old Chancellor @ZhugeLiang seated behind his wooden campaign desk on camera-left under flickering oil candlelight, with young advisor @GuYuan standing quietly in half-shadow on camera-right. At Frame 0, Zhuge Liang unrolls the bamboo dispatch scroll at normal reading distance with dignified calm. At Frame 51, remaining seated with comfortable headroom, he slowly extends his arms to hold the bamboo scroll far out at arm's length, squinting subtly with furrowed brow under the dim lamp light while speaking gravely to stall for time as Gu Yuan notices his outstretched arms. At Frame 136, Zhuge Liang holds the scroll steady at arm's length with head held completely level and stationary and lips closed."
+framing = "closeup"
+aspect = "16:9"
+duration = 6
+model = "veo-quality"
+selected_model = "veo-quality"
+room_id = "qishan_command_tent"
+arc_phase = "phase_4_evidence_awakening"
+acoustic_space = "ancient_tent_interior"
+camera_motion = "85mm anamorphic lens, shallow depth of field slow push-in on Zhuge Liang extending bamboo scroll to arm's length"
+ref_image = "characters/images/zhugeliang_v2.jpg"
+characters = ["ZhugeLiang", "GuYuan"]
+speaker = "ZhugeLiang"
+line = "且慢……张郃用兵诡诈，此简所载行军里数，干系三军生死，须细细详察……"
+keyframes = [
+    "episodes/ep01_qishan_secret_lens/keyframes/s03_kf000_zhuge_unroll.png",
+    "episodes/ep01_qishan_secret_lens/keyframes/s03_kf051_zhuge_arms_length_squint.png",
+    "episodes/ep01_qishan_secret_lens/keyframes/s03_kf051_zhuge_arms_length_squint.png"
+]
+pose_anchors = ["full_single_P002_front", "full_single_P012_diag", "full_single_P012_front"]
+keyframe_indices = [0, 51, 136]
+keyframe_strengths = [1.0, 0.88, 0.90]
+continuity_track = "track_b_hard_cut"
+tail_lock_v9 = true
+emotion_mode = "natural"
+character_card = "诸葛亮|蜀汉丞相 · 武乡侯"
+
+# ----------------------------------------------------------------------------
+# Beat 4: 微距铁证 · 借拨灯芯无声入画的凸透镜 (90 Golden Frames = 3.75s, 17k Keyframes: [0, 51, 85])
+# ----------------------------------------------------------------------------
+[[scenes]]
+id = "sg_ep01_s04_pov_blur_to_lens_insert"
+era = "ancient"
+action = "100mm macro extreme close-up over Zhuge Liang's optical axis onto the damp bamboo scroll beside the brass oil lamp. At Frame 0, the dense tiny brush-ink characters on the bamboo slip are blurry and out-of-focus with double-vision ghosting under flickering candlelight. At Frame 51, @GuYuan's steady hand enters from camera-right holding a brass wick trimmer to brighten the oil lamp while smoothly sliding a sleek metal-rimmed convex optical lens between Zhuge Liang's eyes and the bamboo slip; viewed through the convex lens, the tiny ink characters ('张郃弃大路，断绝街亭水源') snap into magnified crystal-clear razor-sharp focus! At Frame 85, the convex lens remains rock-steady over the magnified ink characters."
+framing = "closeup"
+aspect = "16:9"
+duration = 6
+model = "veo-quality"
+selected_model = "veo-quality"
+room_id = "qishan_command_tent"
+arc_phase = "phase_4_evidence_awakening"
+acoustic_space = "ancient_tent_interior"
+camera_motion = "100mm macro lens, optical rack focus from blurry bamboo ink characters to razor-sharp 2x magnification through convex lens"
+ref_image = "characters/images/guyuan_ancient_v2.jpg"
+characters = ["GuYuan"]
+speaker = "GuYuan"
+line = "丞相，夜雨湿寒烛火暗淡，容属下为您拨亮灯芯，以观拨云见日之策。"
+keyframes = [
+    "episodes/ep01_qishan_secret_lens/keyframes/s04_kf000_pov_blur_bamboo.png",
+    "episodes/ep01_qishan_secret_lens/keyframes/s04_kf051_pov_convex_lens_sharp.png",
+    "episodes/ep01_qishan_secret_lens/keyframes/s04_kf051_pov_convex_lens_sharp.png"
+]
+pose_anchors = ["upper80v2_P018_high", "upper80v2_P018_diag", "upper80v2_P018_front"]
+keyframe_indices = [0, 51, 85]
+keyframe_strengths = [1.0, 0.90, 0.92]
+continuity_track = "track_b_hard_cut"
+tail_lock_v9 = true
+emotion_mode = "natural"
+character_card = "顾渊|随军参军 · 执镜守夜人"
+
+# ----------------------------------------------------------------------------
+# Beat 5: 破局决断 · 丞相目中寒光乍现当场改令 (141 Golden Frames = 5.88s, 17k Keyframes: [0, 51, 136])
+# ----------------------------------------------------------------------------
+[[scenes]]
+id = "sg_ep01_s05_zhuge_awakening_command_climax"
+era = "ancient"
+action = "50mm anamorphic low-angle heroic shot of Chancellor @ZhugeLiang behind his campaign desk. At Frame 0, looking through the convex lens, his furrowed brow relaxes as a sharp flash of cold white light glints across his piercing eyes. At Frame 51, remaining seated with comfortable headroom above his teal GuanJin crown, Zhuge Liang leans his upper torso forward and strikes the tip of his white crane feather fan decisively onto the Jieting river valley on the clay sand table with thunderous authority. At Frame 136, Zhuge Liang holds the wooden military command token upright in his left hand with head held completely level and stationary and mouth closed."
+framing = "medium"
+aspect = "16:9"
+duration = 6
+model = "veo-quality"
+selected_model = "veo-quality"
+room_id = "qishan_command_tent"
+arc_phase = "phase_4_evidence_awakening"
+acoustic_space = "ancient_tent_interior"
+camera_motion = "50mm anamorphic lens, low-angle slow tilt up and pull back as Zhuge Liang strikes the Jieting sand table"
+ref_image = "characters/images/zhugeliang_v2.jpg"
+characters = ["ZhugeLiang"]
+speaker = "ZhugeLiang"
+line = "张郃竟欲断我街亭水源！马谡严禁登山，王平分兵死守汲道！"
+keyframes = [
+    "characters/images/zhugeliang_v2.jpg",
+    "episodes/ep01_qishan_secret_lens/keyframes/s05_kf051_zhuge_fan_strikes_sandtable.png",
+    "episodes/ep01_qishan_secret_lens/keyframes/s05_kf051_zhuge_fan_strikes_sandtable.png"
+]
+pose_anchors = ["full_single_P001_low", "upper80v2_P022_low", "full_single_P002_front"]
+keyframe_indices = [0, 51, 136]
+keyframe_strengths = [1.0, 0.88, 0.90]
+continuity_track = "track_a_latent_relay"
+tail_lock_v9 = true
+emotion_mode = "t8mars_explosive"

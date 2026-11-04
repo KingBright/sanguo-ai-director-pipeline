@@ -1,0 +1,17 @@
+[Script Info]
+Title: Sanguo Ep01 Shot00B Convention Cosplayer Selfie
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Cinema,Microsoft YaHei,36,&H00F2F6FA,&H0000FFFF,&H00141414,&H80000000,-1,0,0,0,100,100,1.5,0,1,2.2,1.2,2,40,40,38,1
+Style: CoserPeer,Microsoft YaHei,34,&H00FFF0E0,&H0000FFFF,&H00141414,&H80000000,-1,0,0,0,100,100,1.5,0,1,2.2,1.2,2,40,40,38,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.25,0:00:02.68,CoserPeer,ZhaoYunCoser,0,0,0,,{\fad(80,60)}兄弟，你这身丞相气度绝了！
+Dialogue: 0,0:00:02.88,0:00:04.78,CoserPeer,XiaoQiaoCoser,0,0,0,,{\fad(60,60)}丞相大人，来合张影呀！
+Dialogue: 0,0:00:05.12,0:00:07.02,Cinema,GuYuan,0,0,0,,{\fad(60,120)}哈哈，多谢二位捧场！

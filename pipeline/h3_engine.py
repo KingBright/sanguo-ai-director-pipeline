@@ -143,16 +143,32 @@ class H3Engine:
         return None
 
     def build_h3_prompt(self, scene: Dict[str, Any], global_style: Dict[str, Any]) -> str:
-        """Compose optimized cinematic prompt with L3 acoustic space & L4 physical camera directives for MiniMax H3."""
+        """Compose optimized cinematic prompt with L3 acoustic space, L4 physical camera, and native <d> lip-sync dialogue for MiniMax H3."""
         action = scene.get("action", "")
         framing = scene.get("framing", "medium")
         camera_motion = scene.get("camera_motion", "")
         style_variant = scene.get("style_variant", "")
         acoustic_space = scene.get("acoustic_space", "")
+        speaker = scene.get("speaker", "GuYuan")
+        line = scene.get("line", "").strip()
+        dialogue_mode = scene.get("dialogue_mode", "lipsync" if acoustic_space == "convention_hall_bustling" else "vo")
+
+        # Native Joint Audio-Video Lip-Sync Injection (<d>...</d> inline dialogue tag)
+        dialogue_cue = ""
+        if line and dialogue_mode == "lipsync":
+            dialogue_cue = (
+                f"{speaker} opens his mouth and speaks clearly in natural Mandarin Chinese directly on camera "
+                f"with expressive, accurately synchronized lip movements: <d>{line}</d>"
+            )
 
         # L3 Acoustic Space Mapping (prevents loud outdoor storm sounds inside closed indoor rooms)
         audio_cue = ""
-        if acoustic_space == "exterior_storm":
+        if acoustic_space == "convention_hall_bustling":
+            if dialogue_cue:
+                audio_cue = "Sound: clear natural Mandarin male speech in the foreground with synchronized lip movements, accompanied by lively indoor anime convention hall ambiance, DSLR camera shutter clicks, and warm crowd chatter."
+            else:
+                audio_cue = "Sound: lively bustling indoor anime convention hall ambiance, rapid DSLR camera shutter clicks, cheerful crowd chatter and warm applause."
+        elif acoustic_space == "exterior_storm":
             audio_cue = "Sound: heavy rain pouring outside hitting window glass and leaves, distant low thunder."
         elif acoustic_space == "interior_closed":
             audio_cue = "Sound: quiet warm indoor room tone, very faint muffled rain outside the closed window, subtle mouse click and gentle rustle of a feather fan."
@@ -176,7 +192,7 @@ class H3Engine:
         # L2 & S5 Layer Separation (never mix ancient costume suffix into modern scenes)
         scene_id = scene.get("id", "").lower()
         suffix = global_style.get("suffix", "")
-        if any(k in scene_id for k in ("modern", "dorm", "study", "cosplay", "pack", "rain_exterior", "crash")):
+        if any(k in scene_id for k in ("modern", "dorm", "study", "cosplay", "pack", "rain_exterior", "crash", "convention")):
             suffix = (
                 "Shot on ARRI Alexa 65 with Panavision anamorphic lens, live-action cinematic realism "
                 "blended with Rembrandt classical oil-painting chiaroscuro lighting, real human skin micro-texture, "
@@ -187,7 +203,11 @@ class H3Engine:
             suffix = global_style["variants"][style_variant].get("suffix", suffix)
 
         cam_tag = f"[{framing} shot, {camera_motion}]" if camera_motion else f"[{framing} shot]"
-        full_prompt = f"{cam_tag} {action} {suffix} {audio_cue}".strip()
+        parts = [cam_tag, action]
+        if dialogue_cue:
+            parts.append(dialogue_cue)
+        parts.extend([suffix, audio_cue])
+        full_prompt = " ".join(p for p in parts if p).strip()
         return full_prompt
 
     def run_movie_project(

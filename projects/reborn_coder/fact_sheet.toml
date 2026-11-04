@@ -1,0 +1,79 @@
+# ============================================================================
+# 《重生之我是天才程序员》产线事实表 (Production Line Fact Sheet - L1~L5 & 17k 架构)
+# ============================================================================
+
+[project]
+id = "reborn_coder"
+name = "重生之我是天才程序员"
+pipeline_type = "drama_s1_s6_l1_l5"
+episode_aspect = "16:9"
+historical_anchor_year = "2014年8月15日 23:50（星海支付 v1.0 主网上线前10分钟）"
+production_mode = "cinematic_drama"
+style_preset = "live_action_arri"
+no_subtitles_lock = true
+
+[style_lock]
+camera_base = "Shot on ARRI Alexa 65 with Panavision Primo 70mm anamorphic lens, shallow depth of field"
+lighting_base = "Fincher-style high-contrast cyber-thriller teal-and-amber lighting, crisp monitor reflections on skin, deep obsidian shadows"
+film_stock = "35mm Kodak Vision3 500T 5219 film grain, 8k raw footage"
+global_suffix = "Shot on ARRI Alexa 65 with Panavision anamorphic lens, photorealistic live-action tech thriller cinema, high-contrast teal-and-amber lighting, real human skin micro-texture, 35mm Kodak Vision3 500T film grain."
+modern_suffix = "Contemporary realistic tech boardroom cinematography, clean natural skin texture, crisp terminal code reflections. Clean video without any subtitles or text."
+negative_prompt = "3D render, CGI, anime, cartoon, plastic skin, watermark, floating subtitles, ancient armor"
+
+[director_rules]
+# L1 契诃夫之枪与细节体现律：禁止角色用直白网络爽文口水词自爆“我重生了/我是从2026年穿越回来的”，必须通过“精确背出十年后的致命后门哈希 0x7F3A 与第 412 行内存偏移”这一硬核工程师行动体现！
+silent_foreshadow_keywords_banned_in_dialogue = [
+    "我重生了", "穿越回来", "上辈子", "前世", "老天让我重活一世"
+]
+always_banned_explicit_medical_terms_in_dialogue = [
+    "我重生了", "上辈子"
+]
+
+banned_literary_vagueness_in_action = [
+    "内心涌起", "意识到真相", "史诗感", "高级感", "宿命感", "酷炫", "炸裂", "心想", "仿佛看到",
+    "inner bitterness", "realizes the", "feels a sense of", "thinks in his heart", "epic vibe"
+]
+
+psychological_arc_phases = [
+    "P1_Hook_Tension",
+    "P2_Escalation",
+    "P3_Climax_Turn",
+    "P4_Resolution",
+]
+tts_max_rate_percent = 12
+
+[[director_rules.dialogue_visual_evidence_rules]]
+dialogue_trigger = "零叉七F三A"
+required_any_in_action = ["terminal", "monitor", "git", "hash", "23:50"]
+description = "台词提及 0x7F3A 哈希与回档时间时，画面必须展示双屏终端上的 git log 哈希或倒计时显示器细节"
+
+[[director_rules.dialogue_visual_evidence_rules]]
+dialogue_trigger = "四一二"
+required_any_in_action = ["412", "red", "screen", "pointer", "hex"]
+description = "台词提及第 412 行指针偏移后门时，画面大屏必须明确展示标红的第 412 行反汇编/C++ 代码块"
+
+[director_rules.tts_pronunciation_overrides]
+"0x7F3A" = "零叉七F三A"
+"PR #409" = "四零九号代码分支"
+"v1.0" = "一点零版本"
+
+[spatial_rooms.star_sea_boardroom_2014]
+description = "2014年星海科技玻璃会议室与外侧研发工位三维坐标系（左：林辰双屏研发工位与玻璃门入口 | 中：85寸主控投屏大幕 | 右：赵坤演讲台与投资人坐席）"
+camera_left = "Lin Chen's dual-monitor workstation and the glass boardroom doorway"
+center_foreground = "85-inch 4K presentation screen displaying Git Pull Request #409 and C++ memory dump"
+camera_right = "Zhao Kun standing at the presenter podium before seated venture capital investors"
+interior_anchor_image = "characters/images/linchen_anchor.png"
+banned_topology_contradictions = [
+    "outdoor forest",
+    "ancient tent"
+]
+
+[acoustic_spaces.exterior_open]
+description = "室外科技园夜雨与城市环境声场"
+ffmpeg_bg_filter = "volume=0.30"
+h3_audio_cue = "Sound: night tech park exterior ambiance, distant city traffic and rain."
+
+[acoustic_spaces.interior_room]
+description = "室内机房与玻璃会议室声场（420Hz 低通滤波环境空调底噪，凸显机械键盘敲击声与投影切换音）"
+ffmpeg_bg_filter = "lowpass=f=480,volume=0.18"
+h3_audio_cue = "Sound: quiet nocturnal tech office room tone, subtle server hum, crisp mechanical keyboard switches."

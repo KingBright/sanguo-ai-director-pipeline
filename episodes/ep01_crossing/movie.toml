@@ -53,6 +53,48 @@ appearance = "Fierce veteran Cao Wei general in his 50s, battle-hardened weather
 ref_image = "characters/images/zhuge_liang.jpg"
 
 [[scenes]]
+id = "ep01_00a_convention_stage"
+era = "modern"
+action = "Inside a bustling daytime university Three Kingdoms anime and cosplay convention hall. Under warm golden stage spotlights and crimson Three Kingdoms banners, 21-year-old student @GuYuan stands poised in his full Zhuge Liang cosplay (tall teal silk GuanJin headdress, wide-sleeved white crane-patterned robe HeChang with indigo brocade trim, sleek black-rimmed farsighted eyeglasses, matte-black hard-shell spare eyeglasses case clipped to his sash), gently fanning his white crane feather fan while looking at the camera and speaking aloud in Mandarin Chinese with clear, natural, synchronized lip and jaw movements. In the left foreground, an enthusiastic photographer crouches firing rapid DSLR camera flashes while college students hold up smartphones cheering; in the background on the right, fellow Zhao Yun and Sun Shangxiang cosplayers watch in admiration."
+framing = "establishing"
+aspect = "16:9"
+duration = 8
+model = "veo-quality"
+selected_model = "veo-quality"
+produced_by_model = "veo-quality"
+room_id = "anime_convention_hall"
+arc_phase = "phase_1_daily_empathy"
+acoustic_space = "convention_hall_bustling"
+camera_motion = "35mm anamorphic lens, slow tracking orbit past flashing DSLR camera toward GuYuan speaking on the convention stage"
+ref_image = "characters/images/ep01_00a_convention_stage_anchor.jpg"
+characters = ["GuYuan"]
+style_variant = "modern"
+dialogue_mode = "lipsync"
+speaker = "GuYuan"
+line = "先帝创业未半而中道崩殂……各位摄影老师，今天这身孔明行装，够还原吧！"
+
+[[scenes]]
+id = "ep01_00b_convention_selfie"
+era = "modern"
+action = "Medium-close interactive shot in the exact same bustling Three Kingdoms anime convention hall. A lively female college cosplayer dressed as Xiao Qiao in red-and-white Hanfu happily holds up a smartphone to snap a two-shot selfie with @GuYuan, while a male cosplayer in Zhao Yun silver armor on the left grins and gives a thumbs-up, and an excited fan in the foreground snaps a DSLR close-up. @GuYuan smiles warmly behind his black-rimmed eyeglasses, gently raising his white crane feather fan in a modest traditional salute while speaking aloud in Mandarin Chinese with clear, natural, synchronized lip movements."
+framing = "medium-close"
+aspect = "16:9"
+duration = 8
+model = "veo-quality"
+selected_model = "veo-quality"
+produced_by_model = "veo-quality"
+room_id = "anime_convention_hall"
+arc_phase = "phase_1_daily_empathy"
+acoustic_space = "convention_hall_bustling"
+camera_motion = "50mm anamorphic lens, subtle push-in on GuYuan speaking warmly with synchronized lip movements during the selfie interaction"
+ref_image = "characters/images/ep01_00b_convention_selfie_anchor.jpg"
+characters = ["GuYuan"]
+style_variant = "modern"
+dialogue_mode = "lipsync"
+speaker = "GuYuan"
+line = "哈哈，多谢子龙兄弟和小乔学妹捧场！来，看镜头，咱们合张影！"
+
+[[scenes]]
 id = "ep01_01_rain_exterior"
 era = "modern"
 action = "Midnight torrential rain outside a dark-framed apartment window with dark-slate curtains pulled to both sides. Raindrops stream down the glass in the foreground. Inside the warm tungsten-lit room (wooden desk along the left wall, 27-inch PC monitor on the left glowing with a photo gallery of his daytime anime convention Zhuge Liang cosplay photos, warm brass desk lamp beside the monitor, open black hard-shell eyeglasses case, white feather fan, folded teal GuanJin headscarf, and DSLR camera on the desk), 21-year-old student @GuYuan in his dark hoodie and black-rimmed eyeglasses sits facing the left monitor, clicking through his convention photos."
@@ -70,12 +112,12 @@ ref_image = "characters/images/ep01_01_exterior_window_anchor.jpg"
 characters = ["GuYuan"]
 style_variant = "modern"
 speaker = "GuYuan"
-line = "今天漫展这身孔明行头，拍出来倒还有几分意思……"
+line = "今天漫展这身孔明行装，拍出来倒还有几分意思……"
 
 [[scenes]]
 id = "ep01_02_cosplay_sigh"
 era = "modern"
-action = "Cut inside the exact same warm dorm room with the rain-streaked dark window and slate curtains behind him. On the left 27-inch monitor screen, a photo gallery clearly displays vibrant daytime anime convention photos of @GuYuan dressed in his Zhuge Liang white crane robe, teal GuanJin headscarf, black-rimmed glasses, and white feather fan amidst convention booths and cosplayers, with a thumbnail filmstrip below and a DSLR camera connected on the desk. @GuYuan (wearing his dark hoodie, tactical vest, and sleek black-rimmed farsighted eyeglasses) gazes fondly at his cosplay photos on screen and gently strokes the real white feather fan on the desk beside his folded teal headscarf and open black eyeglasses case holding his spare glasses."
+action = "Cut just inside the foreground window of the exact same warm dorm room (wooden bookshelf above the left desk and dim college dorm bunk beds in the background shadow). On the left 27-inch monitor screen, a photo gallery clearly displays vibrant daytime anime convention photos of @GuYuan dressed in his Zhuge Liang white crane robe, teal GuanJin headscarf, black-rimmed glasses, and white feather fan amidst convention booths and cosplayers, with a thumbnail filmstrip below and a DSLR camera connected on the desk. @GuYuan (wearing his dark hoodie, tactical vest, and sleek black-rimmed farsighted eyeglasses) gazes fondly at his cosplay photos on screen and gently strokes the real white feather fan on the desk beside his folded teal headscarf and open black eyeglasses case holding his spare glasses."
 framing = "medium-close"
 aspect = "16:9"
 duration = 8
@@ -90,7 +132,7 @@ ref_image = "characters/images/ep01_02_interior_cosplay_screen_anchor.jpg"
 characters = ["GuYuan"]
 style_variant = "modern"
 speaker = "GuYuan"
-line = "出师未捷身先死，长使英雄泪满襟……一千八百年前的祁山，要是当年有人能替丞相守住街亭，该多好。"
+line = "出师未捷身先死，长使英雄泪满襟……要是当年能为丞相守住街亭，该多好。"
 
 [[scenes]]
 id = "ep01_03_pack_and_sleep"
@@ -167,4 +209,4 @@ ref_image = "characters/images/zhugeliang_v2.jpg"
 characters = ["GuYuan", "ZhugeLiang"]
 style_variant = "intimate"
 speaker = "GuYuan"
-line = "‘汉’字大旗、建兴六年、街亭……真的是丞相！既然老天让我撞进这一千八百年前的死局，这一次，街亭绝不能丢！"
+line = "‘汉’字大旗、建兴六年、街亭……真的是丞相！既然撞进这千八百年前的死局，这次街亭绝不能丢！"

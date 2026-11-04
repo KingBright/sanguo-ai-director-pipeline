@@ -1,0 +1,60 @@
+{
+  "episode_id": "ep04_beifa",
+  "production_mode": "cinematic_drama",
+  "seedance_nodes": [
+    {
+      "aspect_ratio": "16:9",
+      "audio_references": [
+        "assets/voices/温厚沉稳青年男声-v1.wav"
+      ],
+      "duration": 8,
+      "enable_sound": true,
+      "engine": "seedance-2.0-pro",
+      "image_references": [
+        "characters/images/zhugeliang_v2.jpg"
+      ],
+      "input_mode": "mixed2video",
+      "prompt": "图片1为场景『qishan_command_tent』的空间参考图，只参考空间结构（左：wooden campaign desk under flickering oil candlelight where Chancellor Zhuge Liang sits；中：clay topographical sand table of Jieting and wooden command token；右：tent entrance and assembled Shu Han generals）、固定陈设、材质和基础光位。音频1仅用于参考ZhugeLiang的音色，本片段准确台词只以提示词中 `{}` 内的对白为准。 视觉风格锁定：Shot on ARRI Alexa 65 with Panavision anamorphic lens, live-action cinematic historical drama realism blended with Rembrandt classical oil-painting chiaroscuro lighting, real human skin micro-texture, rich warm amber/tungsten highlights against deep slate shadows, fine Kodak Vision3 500T film grain, 8k cinematic color grading. 全程不生成任何字幕、旁白文字、对白文字、标题、角色名条或其他屏幕叠字，所有信息只通过画面与声音表达。 全程无背景音乐。\n镜头调度与动作（24mm anamorphic lens, sweeping aerial drone tracking over misty Qinling fortress at dawn）：Sweeping aerial establishing shot of the Shu Han Northern Expedition army marching through the misty Qinling mountains at dawn. Towering wooden watchtowers and black-and-crimson 'HAN' and 'ZHUGE' silk war banners snap fiercely in the freezing gale as thousands of armored foot soldiers advance toward Qishan. 声音时间线：<Howling mountain wind, snapping silk war banners, marching iron armor and war drums>ZhugeLiang说出{今南方已定，兵甲已足，当奖率三军，北定中原，兴复汉室，还于旧都！}。",
+      "resolution": "720p",
+      "scene_id": "ep04_01_qishan_dawn"
+    },
+    {
+      "aspect_ratio": "16:9",
+      "audio_references": [
+        "assets/voices/磁性沧桑中年男声-v1.wav"
+      ],
+      "duration": 8,
+      "enable_sound": true,
+      "engine": "seedance-2.0-pro",
+      "image_references": [
+        "characters/images/guyuan_ancient.jpg",
+        "characters/images/zhugeliang_v2.jpg",
+        "characters/images/zhugeliang_v2.jpg"
+      ],
+      "input_mode": "mixed2video",
+      "prompt": "图片1为WeiYan的无文字多视图人物形象卡（当前服装版本：常规服饰 v1），卡中左侧正脸与右侧正面、侧面、背面全身均为同一个“WeiYan”，只参考WeiYan的面部身份、发型、体型、服装结构与材质 (Fierce Shu Han vanguard general Wei Yan in his early 40s, bearded commanding face with sharp fearless eyes, wearing heavy crimson-and-bronze mountain scale armor and dark battle cloak, gripping his curved long-blade sabre at his waist.)，不把多个视图生成成多个角色。图片2为ZhugeLiang的无文字多视图人物形象卡（当前服装版本：常规服饰 v1），卡中左侧正脸与右侧正面、侧面、背面全身均为同一个“ZhugeLiang”，只参考ZhugeLiang的面部身份、发型、体型、服装结构与材质 (Chancellor Zhuge Liang at age 47 (First Northern Expedition, 228 AD), closely modeled after the iconic 1994 CCTV Three Kingdoms portrayal by Tang Guoqiang. Dignified, handsome and noble Chinese scholarly face, expressive sword-like eyebrows, deep intelligent and compassionate eyes, straight nose, classic well-groomed three-stranded long black beard. Wearing the iconic tall teal/dark-blue silk GuanJin headdress and wide-sleeved white crane-patterned robe (HeChang) with blue-and-gold woven brocade trim, holding a white crane feather fan. Shot on ARRI Alexa 65 with Panavision anamorphic lens, live-action historical drama realism blended with Rembrandt classical oil-painting chiaroscuro lighting, Kodak Vision3 500T film grain.)，不把多个视图生成成多个角色。图片3为场景『qishan_command_tent』的空间参考图，只参考空间结构（左：wooden campaign desk under flickering oil candlelight where Chancellor Zhuge Liang sits；中：clay topographical sand table of Jieting and wooden command token；右：tent entrance and assembled Shu Han generals）、固定陈设、材质和基础光位。音频1仅用于参考WeiYan的音色，本片段准确台词只以提示词中 `{}` 内的对白为准。 视觉风格锁定：Shot on ARRI Alexa 65 with Panavision anamorphic lens, live-action cinematic historical drama realism blended with Rembrandt classical oil-painting chiaroscuro lighting, real human skin micro-texture, rich warm amber/tungsten highlights against deep slate shadows, fine Kodak Vision3 500T film grain, 8k cinematic color grading. 全程不生成任何字幕、旁白文字、对白文字、标题、角色名条或其他屏幕叠字，所有信息只通过画面与声音表达。 全程无背景音乐。\n镜头调度与动作（35mm anamorphic lens, dynamic low-angle push-in on Wei Yan pointing at the Ziwu Valley sand table）：Inside the heavy canvas Qishan command tent, vanguard general @WeiYan in crimson-and-bronze mountain scale armor steps forward from camera-right toward the clay topographical sand table in the center foreground, slapping his iron bracer and pointing urgently at the narrow Ziwu Valley gorge while Chancellor @ZhugeLiang listens from the wooden desk on camera-left. 声音时间线：<Quiet command tent interior, clink of bronze scale armor, hand striking wooden sand table edge>WeiYan说出{丞相！某愿得精兵五千，直出子午谷，十日之内必至长安！}。",
+      "resolution": "720p",
+      "scene_id": "ep04_02_ziwu_debate"
+    },
+    {
+      "aspect_ratio": "16:9",
+      "audio_references": [
+        "assets/voices/温厚沉稳青年男声-v1.wav"
+      ],
+      "duration": 8,
+      "enable_sound": true,
+      "engine": "seedance-2.0-pro",
+      "image_references": [
+        "characters/images/zhugeliang_v2.jpg",
+        "characters/images/guyuan_ancient_v2.jpg",
+        "characters/images/zhugeliang_v2.jpg"
+      ],
+      "input_mode": "mixed2video",
+      "prompt": "图片1为ZhugeLiang的无文字多视图人物形象卡（当前服装版本：常规服饰 v1），卡中左侧正脸与右侧正面、侧面、背面全身均为同一个“ZhugeLiang”，只参考ZhugeLiang的面部身份、发型、体型、服装结构与材质 (Chancellor Zhuge Liang at age 47 (First Northern Expedition, 228 AD), closely modeled after the iconic 1994 CCTV Three Kingdoms portrayal by Tang Guoqiang. Dignified, handsome and noble Chinese scholarly face, expressive sword-like eyebrows, deep intelligent and compassionate eyes, straight nose, classic well-groomed three-stranded long black beard. Wearing the iconic tall teal/dark-blue silk GuanJin headdress and wide-sleeved white crane-patterned robe (HeChang) with blue-and-gold woven brocade trim, holding a white crane feather fan. Shot on ARRI Alexa 65 with Panavision anamorphic lens, live-action historical drama realism blended with Rembrandt classical oil-painting chiaroscuro lighting, Kodak Vision3 500T film grain.)，不把多个视图生成成多个角色。图片2为GuYuan的无文字多视图人物形象卡（当前服装版本：常规服饰 v1），卡中左侧正脸与右侧正面、侧面、背面全身均为同一个“GuYuan”，只参考GuYuan的面部身份、发型、体型、服装结构与材质 (21-year-old youthful and handsome Chinese male college student (locked facial bone structure: sharp defined jawline, straight nose bridge, natural parted black hair with light wispy bangs, wearing sleek black-rimmed rectangular eyeglasses at all times, carrying a matte-black hard-shell eyeglasses case with a spare pair of metal-rimmed glasses and a white crane feather fan). Shot on ARRI Alexa 65 with Panavision anamorphic lens, Rembrandt classical oil-painting chiaroscuro lighting, Kodak Vision3 500T film grain.)，不把多个视图生成成多个角色。图片3为场景『qishan_command_tent』的空间参考图，只参考空间结构（左：wooden campaign desk under flickering oil candlelight where Chancellor Zhuge Liang sits；中：clay topographical sand table of Jieting and wooden command token；右：tent entrance and assembled Shu Han generals）、固定陈设、材质和基础光位。音频1仅用于参考ZhugeLiang的音色，本片段准确台词只以提示词中 `{}` 内的对白为准。 视觉风格锁定：Shot on ARRI Alexa 65 with Panavision anamorphic lens, live-action cinematic historical drama realism blended with Rembrandt classical oil-painting chiaroscuro lighting, real human skin micro-texture, rich warm amber/tungsten highlights against deep slate shadows, fine Kodak Vision3 500T film grain, 8k cinematic color grading. 全程不生成任何字幕、旁白文字、对白文字、标题、角色名条或其他屏幕叠字，所有信息只通过画面与声音表达。 全程无背景音乐。\n镜头调度与动作（85mm anamorphic macro portrait lens, slow dolly in from bamboo scroll held at arm's length to magnified ink characters through convex lenses）：Inside the candlelit Qishan command tent, 47-year-old Chancellor @ZhugeLiang sits at the wooden campaign desk on camera-left, holding a dense bamboo scroll at arm's length and squinting in the dim light until @GuYuan steps into the center foreground and respectfully offers his spare metal-rimmed glasses; viewed through the convex lens, the tiny clerical ink characters on the bamboo slip are sharply magnified as @ZhugeLiang's brow relaxes completely. 声音时间线：<Soft crackle of oil candle flame, gentle rustle of bamboo scroll and feather fan>ZhugeLiang说出{烛下细字，竟似拨云见日，一目了然！今陇右虚实尽在掌中，三军听令，出师北伐！}。",
+      "resolution": "720p",
+      "scene_id": "ep04_03_chushi_vision"
+    }
+  ],
+  "style_preset": "live_action_arri",
+  "title": "第4集：诸葛北伐·出师表与祁山军议"
+}

@@ -205,13 +205,14 @@ class DirectorLinter:
                     ))
 
             # --- L2 Check 2: Bidirectional Era Isolation ---
-            if era == "modern" and ("armor" in action_lower or "ancient chinese soldiers" in action_lower):
+            is_convention_cosplay = room_id == "anime_convention_hall" or "convention" in action_lower or "cosplayer" in action_lower
+            if era == "modern" and not is_convention_cosplay and ("armor" in action_lower or "ancient chinese soldiers" in action_lower):
                 issues.append(LintIssue(
                     level="ERROR",
                     layer="L2-时代服化道隔离",
                     scene_id=sc_id,
-                    message="现代场景画面描述中混入了古代盔甲/古装士卒词汇，会导致古今串戏。",
-                    suggestion="使用 `era = \"modern\"` 与现代场景描述，将现代场景与古代战场服化道严格物理隔离。"
+                    message="现代非漫展场景画面描述中混入了古代盔甲/古装士卒词汇，会导致古今串戏。",
+                    suggestion="使用 `era = \"modern\"` 与现代场景描述，将现代日常场景与古代战场服化道严格物理隔离。"
                 ))
             elif era == "ancient" and any(w in action_lower for w in ("dormitory", "laptop", "computer monitor", "asphalt street", "sedan")):
                 issues.append(LintIssue(
@@ -325,6 +326,35 @@ class DirectorLinter:
                         suggestion="摄影机只能拍摄物理可见的动作与光影，请将其改写为具体的面部微表情、肢体动作、焦段景深与光影方向。"
                     ))
 
+            # --- L5 Check 1: Voiceover Pacing & Polyphonic / Prosody Split Guard ---
+            dur = float(sc.get("duration", 8))
+            clean_chars = re.sub(r"[^\u4e00-\u9fff0-9A-Za-z]", "", line)
+            max_chars = int(dur * 4.5)  # max ~4.5 chars/sec so TTS never needs >+12% speedup
+            if len(clean_chars) > max_chars:
+                issues.append(LintIssue(
+                    level="WARNING",
+                    layer="L5-配音韵律与语速锁",
+                    scene_id=sc_id,
+                    message=f"单镜头（{dur:.0f}秒）台词字数过多（{len(clean_chars)}字 > 建议上限 {max_chars}字），会导致 TTS 强行加速失真或断词错误。",
+                    suggestion=f"精简台词至 {max_chars} 字以内，确保在正常语速（+0% ~ +12%）下自然从容念完。"
+                ))
+            if "替丞相" in line:
+                issues.append(LintIssue(
+                    level="ERROR",
+                    layer="L5-配音防拆词与多音字锁",
+                    scene_id=sc_id,
+                    message="台词包含『替丞相』，神经 TTS 分词器会将其误切分为『替城 / 相守住』（把“丞相”拆成“城、乡”两个字）！",
+                    suggestion="请改为『为丞相』（如『能为丞相守住街亭』），确保“丞相 (chéng xiàng)”完整连读。"
+                ))
+            if "孔明行头" in line:
+                issues.append(LintIssue(
+                    level="ERROR",
+                    layer="L5-配音防拆词与多音字锁",
+                    scene_id=sc_id,
+                    message="台词包含多音字易错词『孔明行头』，TTS 默认会误读为『háng tóu』而非『xíng tou』。",
+                    suggestion="请改为『孔明行装』或通过 `format_tts_text()` 映射，确保发音 100% 准确。"
+                ))
+
         has_errors = any(i.level == "ERROR" for i in issues)
         return LintReport(
             manifest_path=manifest_path,
@@ -332,6 +362,20 @@ class DirectorLinter:
             issues=issues,
             scene_count=len(scenes),
         )
+
+    def format_tts_text(self, line: str) -> str:
+        """Apply L5 phonetic & prosody overrides from `fact_sheet.toml` before sending text to TTS
+        (e.g. mapping '长使英雄泪满襟' -> '出师未捷，身先死，常使英雄，泪满襟' so '长' is read as cháng and follows 4-3 poetic meter).
+        """
+        tts_text = line
+        overrides: Dict[str, str] = self.rules.get("tts_pronunciation_overrides", {})
+        for src, dst in overrides.items():
+            if src in tts_text:
+                if src == "长使英雄泪满襟" and "出师未捷" in tts_text:
+                    tts_text = re.sub(r"出师未捷身先死[，,]\s*长使英雄泪满襟[…—。，]*", dst + "。", tts_text)
+                else:
+                    tts_text = tts_text.replace(src, dst)
+        return tts_text
 
     def get_ffmpeg_bg_filter(self, acoustic_space: str) -> str:
         """Return physically accurate FFmpeg audio filter for the scene's acoustic space."""
@@ -346,31 +390,98 @@ class DirectorLinter:
         voiceover_path: Optional[Path] = None,
         ass_subtitle_path: Optional[Path] = None,
         target_duration: float = 8.0,
+        vo_delay_ms: int = 200,
+        use_native_audio: bool = False,
     ) -> bool:
         """L5 Acoustic Space & Subtitle Mastering:
-        Applies physical acoustic filtering (e.g. lowpass=f=420,volume=0.18 for closed indoor rooms
-        or lowpass=f=380,volume=0.22 for military tents vs full-spectrum rain/wind for exterior shots),
-        mixes voiceover, and burns ASS subtitles.
+        - When `use_native_audio=True` (on-screen lip-sync mode for Veo 3.1 / MiniMax H3), preserves
+          the model's native lip-synced audio track `[0:a]` at full clarity and does NOT time-stretch
+          video frames relative to audio (preventing any lip-sync drift), nor overwrite `[0:a]` with external TTS!
+        - When `use_native_audio=False` (off-screen inner monologue / VO mode), smoothly stretches shorter clips
+          to `target_duration` and mixes the continuous stereo rain/ambient bed with the voiceover track.
         """
         if not raw_video_path.exists():
             raise FileNotFoundError(f"Raw video clip not found: {raw_video_path}")
+        if not use_native_audio and voiceover_path is not None and not voiceover_path.exists():
+            raise FileNotFoundError(f"Voiceover audio file not found: {voiceover_path}")
+        if ass_subtitle_path is not None and not ass_subtitle_path.exists():
+            raise FileNotFoundError(f"ASS subtitle file not found: {ass_subtitle_path}")
 
         bg_filter = self.get_ffmpeg_bg_filter(acoustic_space)
         output_video_path.parent.mkdir(parents=True, exist_ok=True)
 
-        # Video filter chain: pad if shorter than target_duration, scale to 1280x720, burn ASS if present
-        v_filters = [f"tpad=stop_mode=clone:stop_duration={target_duration}", "scale=1280:720:flags=lanczos"]
-        if ass_subtitle_path and ass_subtitle_path.exists():
+        # Probe input video duration using ffmpeg stderr
+        probe = subprocess.run(
+            [self.ffmpeg_bin, "-i", str(raw_video_path)],
+            capture_output=True, text=True, encoding="utf-8", errors="replace"
+        )
+        raw_dur = target_duration
+        m = re.search(r"Duration:\s*(\d+):(\d+):(\d+(?:\.\d+)?)", probe.stderr)
+        if m:
+            raw_dur = int(m.group(1)) * 3600 + int(m.group(2)) * 60 + float(m.group(3))
+
+        effective_dur = raw_dur if use_native_audio else target_duration
+
+        v_filters = []
+        if not use_native_audio and raw_dur > 0.5 and abs(raw_dur - target_duration) > 0.25:
+            stretch = round(target_duration / raw_dur, 4)
+            v_filters.append(f"setpts={stretch}*PTS")
+            v_filters.append("minterpolate=fps=24:mi_mode=blend")
+        else:
+            v_filters.append("fps=24")
+        v_filters.append("scale=1280:720:flags=lanczos")
+
+        if ass_subtitle_path:
             safe_ass = ass_subtitle_path.as_posix().replace(":", "\\:")
             v_filters.append(f"ass='{safe_ass}'")
         v_chain = ",".join(v_filters)
 
-        if voiceover_path and voiceover_path.exists():
+        # Ensure a continuous, audible rain/ambient bed for storm/interior scenes even if raw I2V clip has near-silent audio
+        rain_bed = Path("output/raw_clips/ep01_crossing/ep01_01_rain_exterior_v3_cloud.mp4")
+        use_rain_bed = rain_bed.exists() and acoustic_space in ("exterior_storm", "interior_closed")
+
+        if use_native_audio:
             filter_complex = (
                 f"[0:v]{v_chain}[v];"
-                f"[0:a]apad=whole_dur={target_duration},{bg_filter}[bg];"
-                f"[1:a]adelay=200|200,apad=whole_dur={target_duration},volume=1.45[vo];"
-                f"[bg][vo]amix=inputs=2:duration=first:dropout_transition=2[a]"
+                f"[0:a]aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo,volume=1.35[a]"
+            )
+            cmd = [
+                self.ffmpeg_bin, "-y",
+                "-i", str(raw_video_path),
+                "-filter_complex", filter_complex,
+                "-map", "[v]", "-map", "[a]",
+                "-t", f"{effective_dur:.2f}",
+                "-c:v", "libx264", "-crf", "18", "-pix_fmt", "yuv420p",
+                "-c:a", "aac", "-ar", "48000", "-ac", "2", "-b:a", "192k",
+                str(output_video_path),
+            ]
+        elif use_rain_bed and voiceover_path:
+            bed_filter = "volume=0.80" if acoustic_space == "exterior_storm" else "lowpass=f=420,volume=0.35"
+            filter_complex = (
+                f"[0:v]{v_chain}[v];"
+                f"[0:a]aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo,apad=whole_dur={target_duration},{bg_filter}[raw_a];"
+                f"[1:a]aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo,apad=whole_dur={target_duration},{bed_filter}[bed_a];"
+                f"[2:a]aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo,adelay={vo_delay_ms}|{vo_delay_ms},apad=whole_dur={target_duration},volume=1.85[vo];"
+                f"[raw_a][bed_a][vo]amix=inputs=3:duration=first:dropout_transition=2:normalize=0[a]"
+            )
+            cmd = [
+                self.ffmpeg_bin, "-y",
+                "-i", str(raw_video_path),
+                "-i", str(rain_bed),
+                "-i", str(voiceover_path),
+                "-filter_complex", filter_complex,
+                "-map", "[v]", "-map", "[a]",
+                "-t", str(target_duration),
+                "-c:v", "libx264", "-crf", "18", "-pix_fmt", "yuv420p",
+                "-c:a", "aac", "-ar", "48000", "-ac", "2", "-b:a", "192k",
+                str(output_video_path),
+            ]
+        elif voiceover_path:
+            filter_complex = (
+                f"[0:v]{v_chain}[v];"
+                f"[0:a]aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo,apad=whole_dur={target_duration},{bg_filter}[bg];"
+                f"[1:a]aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo,adelay={vo_delay_ms}|{vo_delay_ms},apad=whole_dur={target_duration},volume=1.85[vo];"
+                f"[bg][vo]amix=inputs=2:duration=first:dropout_transition=2:normalize=0[a]"
             )
             cmd = [
                 self.ffmpeg_bin, "-y",
@@ -380,13 +491,13 @@ class DirectorLinter:
                 "-map", "[v]", "-map", "[a]",
                 "-t", str(target_duration),
                 "-c:v", "libx264", "-crf", "18", "-pix_fmt", "yuv420p",
-                "-c:a", "aac", "-b:a", "192k",
+                "-c:a", "aac", "-ar", "48000", "-ac", "2", "-b:a", "192k",
                 str(output_video_path),
             ]
         else:
             filter_complex = (
                 f"[0:v]{v_chain}[v];"
-                f"[0:a]apad=whole_dur={target_duration},{bg_filter}[a]"
+                f"[0:a]aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo,apad=whole_dur={target_duration},{bg_filter}[a]"
             )
             cmd = [
                 self.ffmpeg_bin, "-y",
@@ -395,9 +506,11 @@ class DirectorLinter:
                 "-map", "[v]", "-map", "[a]",
                 "-t", str(target_duration),
                 "-c:v", "libx264", "-crf", "18", "-pix_fmt", "yuv420p",
-                "-c:a", "aac", "-b:a", "192k",
+                "-c:a", "aac", "-ar", "48000", "-ac", "2", "-b:a", "192k",
                 str(output_video_path),
             ]
 
-        res = subprocess.run(cmd, capture_output=True, text=True)
-        return res.returncode == 0
+        res = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
+        if res.returncode != 0:
+            raise RuntimeError(f"FFmpeg mastering failed ({res.returncode}): {res.stderr[-600:]}")
+        return True

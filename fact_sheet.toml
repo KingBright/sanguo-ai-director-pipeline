@@ -18,6 +18,7 @@
 # ============================================================================
 
 [project]
+id = "sanguo"
 name = "三国：逆天改命·诸葛亮北伐"
 pipeline_type = "drama_s1_s6_l1_l5"
 episode_aspect = "16:9"
@@ -58,6 +59,13 @@ psychological_arc_phases = [
     "phase_4_evidence_awakening"    # 物理铁证冲击下的时空确认、智谋破局与伏笔回收觉醒
 ]
 
+# L5 语音韵律与多音字防断词字典（防止 TTS 极速压缩失真、把“替丞相”拆成“替城/相”或把“行头/长使”读错）
+tts_max_rate_percent = 12
+[director_rules.tts_pronunciation_overrides]
+"孔明行头" = "孔明行装"
+"长使英雄泪满襟" = "出师未捷，身先死，常使英雄，泪满襟"
+"替丞相守住" = "为丞相守住"
+
 # L4 台词指涉物与画面视觉证据强制映射表（Dialogue Referent -> Required Action Visual Evidence）
 [[director_rules.dialogue_visual_evidence_rules]]
 dialogue_trigger = "漫展"
@@ -76,14 +84,34 @@ description = "台词体现敌军/武将畏惧神光时，画面必须展示阳�
 
 [spatial_rooms]
 # L3 同场次跨镜三维空间拓扑坐标系（锁死房间左/中/右/前/后几何关系与外景/内景配对首帧母图）
+[spatial_rooms.anime_convention_hall]
+description = "高校三国动漫展室内主展厅（统一展台互动区三维空间拓扑：前景Z=0为单反摄影师与举手机围观观众，中景Z=3左侧为赵云/孙尚香等其他三国Coser互动合拍区、右侧为身着孔明鹤氅纶巾的主角顾渊，背景Z=10为高挑现代会展穹顶、三国主题展位横幅与舞台暖金追光灯架）"
+camera_left = "enthusiastic convention photographers with DSLR cameras, cheering college students holding up smartphones, and fellow Three Kingdoms cosplayers (Zhao Yun in silver armor, Sun Shangxiang in red Hanfu) interacting and taking selfies"
+center_foreground = "camera flashes, DSLR lenses, and white crane feather fan held by GuYuan"
+camera_right = "21-year-old GuYuan in full Zhuge Liang cosplay (tall teal GuanJin headdress, white crane-patterned robe HeChang, sleek black-rimmed farsighted eyeglasses, matte-black spare eyeglasses case at waist sash)"
+exterior_anchor_image = "characters/images/ep01_00a_convention_stage_anchor.jpg"
+interior_anchor_image = "characters/images/ep01_00b_convention_selfie_anchor.jpg"
+banned_topology_contradictions = [
+    "empty hall",
+    "outdoor street",
+    "rainy forest"
+]
+
 [spatial_rooms.dorm_room_night]
-description = "顾渊大学宿舍夜间书桌区（统一外景透窗与内景近景的三维空间拓扑）"
-camera_left = "27-inch PC monitor displaying convention cosplay photo album + warm brass desk lamp"
-center_foreground = "wooden desk with open matte-black hard-shell eyeglasses case (holding spare convex glasses), white crane feather fan, folded teal GuanJin headscarf, DSLR camera, dark trekking backpack"
-camera_right = "21-year-old GuYuan seated in dark charcoal hoodie & vest facing camera-left toward the monitor"
+description = "顾渊大学宿舍夜间书桌区（统一外景透窗与内景近景的三维空间拓扑与 Z 轴深度：窗户在前景 Z=0，书桌与人物在 Z=2，背景 Z=10 为左侧木书柜与右侧宿舍上下铺）"
+camera_left = "27-inch PC monitor displaying convention cosplay photo album + warm brass desk lamp + upper wooden bookshelf"
+center_foreground = "wooden desk right inside the foreground window with open matte-black hard-shell eyeglasses case (holding spare convex glasses), white crane feather fan, folded teal GuanJin headscarf, DSLR camera, dark trekking backpack"
+camera_right = "21-year-old GuYuan seated in dark charcoal hoodie & vest facing camera-left toward the monitor, with college dorm bunk beds in the background shadow behind him"
 exterior_anchor_image = "characters/images/ep01_01_exterior_window_anchor.jpg"
 interior_anchor_image = "characters/images/ep01_02_interior_cosplay_screen_anchor.jpg"
-banned_topology_contradictions = ["monitor on the right", "facing right toward monitor", "lamp on the far right"]
+banned_topology_contradictions = [
+    "monitor on the right",
+    "facing right toward monitor",
+    "lamp on the far right",
+    "window behind him",
+    "curtains behind him",
+    "window in the background"
+]
 
 [spatial_rooms.qishan_command_tent]
 description = "蜀汉祁山大营中军帅帐三维坐标系"
@@ -95,6 +123,11 @@ banned_topology_contradictions = []
 
 [acoustic_spaces]
 # L3 声画空间物理一致性矩阵（FFmpeg 音频滤波器参数 + H3 原生声学提示词）
+[acoustic_spaces.convention_hall_bustling]
+description = "热闹非凡的室内动漫展场馆空间（快门连拍咔嚓声、观众欢呼赞美声、展馆混响与轻快国风背景氛围音）"
+ffmpeg_bg_filter = "volume=0.80"
+h3_audio_cue = "Sound: lively bustling indoor anime convention hall ambiance, rapid DSLR camera shutter clicks, cheerful crowd chatter and warm applause."
+
 [acoustic_spaces.exterior_storm]
 description = "室外雨夜/风暴全频段空间（允许清晰大雨声与雷声）"
 ffmpeg_bg_filter = "volume=0.85"

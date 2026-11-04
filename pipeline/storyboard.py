@@ -120,6 +120,8 @@ class StoryboardCompiler:
                 lines.append(f'style_variant = "{style_variant}"')
             if "style_suffix" in sc:
                 lines.append(f'style_suffix = "{sc["style_suffix"]}"')
+            if "dialogue_mode" in sc:
+                lines.append(f'dialogue_mode = "{sc["dialogue_mode"]}"')
             if "speaker" in sc:
                 lines.append(f'speaker = "{sc["speaker"]}"')
             if "line" in sc:

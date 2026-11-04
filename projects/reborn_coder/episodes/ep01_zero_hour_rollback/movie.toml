@@ -1,0 +1,111 @@
+# ============================================================================
+# AetherDirector Studio · L1-L5 & H3 v2.5 / V9 17k Keyframe Manifest
+# Project: reborn_coder | Episode: ep01_zero_hour_rollback
+# Title: 《重生之我是天才程序员》第一幕精修版：零点回档与第412行反杀
+# ============================================================================
+schema_version = 1
+title = "第一幕精修版：零点回档与第412行反杀"
+project = "reborn_coder"
+output_dir = "C:/Users/Liang/Downloads/sanguo/projects/reborn_coder/output/raw_clips/ep01_zero_hour_rollback"
+
+[[characters]]
+name = "LinChen"
+tier = "protagonist"
+appearance = "25-year-old Chinese distributed systems architect Lin Chen (sharp defined jawline, intense intelligent dark eyes, clean short black hair, wearing a dark charcoal open-collar shirt over a black tee, carrying a matte-black ThinkPad laptop)."
+voice = "rigel"
+ref_image = "characters/images/linchen_anchor.png"
+
+[[characters]]
+name = "ZhaoKun"
+tier = "supporting"
+appearance = "32-year-old corporate tech executive Zhao Kun (slick combed-back black hair, calculating smug expression, wearing a bespoke navy suit and silver tie, holding a wireless presentation remote)."
+voice = "charon"
+ref_image = "characters/images/zhaokun_anchor.png"
+
+# ----------------------------------------------------------------------------
+# Beat 1: 强钩子 · 2026机房红警 -> 2014发布会倒计时瞳孔匹配转场 (90 Golden Frames = 3.75s)
+# ----------------------------------------------------------------------------
+[[scenes]]
+id = "rc_ep01_s01_2026_betrayal_matchcut"
+era = "modern"
+action = "35mm anamorphic establishing shot at @LinChen's dual-monitor workstation outside the glass boardroom at 23:50 night. At Frame 0, Lin Chen is slumped forward over his desk as crimson server warning reflections fade into warm 2014 desk lamp light. At Frame 51, remaining seated with comfortable headroom, Lin Chen jolts bolt upright and slams both hands onto his mechanical keyboard, checking the git log hash and 00:09:59 countdown on the glowing terminal monitor. At Frame 85, he turns his gaze 30 degrees toward the glass conference room on camera-right with mouth closed and cold piercing eyes."
+framing = "establishing"
+aspect = "16:9"
+duration = 6
+model = "veo-quality"
+selected_model = "veo-quality"
+room_id = "star_sea_boardroom_2014"
+arc_phase = "P1_Hook_Tension"
+acoustic_space = "exterior_open"
+camera_motion = "35mm anamorphic lens, fast dolly-in to medium close-up of Lin Chen at dual-monitor terminal workstation"
+ref_image = "characters/images/linchen_anchor.png"
+characters = ["LinChen"]
+speaker = "LinChen"
+line = "哈希零叉七F三A……八月十五号？离主网合并只剩九分钟！"
+pose_anchors = ["full_single_P067_diag", "full_single_P002_front", "full_single_P079_side"]
+keyframe_indices = [0, 51, 85]
+keyframe_strengths = [1.0, 0.88, 0.90]
+continuity_track = "track_b_hard_cut"
+tail_lock_v9 = true
+emotion_mode = "t8mars_explosive"
+character_card = "林辰|首席分布式架构师 · 零点回档者"
+
+# ----------------------------------------------------------------------------
+# Beat 2: 反派施压 · 赵坤当众剽窃邀功准备合入后门代码 (141 Golden Frames = 5.88s)
+# ----------------------------------------------------------------------------
+[[scenes]]
+id = "rc_ep01_s02_zhaokun_hypocrisy_ots"
+era = "modern"
+action = "50mm anamorphic over-the-shoulder shot from behind Lin Chen standing in the glass boardroom doorway on camera-left toward @ZhaoKun standing in a bespoke navy suit beside the glowing 85-inch presentation screen on camera-right. At Frame 0, Zhao Kun gestures smoothly toward the Merge Pull Request UI before seated venture capital investors. At Frame 51, Zhao Kun raises the wireless presenter remote in his right hand with an arrogant triumphant smile, thumb hovering over the confirm button. At Frame 136, Zhao Kun freezes with mouth closed as the 85-inch screen behind him flashes crimson SSH OVERRIDE."
+framing = "medium"
+aspect = "16:9"
+duration = 6
+model = "veo-quality"
+selected_model = "veo-quality"
+room_id = "star_sea_boardroom_2014"
+arc_phase = "P2_Escalation"
+acoustic_space = "interior_room"
+camera_motion = "50mm anamorphic lens, over-the-shoulder slow push-in toward Zhao Kun beside the 85-inch boardroom screen"
+ref_image = "characters/images/zhaokun_anchor.png"
+characters = ["ZhaoKun"]
+speaker = "ZhaoKun"
+line = "各位请看，这套清算引擎由我独立重构，现在点击合并正式上线！"
+pose_anchors = ["full_single_P015_diag", "upper80v2_P022_diag", "full_single_P017_front"]
+keyframe_indices = [0, 51, 136]
+keyframe_strengths = [1.0, 0.86, 0.90]
+continuity_track = "track_b_hard_cut"
+tail_lock_v9 = true
+emotion_mode = "natural"
+character_card = "赵坤|联合创始人 · 技术副总"
+
+# ----------------------------------------------------------------------------
+# Beat 3: 降维反杀 · 林辰SSH劫持大屏拆穿第412行内存后门 (141 Golden Frames = 5.88s)
+# ----------------------------------------------------------------------------
+[[scenes]]
+id = "rc_ep01_s03_linchen_live_decompile_counter"
+era = "modern"
+action = "50mm anamorphic low-angle medium shot of @LinChen inside the glass boardroom. At Frame 0, Lin Chen stands in the doorway cradling his open ThinkPad laptop on his left forearm, right index finger pressing the Enter key decisively. At Frame 51, Lin Chen tilts his laptop screen toward the investors while his right hand points sharply at line 412 highlighted in glowing red pointer hex code on the giant 85-inch presentation screen behind him. At Frame 136, Lin Chen stands tall with head held completely level and stationary and mouth closed."
+framing = "medium"
+aspect = "16:9"
+duration = 6
+model = "veo-quality"
+selected_model = "veo-quality"
+room_id = "star_sea_boardroom_2014"
+arc_phase = "P3_Climax_Turn"
+acoustic_space = "interior_room"
+camera_motion = "50mm anamorphic lens, low-angle slow arc and tilt up revealing projected red line 412 C++ hex dump"
+ref_image = "characters/images/linchen_anchor.png"
+characters = ["LinChen"]
+speaker = "LinChen"
+line = "你重构的？请解释一下，第四一二行这个洗钱指针也是你写的？"
+keyframes = [
+    "episodes/ep01_zero_hour_rollback/keyframes/s03_kf000_linchen_ssh_enter.png",
+    "episodes/ep01_zero_hour_rollback/keyframes/s03_kf051_linchen_point_line412.png",
+    "episodes/ep01_zero_hour_rollback/keyframes/s03_kf051_linchen_point_line412.png"
+]
+pose_anchors = ["full_single_P015_front", "upper80v2_P022_low", "full_single_P022_front"]
+keyframe_indices = [0, 51, 136]
+keyframe_strengths = [1.0, 0.88, 0.90]
+continuity_track = "track_b_hard_cut"
+tail_lock_v9 = true
+emotion_mode = "t8mars_explosive"

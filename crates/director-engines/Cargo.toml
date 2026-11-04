@@ -1,0 +1,15 @@
+[package]
+name = "director-engines"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+director-core = { path = "../director-core" }
+serde.workspace = true
+serde_json.workspace = true
+toml.workspace = true
+anyhow.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+chrono.workspace = true
+uuid.workspace = true

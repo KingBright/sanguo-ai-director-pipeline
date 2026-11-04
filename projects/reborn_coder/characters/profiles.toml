@@ -1,0 +1,13 @@
+[[characters]]
+name = "LinChen"
+tier = "protagonist"
+appearance = "25-year-old Chinese distributed systems architect Lin Chen (sharp defined jawline, intense intelligent dark eyes, clean short black hair, wearing a dark charcoal open-collar shirt over a black tee, carrying a matte-black ThinkPad laptop). Shot on ARRI Alexa 65, Fincher-style high-contrast teal-and-amber lighting."
+voice = "rigel"
+ref_image = "characters/images/linchen_anchor.png"
+
+[[characters]]
+name = "ZhaoKun"
+tier = "supporting"
+appearance = "32-year-old corporate tech executive Zhao Kun (slick combed-back black hair, calculating smug expression, wearing a bespoke navy suit and silver tie, holding a wireless presentation remote)."
+voice = "charon"
+ref_image = "characters/images/zhaokun_anchor.png"
