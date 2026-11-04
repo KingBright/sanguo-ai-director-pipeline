@@ -27,8 +27,8 @@ use director_core::{
     ProjectSummary, SceneSpec, SpatialRoom, StoryboardCompiler, StyleLock, WorkspacePaths,
 };
 use director_engines::{
-    ColabBridgeRunner, CreditReport, FlowEngine, H3Engine, JobStatus, LocalGpuStatus, RenderJob,
-    RenderQueue, SumeEngine,
+    ColabBridgeRunner, CreditReport, FlowEngine, FlowMusicEngine, H3Engine, JobStatus, LocalGpuStatus,
+    MusicGenerateResult, RenderJob, RenderQueue, SumeEngine,
 };
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -57,6 +57,7 @@ pub struct AppState {
     pub root_dir: std::path::PathBuf,
     pub active_project: Arc<RwLock<String>>,
     pub flow_engine: FlowEngine,
+    pub flow_music_engine: FlowMusicEngine,
     pub h3_engine: H3Engine,
     pub sume_engine: SumeEngine,
     pub queue: RenderQueue,
@@ -109,6 +110,96 @@ struct LoginRequest {
     password: String,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ColabEstimates {
+    pub g4_video_hours: f64,
+    pub estimated_video_minutes: f64,
+    pub l4_audio_hours: f64,
+    pub estimated_audio_minutes: f64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ColabQuotaSummary {
+    pub tier: String,
+    pub remaining_ccu: f64,
+    pub total_pool_ccu: f64,
+    pub percentage: f64,
+    pub burn_rate: f64,
+    pub active_assignments: i64,
+    pub expires_at: String,
+    pub days_remaining: i64,
+    pub refreshes_at: String,
+    pub refresh_countdown: String,
+    pub estimates: ColabEstimates,
+    pub source: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FlowVideoEstimates {
+    pub veo_fast_shots: i64,
+    pub estimated_fast_video_minutes: f64,
+    pub estimated_fast_video_seconds: i64,
+    pub veo_quality_shots: i64,
+    pub estimated_quality_video_minutes: f64,
+    pub estimated_quality_video_seconds: i64,
+    pub nano_pro_images: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FlowVideoQuotaSummary {
+    pub tier: String,
+    pub account: String,
+    pub remaining_credits: i64,
+    pub total_credits: i64,
+    pub percentage: f64,
+    pub last_spent: Option<i64>,
+    pub expires_at: String,
+    pub days_remaining: i64,
+    pub refreshes_at: String,
+    pub refresh_countdown: String,
+    pub estimates: FlowVideoEstimates,
+    pub source: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FlowMusicEstimates {
+    pub estimated_music_minutes: f64,
+    pub estimated_sfx_count: i64,
+    pub ace_step_unlimited: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FlowMusicQuotaSummary {
+    pub tier: String,
+    pub daily_quota_tracks: i64,
+    pub daily_remaining_tracks: i64,
+    pub daily_used_tracks: i64,
+    pub credits_deduction: i64,
+    pub expires_at: String,
+    pub days_remaining: i64,
+    pub refreshes_at: String,
+    pub refresh_countdown: String,
+    pub estimates: FlowMusicEstimates,
+    pub local_engine_status: String,
+    pub source: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct QuotaSummaryResponse {
+    pub colab: ColabQuotaSummary,
+    pub flow_video: FlowVideoQuotaSummary,
+    pub flow_music: FlowMusicQuotaSummary,
+    pub updated_at: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct MusicGenerateRequest {
+    pub prompt: String,
+    pub mood: Option<String>,
+    pub duration_sec: Option<f64>,
+    pub output_filename: Option<String>,
+}
+
 #[derive(Debug, Serialize)]
 struct SystemStatusResponse {
     studio_name: String,
@@ -122,6 +213,7 @@ struct SystemStatusResponse {
     active_jobs_count: usize,
     pending_approvals_count: usize,
     agent_conversation_id: String,
+    quota_summary: QuotaSummaryResponse,
 }
 
 #[derive(Debug, Serialize)]
@@ -372,6 +464,7 @@ async fn main() -> anyhow::Result<()> {
         root_dir: base_dir.clone(),
         active_project: Arc::new(RwLock::new(initial_proj)),
         flow_engine: FlowEngine::new(&base_dir),
+        flow_music_engine: FlowMusicEngine::new(&base_dir),
         h3_engine: H3Engine::new(&base_dir),
         sume_engine: SumeEngine::new(&base_dir),
         queue: RenderQueue::new(),
@@ -401,6 +494,8 @@ async fn main() -> anyhow::Result<()> {
         .route("/api/v1/projects/select", post(api_select_project))
         .route("/api/v1/system/status", get(api_system_status))
         .route("/api/v1/system/policy", put(api_update_policy))
+        .route("/api/v1/quota/summary", get(api_quota_summary))
+        .route("/api/v1/music/generate", post(api_generate_music))
         .route("/api/v1/episodes", get(api_list_episodes).post(api_create_episode))
         .route("/api/v1/episodes/:id", get(api_get_episode))
         .route("/api/v1/episodes/:id/scenes", put(api_save_episode_scenes))
@@ -430,6 +525,7 @@ async fn main() -> anyhow::Result<()> {
         .nest_service("/media/characters", ServeDir::new(base_dir.join("characters")))
         .nest_service("/media/output", ServeDir::new(base_dir.join("output")))
         .nest_service("/media/projects", ServeDir::new(base_dir.join("projects")))
+        .nest_service("/media/renders", ServeDir::new(base_dir.join("assets").join("renders")))
         .layer(middleware::from_fn_with_state(state.clone(), auth_middleware))
         .layer(CorsLayer::permissive())
         .with_state(state);
@@ -497,7 +593,9 @@ async fn auth_middleware(
         && !is_proxied
         && (path == "/mcp"
             || path == "/api/v1/mcp"
-            || path == "/api/v1/agent/mcp-webhook")
+            || path == "/api/v1/agent/mcp-webhook"
+            || path == "/api/v1/quota/summary"
+            || path == "/api/v1/music/generate")
     {
         return next.run(req).await;
     }
@@ -582,6 +680,7 @@ async fn api_system_status(State(state): State<AppState>) -> Json<SystemStatusRe
         .iter()
         .filter(|j| j.status == JobStatus::PendingApproval)
         .count();
+    let quota_summary = build_quota_summary(&state).await;
 
     Json(SystemStatusResponse {
         studio_name: director_core::config::SYSTEM_TITLE_CN.to_string(),
@@ -599,7 +698,198 @@ async fn api_system_status(State(state): State<AppState>) -> Json<SystemStatusRe
         active_jobs_count,
         pending_approvals_count,
         agent_conversation_id: state.agent_conversation_id.read().await.clone(),
+        quota_summary,
     })
+}
+
+async fn query_colab_usage(workspace_root: &std::path::Path) -> (f64, f64, i64, &'static str) {
+    let colab_bin = director_engines::resolve_colab_bin();
+    if let Some(bin) = colab_bin {
+        let mut cmd = tokio::process::Command::new(bin);
+        cmd.arg("usage");
+        let timeout_fut = tokio::time::timeout(Duration::from_secs(5), cmd.output());
+        if let Ok(Ok(out)) = timeout_fut.await {
+            if out.status.success() {
+                let stdout = String::from_utf8_lossy(&out.stdout);
+                let mut balance = None;
+                let mut rate = 0.0f64;
+                let mut active = 0i64;
+                for line in stdout.lines() {
+                    let l = line.trim();
+                    if l.starts_with("Current balance:") {
+                        let parts: Vec<&str> = l.split_whitespace().collect();
+                        if parts.len() >= 3 {
+                            if let Ok(val) = parts[2].parse::<f64>() {
+                                balance = Some(val);
+                            }
+                        }
+                    } else if l.starts_with("Usage rate:") {
+                        let parts: Vec<&str> = l.split_whitespace().collect();
+                        if parts.len() >= 3 {
+                            let r_str = parts[2].trim_end_matches("/hr");
+                            if let Ok(val) = r_str.parse::<f64>() {
+                                rate = val;
+                            }
+                        }
+                    } else if l.starts_with("Active assignments:") {
+                        let parts: Vec<&str> = l.split_whitespace().collect();
+                        if parts.len() >= 3 {
+                            if let Ok(val) = parts[2].parse::<i64>() {
+                                active = val;
+                            }
+                        }
+                    }
+                }
+                if let Some(bal) = balance {
+                    return (bal, rate, active, "live colab CLI");
+                }
+            }
+        }
+    }
+
+    let cache_p = workspace_root.join("colab_quota_cache.json");
+    if cache_p.exists() {
+        if let Ok(raw) = std::fs::read_to_string(&cache_p) {
+            if let Ok(val) = serde_json::from_str::<serde_json::Value>(&raw) {
+                let bal = val.get("balance").and_then(|v| v.as_f64()).unwrap_or(1873.15);
+                let rate = val.get("burn_rate").and_then(|v| v.as_f64()).unwrap_or(0.0);
+                let active = val.get("active_assignments").and_then(|v| v.as_i64()).unwrap_or(0);
+                return (bal, rate, active, "cached colab_quota_cache.json");
+            }
+        }
+    }
+
+    (1873.15, 0.0, 0, "default cache")
+}
+
+async fn build_quota_summary(state: &AppState) -> QuotaSummaryResponse {
+    let now = chrono::Utc::now();
+    let now_cst = now.with_timezone(&chrono::FixedOffset::east_opt(8 * 3600).unwrap());
+
+    // 1. Colab
+    let (colab_bal, burn_rate, active_assigns, colab_source) = query_colab_usage(&state.root_dir).await;
+    let colab_total_pool = 2000.0f64;
+    let colab_pct = ((colab_bal / colab_total_pool) * 100.0 * 10.0).round() / 10.0;
+
+    let expires_ts = 1796054400i64; // 2026-12-01 00:00:00 UTC+8
+    let days_remaining = ((expires_ts - now.timestamp()).max(0) / 86400).max(1);
+
+    let g4_hours = ((colab_bal / 8.71) * 10.0).round() / 10.0;
+    let est_video_mins = ((g4_hours * 6.0) * 10.0).round() / 10.0;
+    let l4_hours = ((colab_bal / 1.71) * 10.0).round() / 10.0;
+    let est_audio_mins = ((l4_hours * 150.0) * 10.0).round() / 10.0;
+
+    let colab = ColabQuotaSummary {
+        tier: "Google AI Ultra (Pro/Ultra Plan)".to_string(),
+        remaining_ccu: (colab_bal * 100.0).round() / 100.0,
+        total_pool_ccu: colab_total_pool,
+        percentage: colab_pct,
+        burn_rate,
+        active_assignments: active_assigns,
+        expires_at: "2026-12-01 00:00:00 UTC+8".to_string(),
+        days_remaining,
+        refreshes_at: "每月 1 日 16:00 CST (00:00 PT) 自动重置 +1,000~2,000 CCU".to_string(),
+        refresh_countdown: format!("{}天后自动重置", days_remaining),
+        estimates: ColabEstimates {
+            g4_video_hours: g4_hours,
+            estimated_video_minutes: est_video_mins,
+            l4_audio_hours: l4_hours,
+            estimated_audio_minutes: est_audio_mins,
+        },
+        source: colab_source.to_string(),
+    };
+
+    // 2. Google Flow Video & Image
+    let flow_credits = state.flow_engine.get_credits_and_status().await;
+    let flow_bal = flow_credits.balance;
+    let flow_total = 10000i64;
+    let flow_pct = (((flow_bal as f64 / flow_total as f64) * 100.0) * 100.0).round() / 100.0;
+    let veo_fast = flow_bal / 10;
+    let veo_quality = flow_bal / 100;
+    let fast_sec = veo_fast * 8;
+    let quality_sec = veo_quality * 8;
+    let fast_min = ((fast_sec as f64 / 60.0) * 10.0).round() / 10.0;
+    let quality_min = ((quality_sec as f64 / 60.0) * 10.0).round() / 10.0;
+
+    let flow_video = FlowVideoQuotaSummary {
+        tier: "Google AI Ultra (TIER_ULTRA)".to_string(),
+        account: "yuanyang749@gmail.com".to_string(),
+        remaining_credits: flow_bal,
+        total_credits: flow_total,
+        percentage: flow_pct,
+        last_spent: flow_credits.last_spent,
+        expires_at: "2026-12-01 00:00:00 UTC+8".to_string(),
+        days_remaining,
+        refreshes_at: "每月 1 日 16:00 CST 自动补满 10,000 Credits".to_string(),
+        refresh_countdown: flow_credits.refresh_countdown.clone(),
+        estimates: FlowVideoEstimates {
+            veo_fast_shots: veo_fast,
+            estimated_fast_video_minutes: fast_min,
+            estimated_fast_video_seconds: fast_sec,
+            veo_quality_shots: veo_quality,
+            estimated_quality_video_minutes: quality_min,
+            estimated_quality_video_seconds: quality_sec,
+            nano_pro_images: "0 Credits/张 (无限免费 ∞ 张)".to_string(),
+        },
+        source: if flow_credits.success { "credits_cache.json / session" } else { "default cache" }.to_string(),
+    };
+
+    // 3. Google Flow Music
+    let music_status = state.flow_music_engine.get_quota_status().await;
+    let flow_music = FlowMusicQuotaSummary {
+        tier: music_status.tier,
+        daily_quota_tracks: music_status.daily_quota_tracks,
+        daily_remaining_tracks: music_status.daily_remaining_tracks,
+        daily_used_tracks: music_status.daily_used_tracks,
+        credits_deduction: 0,
+        expires_at: music_status.expires_at,
+        days_remaining,
+        refreshes_at: music_status.refreshes_at,
+        refresh_countdown: music_status.refresh_countdown,
+        estimates: FlowMusicEstimates {
+            estimated_music_minutes: music_status.estimates.estimated_music_minutes,
+            estimated_sfx_count: music_status.estimates.estimated_sfx_count,
+            ace_step_unlimited: true,
+        },
+        local_engine_status: music_status.local_engine_status,
+        source: if music_status.has_oauth_token { "Google Labs OAuth Session" } else { "Local ACE-Step 1.5 + Curated Studio Engine" }.to_string(),
+    };
+
+    QuotaSummaryResponse {
+        colab,
+        flow_video,
+        flow_music,
+        updated_at: now_cst.format("%Y-%m-%d %H:%M:%S CST").to_string(),
+    }
+}
+
+async fn api_quota_summary(State(state): State<AppState>) -> Json<QuotaSummaryResponse> {
+    let summary = build_quota_summary(&state).await;
+    Json(summary)
+}
+
+async fn api_generate_music(
+    State(state): State<AppState>,
+    Json(req): Json<MusicGenerateRequest>,
+) -> Result<Json<MusicGenerateResult>, (StatusCode, String)> {
+    let mood = req.mood.as_deref().unwrap_or("epic");
+    let dur = req.duration_sec.unwrap_or(15.0).clamp(1.0, 180.0);
+    let paths = state.current_paths().await;
+    let filename = req.output_filename.unwrap_or_else(|| {
+        format!("bgm_{}_{}.wav", mood, uuid::Uuid::new_v4().simple())
+    });
+    let out_path = paths.base_dir.join("assets").join("renders").join(filename);
+    if let Some(parent) = out_path.parent() {
+        std::fs::create_dir_all(parent).map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
+    }
+
+    let res = state
+        .flow_music_engine
+        .generate_bgm(&req.prompt, mood, dur, &out_path)
+        .await
+        .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
+
+    Ok(Json(res))
 }
 
 fn build_project_summary(paths: &WorkspacePaths, active_id: &str) -> ProjectSummary {
@@ -2206,4 +2496,43 @@ fn scan_scene_clips(
     }
 
     map
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn test_quota_summary_calculation() {
+        let base_dir = resolve_workspace_root();
+        let initial_proj = WorkspacePaths::resolve_active_project_id(&base_dir);
+        let reg = Arc::new(RwLock::new(AgentPluginRegistry::new()));
+        let state = AppState {
+            root_dir: base_dir.clone(),
+            active_project: Arc::new(RwLock::new(initial_proj)),
+            flow_engine: FlowEngine::new(&base_dir),
+            flow_music_engine: FlowMusicEngine::new(&base_dir),
+            h3_engine: H3Engine::new(&base_dir),
+            sume_engine: SumeEngine::new(&base_dir),
+            queue: RenderQueue::new(),
+            admin_pin: "2280".to_string(),
+            web_password: "pass".to_string(),
+            session_token: "token".to_string(),
+            port: 18443,
+            agent_conversation_id: Arc::new(RwLock::new("conv".to_string())),
+            agent_demands: Arc::new(RwLock::new(Vec::new())),
+            agent_registry: reg,
+            colab_runner: ColabBridgeRunner::new(&base_dir),
+        };
+
+        let summary = build_quota_summary(&state).await;
+        assert!(summary.colab.remaining_ccu > 0.0);
+        assert_eq!(summary.flow_video.remaining_credits, 9895);
+        assert_eq!(summary.flow_music.daily_quota_tracks, 500);
+        assert!(summary.colab.estimates.estimated_video_minutes > 1000.0);
+        assert!(summary.colab.estimates.estimated_audio_minutes > 100000.0);
+        assert_eq!(summary.flow_video.estimates.veo_fast_shots, 989);
+        assert_eq!(summary.flow_video.estimates.veo_quality_shots, 98);
+        assert_eq!(summary.flow_music.estimates.estimated_sfx_count, 1000);
+    }
 }

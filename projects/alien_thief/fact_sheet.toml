@@ -1,0 +1,87 @@
+# ============================================================================
+# 《外星小偷：烂柯星刮刮乐大劫案》产线事实表 (Production Line Fact Sheet - L1~L5)
+# ============================================================================
+
+[project]
+id = "alien_thief"
+name = "外星小偷：宇宙头号通缉犯"
+pipeline_type = "comedy_s1_s6_l1_l5"
+episode_aspect = "16:9"
+historical_anchor_year = "星历7042年 烂柯星三不管黑市（星际刮刮乐开奖日）"
+production_mode = "2d_cyber_comic"
+style_preset = "rick_morty_cel_comic"
+no_subtitles_lock = true
+
+[style_lock]
+camera_base = "2D Western-meets-Cyberpunk Comic Cel-Shaded Animation, bold black ink outlines, vibrant cel-shaded flat colors with gritty cyberpunk wasteland textures, expressive oversized eyes and dynamic facial exaggeration, zero 3D plastic gloss"
+lighting_base = "Cyberpunk neon saturated rim lighting, sharp comic shadow hatching, vivid neon cyan and acid yellow highlights"
+film_stock = "2D vector cel animation, gritty comic book halftone paper texture"
+global_suffix = "2D Western-meets-Cyberpunk Comic Cel-Shaded Animation, bold black ink outlines, vibrant cel-shaded flat colors with gritty cyberpunk wasteland textures, expressive oversized eyes and dynamic facial exaggeration, zero 3D plastic gloss."
+modern_suffix = "2D cyber comic style, bold clean line art, comic book aesthetics. Clean video without any subtitles or text."
+negative_prompt = "3D render, CGI, photorealistic, realistic human skin, 3D plastic gloss, watermark, floating subtitles, live action"
+
+[director_rules]
+silent_foreshadow_keywords_banned_in_dialogue = [
+    "假彩票", "联盟卧底"
+]
+always_banned_explicit_medical_terms_in_dialogue = [
+    "远视眼", "老花眼", "凸透镜", "度数"
+]
+banned_literary_vagueness_in_action = [
+    "内心涌起", "意识到真相", "史诗感", "高级感", "宿命感", "酷炫", "炸裂", "心想", "仿佛看到",
+    "inner bitterness", "realizes the", "feels a sense of", "thinks in his heart", "epic vibe"
+]
+psychological_arc_phases = [
+    "phase_1_setup_recon",
+    "phase_2_heist_execution",
+    "phase_3_bizarre_twist",
+    "phase_4_absurd_escape",
+]
+tts_max_rate_percent = 12
+
+[spatial_rooms.room_ruined_overlook]
+description = "烂柯星废墟狙击哨所（180度南向机位锁）：左卡托重型望远镜、中破损钢筋掩体、右小黛全息通缉悬赏板"
+camera_left = "Kato crouching beside a massive brass tactical telescope tripod scanning the distant kiosk"
+center_foreground = "Crumbling reinforced concrete rebar bunker overlooking the neon junk alley"
+camera_right = "Xiaodai holding a flickering holographic bounty wanted board showing criminal rankings"
+interior_anchor_image = "characters/images/kato_anchor.png"
+banned_topology_contradictions = ["boardroom", "ancient tent"]
+
+[spatial_rooms.room_neon_kiosk]
+description = "星际彩票杂货铺（180度南向机位锁）：左霓虹刮刮乐展示柜、中全息收银台、右放风警报器"
+camera_left = "Glowing neon scratch-off lottery ticket display case with flickering jackpots"
+center_foreground = "Holographic checkout register counter with blinking credit scanner"
+camera_right = "Puffing exhaust vent with red blinking lookout alarm horn"
+interior_anchor_image = "characters/images/ximu_anchor.png"
+banned_topology_contradictions = ["boardroom", "ancient tent"]
+
+[spatial_rooms.room_bazaar_plaza]
+description = "烂柯星三不管露天集市（180度南向机位锁）：左星际文明评选台、中粉色怪咖演讲台、右围观外星摊贩"
+camera_left = "Interstellar Civilization Award banners fluttering above rusted market stalls"
+center_foreground = "PinkWeirdo standing on a rusted metal podium with microphone and red peace sash"
+camera_right = "Crowd of quirky alien vendors and street peddlers watching skeptically"
+interior_anchor_image = "characters/images/pinkweirdo_anchor.png"
+banned_topology_contradictions = ["boardroom", "ancient tent"]
+
+[spatial_rooms.room_lanke_tavern]
+description = "地下霓虹牌桌酒馆（180度南向机位锁）：左里贝抱头抓狂、中悬浮扑克筹码圆桌、右西木顶着白猫与联盟抓捕队长同桌斗地主"
+camera_left = "Libei clutching his frog-hood head in utter panic beside spilled energy mugs"
+center_foreground = "Floating magnetic card poker table with spinning holographic chips"
+camera_right = "Ximu wearing a smug grin with a fluffy white cat perched on his head playing cards with the Alliance Captain"
+interior_anchor_image = "characters/images/ximu_anchor.png"
+banned_topology_contradictions = ["boardroom", "ancient tent"]
+
+[acoustic_spaces.ruin_wind_ambience]
+description = "废墟荒原呼啸狂风与外星杂音底噪"
+ffmpeg_bg_filter = "volume=0.30"
+h3_audio_cue = "Sound: howling wasteland wind, gritty rustling debris, distant alien bazaar hum."
+
+[acoustic_spaces.neon_kiosk_hum]
+description = "杂货铺高频霓虹电流蜂鸣与全息警报滴滴声"
+ffmpeg_bg_filter = "lowpass=f=2400,volume=0.25"
+h3_audio_cue = "Sound: buzzing neon transformer hum, digital register beeps, electronic scratch ticker."
+
+[acoustic_spaces.tavern_jazz_chatter]
+description = "地下酒馆怪诞喧闹外星爵士乐与酒杯碰擦声"
+ffmpeg_bg_filter = "lowpass=f=1800,volume=0.22"
+h3_audio_cue = "Sound: quirky offbeat alien jazz trumpet, clinking glass mugs, murmur of gambling aliens."

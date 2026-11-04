@@ -345,3 +345,19 @@ impl FlowEngine {
         Ok((output.status.success(), stdout, stderr))
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn test_flow_credits_with_seeded_cache() {
+        let ws = std::env::current_dir().unwrap();
+        let engine = FlowEngine::new(&ws);
+        let report = engine.get_credits_and_status().await;
+        assert!(report.success, "Should find credit cache");
+        assert_eq!(report.balance, 9895, "Should match 9895 credits from cubex audit");
+        assert!(report.clips_quality >= 98);
+        assert!(report.clips_fast >= 980);
+    }
+}

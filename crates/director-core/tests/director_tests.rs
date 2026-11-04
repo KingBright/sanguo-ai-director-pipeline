@@ -269,4 +269,18 @@ fn test_episodes_lint_cleanly() {
         );
         assert_eq!(report.error_count, 0, "ep04_beifa should have 0 errors");
     }
+
+    let alien_thief_root = ws_root.join("projects").join("alien_thief");
+    let alien_thief_manifest = alien_thief_root.join("episodes").join("ep01_lottery_heist").join("movie.toml");
+    if alien_thief_manifest.exists() {
+        let alien_linter = DirectorLinter::new(&alien_thief_root);
+        let report = alien_linter.lint_manifest_file(&alien_thief_manifest).expect("Failed to lint alien_thief ep01");
+        assert!(
+            report.passed,
+            "alien_thief ep01 failed lint: error_count={}, issues: {:?}",
+            report.error_count, report.issues
+        );
+        assert_eq!(report.error_count, 0, "alien_thief ep01 should have 0 errors");
+        assert_eq!(report.issues.len(), 0, "alien_thief ep01 should have 0 warnings and 0 errors");
+    }
 }

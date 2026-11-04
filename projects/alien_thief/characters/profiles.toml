@@ -1,0 +1,34 @@
+[[characters]]
+name = "Ximu"
+tier = "protagonist"
+appearance = "Green chubby one-eyed alien goblin Ximu (oversized single glossy cyclops eye, large horizontal pink bat ears, round potbelly, wearing a baggy beige hoodie with rolled-up sleeves, holding a titanium crowbar and lottery tickets). 2D Western-meets-Cyberpunk Comic Cel-Shaded Animation, bold black ink outlines, vibrant cel-shaded flat colors, expressive dynamic facial exaggeration."
+voice = "rigel"
+ref_image = "characters/images/ximu_anchor.png"
+
+[[characters]]
+name = "Libei"
+tier = "protagonist"
+appearance = "Purple-skinned lanky youthful alien partner Libei (large yellow sclera eyes, wearing a neon-green frog-head hood with bulging cartoon eyes and felt teeth, orange tactical goggles over forehead, oversized mismatched sneakers). 2D Western-meets-Cyberpunk Comic Cel-Shaded Animation, bold black ink outlines, comic cel shading."
+voice = "sirius"
+ref_image = "characters/images/libei_anchor.png"
+
+[[characters]]
+name = "Kato"
+tier = "supporting"
+appearance = "Massive purple-skinned horned troll bounty hunter Kato (two sharp curved cranial horns, prominent forehead bone crests, rugged jutting lower fangs, heavy weathered cyber-leather tactical armor, carrying a giant brass telescope and blasters). 2D Western-meets-Cyberpunk Comic Cel-Shaded Animation, bold black ink outlines."
+voice = "charon"
+ref_image = "characters/images/kato_anchor.png"
+
+[[characters]]
+name = "Xiaodai"
+tier = "supporting"
+appearance = "Purple-haired deadpan alien sister Xiaodai (straight bob-cut ultraviolet hair, oversized round circular spectacles, pointed elf-like ears, sleek dark plum turtleneck vest, clutching a glowing cyan holographic wanted bounty tablet). 2D Western-meets-Cyberpunk Comic Cel-Shaded Animation, bold black ink outlines."
+voice = "vega"
+ref_image = "characters/images/xiaodai_anchor.png"
+
+[[characters]]
+name = "PinkWeirdo"
+tier = "supporting"
+appearance = "Extremely quirky pink rubbery alien weirdo PinkWeirdo (impossibly long noodle neck, single wide-open unblinking eye on teardrop head, wearing a dirty white ribbed tank top draped with a bright red satin sash embroidered with '星际和平先进个人', holding a vintage rusted megaphone). 2D Western-meets-Cyberpunk Comic Cel-Shaded Animation, bold black ink outlines."
+voice = "spica"
+ref_image = "characters/images/pinkweirdo_anchor.png"

@@ -1,0 +1,414 @@
+# ============================================================================
+# 《外星小偷：烂柯星刮刮乐大劫案》分镜工程 (Movie Manifest - L1~L5)
+# Project: alien_thief | Episode: ep01_lottery_heist
+# Title: 《外星小偷：烂柯星刮刮乐大劫案》
+# Total Duration: 66s (12 Shots, Fast-Paced High-Density Comedy)
+# ============================================================================
+schema_version = 1
+title = "烂柯星刮刮乐大劫案"
+project = "alien_thief"
+output_dir = "C:/Users/Liang/Downloads/sanguo/projects/alien_thief/output/raw_clips/ep01_lottery_heist"
+
+[[characters]]
+name = "Ximu"
+tier = "protagonist"
+appearance = "Green chubby one-eyed alien goblin Ximu (oversized single glossy cyclops eye, large horizontal pink bat ears, round potbelly, wearing a baggy beige hoodie with rolled-up sleeves, holding a titanium crowbar and lottery tickets). 2D Western-meets-Cyberpunk Comic Cel-Shaded Animation, bold black ink outlines, vibrant cel-shaded flat colors, expressive dynamic facial exaggeration."
+voice = "rigel"
+ref_image = "characters/images/ximu_anchor.png"
+
+[[characters]]
+name = "Libei"
+tier = "protagonist"
+appearance = "Purple-skinned lanky youthful alien partner Libei (large yellow sclera eyes, wearing a neon-green frog-head hood with bulging cartoon eyes and felt teeth, orange tactical goggles over forehead, oversized mismatched sneakers). 2D Western-meets-Cyberpunk Comic Cel-Shaded Animation, bold black ink outlines, comic cel shading."
+voice = "sirius"
+ref_image = "characters/images/libei_anchor.png"
+
+[[characters]]
+name = "Kato"
+tier = "supporting"
+appearance = "Massive purple-skinned horned troll bounty hunter Kato (two sharp curved cranial horns, prominent forehead bone crests, rugged jutting lower fangs, heavy weathered cyber-leather tactical armor, carrying a giant brass telescope and blasters). 2D Western-meets-Cyberpunk Comic Cel-Shaded Animation, bold black ink outlines."
+voice = "charon"
+ref_image = "characters/images/kato_anchor.png"
+
+[[characters]]
+name = "Xiaodai"
+tier = "supporting"
+appearance = "Purple-haired deadpan alien sister Xiaodai (straight bob-cut ultraviolet hair, oversized round circular spectacles, pointed elf-like ears, sleek dark plum turtleneck vest, clutching a glowing cyan holographic wanted bounty tablet). 2D Western-meets-Cyberpunk Comic Cel-Shaded Animation, bold black ink outlines."
+voice = "vega"
+ref_image = "characters/images/xiaodai_anchor.png"
+
+[[characters]]
+name = "PinkWeirdo"
+tier = "supporting"
+appearance = "Extremely quirky pink rubbery alien weirdo PinkWeirdo (impossibly long noodle neck, single wide-open unblinking eye on teardrop head, wearing a dirty white ribbed tank top draped with a bright red satin sash embroidered with '星际和平先进个人', holding a vintage rusted megaphone). 2D Western-meets-Cyberpunk Comic Cel-Shaded Animation, bold black ink outlines."
+voice = "spica"
+ref_image = "characters/images/pinkweirdo_anchor.png"
+
+# ============================================================================
+# Beat 1: 伏击侦查 · 废墟哨所内的穷鬼猎人组合 (Shot 1-3)
+# ============================================================================
+
+[[scenes]]
+id = "ep01_01"
+era = "modern"
+action = "35mm anamorphic wide establishing shot of @Kato crouching at the ruined concrete overlook on camera-left. He peers through a massive brass tactical telescope pointed toward the distant neon kiosk below. Heavy brow glabella twitches with intense tactical squinting as his masseter clenches and lower fangs jut forward. Gaze locked steadily forward across the wasteland horizon with comfortable headroom. Gritty 2D cel comic line art with vibrant neon rim lights."
+framing = "establishing"
+aspect = "16:9"
+duration = 6
+model = "veo-fast"
+selected_model = "veo-fast"
+room_id = "room_ruined_overlook"
+arc_phase = "phase_1_setup_recon"
+acoustic_space = "ruin_wind_ambience"
+camera_motion = "35mm anamorphic lens, slow lateral truck right along cracked concrete rebar"
+ref_image = "characters/images/kato_anchor.png"
+characters = ["Kato"]
+speaker = "Kato"
+line = "锁定目标！通缉榜倒数第一的独眼地精正在靠近彩票亭！"
+micro_beats = [
+    "Beat 1 (0.0-1.5s): Kato leans right eye into the brass eyepiece, left brow furrowing into tight glabella creases.",
+    "Beat 2 (1.5-3.0s): Massive green hand tightens grip on the focusing dial with audible mechanical ratchets.",
+    "Beat 3 (3.0-4.5s): Nostril flares in aggressive inhalation as jaw masseter flexes, barking orders through sharp fangs.",
+    "Beat 4 (4.5-6.0s): Gaze holds steady on the target crosshairs, head remaining stationary in frame."
+]
+facial_progression = "Glabella furrow deepens -> right eyelid squints into eyepiece -> masseter tightens -> lips part displaying lower fangs."
+prop_interaction = "Rough scarred leather gauntlet turning the knurled brass brass adjustment ring of the tripod telescope."
+listener_reaction = "Xiaodai stands motionless on camera-right, holding her holographic tablet without blinking."
+env_micro_physics = "Blowing red dust particles streak across the rusted rebar pillars in crosswind turbulence."
+sub_beat_emotions = ["vigilant", "focused", "aggressive", "resolute"]
+character_card = "卡托|星际赏金猎人 · 破防狂暴巨魔"
+
+[[scenes]]
+id = "ep01_02"
+era = "modern"
+action = "50mm comic medium closeup of @Xiaodai on camera-right of the overlook bunker. She taps the flickering cyan holographic wanted bounty tablet with her fingernail, circular spectacles reflecting data streams. Upper eyelids half-closed in deadpan disdain, lip corner slightly drooping into a flat unimpressed line. Gaze locked steadily toward Kato on camera-left with comfortable headroom. 2D flat cel comic shading with bold ink contours."
+framing = "medium"
+aspect = "16:9"
+duration = 5
+model = "veo-fast"
+selected_model = "veo-fast"
+room_id = "room_ruined_overlook"
+arc_phase = "phase_1_setup_recon"
+acoustic_space = "ruin_wind_ambience"
+camera_motion = "50mm comic prime lens, subtle slow push-in toward Xiaodai's round spectacles"
+ref_image = "characters/images/xiaodai_anchor.png"
+characters = ["Xiaodai"]
+speaker = "Xiaodai"
+line = "悬赏金额两块五，耗油三千块，哥你真会理财。"
+micro_beats = [
+    "Beat 1 (0.0-1.2s): Xiaodai swipes her index finger across the cyan holographic projection.",
+    "Beat 2 (1.2-2.5s): Round spectacle frames catch cyan glare as lower eyelids relax into deadpan skepticism.",
+    "Beat 3 (2.5-3.8s): Lip corner twitches downward into dry comedic delivery while head stays level.",
+    "Beat 4 (3.8-5.0s): Holo-pad display flashes 'BOUNTY: 2.50 CREDITS' in bright comic text."
+]
+facial_progression = "Spectacle reflection glints -> eyelids drop to half-mast -> glabella completely smooth -> lip corner pulls into dry smirk."
+prop_interaction = "Slim purple fingers flicking glowing holographic bounty icons that dissolve into pixel dust."
+listener_reaction = "Kato's neck crests flare purple in the background as his horn twitches in silent irritation."
+env_micro_physics = "Holographic scanlines pulse rhythmically, casting neon cyan ripples across her plum turtleneck."
+sub_beat_emotions = ["deadpan", "calculating", "sarcastic", "calm"]
+character_card = "小黛|首席情报分析师 · 毒舌妹妹"
+
+[[scenes]]
+id = "ep01_03"
+era = "modern"
+action = "50mm comic over-the-shoulder medium shot behind broken bunker rubble toward @Libei crouching low. His green frog hood with cartoon eyes shivers comically, orange tactical goggles resting crookedly on his forehead. Yellow sclera pupils dart nervously left and right, lip corners quivering in pure comic dread. Keeping full head and shoulders comfortably inside the frame with natural micro-tremors."
+framing = "medium"
+aspect = "16:9"
+duration = 5
+model = "veo-fast"
+selected_model = "veo-fast"
+room_id = "room_ruined_overlook"
+arc_phase = "phase_1_setup_recon"
+acoustic_space = "ruin_wind_ambience"
+camera_motion = "50mm comic prime lens, handheld low-angle jitter framing Libei's frog hood"
+ref_image = "characters/images/libei_anchor.png"
+characters = ["Libei"]
+speaker = "Libei"
+line = "西木哥！对面狙击镜反光超刺眼，咱真要抢吗？"
+micro_beats = [
+    "Beat 1 (0.0-1.2s): Libei peeks top of frog-hood over concrete ledge, pupils shrinking into tiny dots.",
+    "Beat 2 (1.2-2.5s): Trembling purple fingers pull frog felt teeth over his chin in futile concealment.",
+    "Beat 3 (2.5-3.8s): Lower jaw quivers with rapid masseter spasms, vocalizing in panicked whisper.",
+    "Beat 4 (3.8-5.0s): Reflexively ducks 20 degrees lower, goggles slipping down to eyebrow bridge."
+]
+facial_progression = "Wide yellow pupils constrict -> nostrils widen in shallow panting -> masseter trembles -> lip corners sag in terror."
+prop_interaction = "Nervous hands clutching the foam teeth of the neon-green frog hood, knuckles white with fear."
+listener_reaction = "A puff of distant neon smoke wafts from the alleyway below without acknowledging his panic."
+env_micro_physics = "Loose cement pebbles dislodge from the bunker rim and tumble down into the dark abyss."
+sub_beat_emotions = ["terrified", "hesitant", "panicked", "cowering"]
+character_card = "里贝|新手盗贼学徒 · 绝望吐槽役"
+
+# ============================================================================
+# Beat 2: 盗窃实施 · 彩票亭前的硬核强刮行动 (Shot 4-6)
+# ============================================================================
+
+[[scenes]]
+id = "ep01_04"
+era = "modern"
+action = "35mm comic medium shot inside the neon kiosk aisle. @Ximu stands proudly in his beige hoodie on camera-left, clutching a heavy titanium crowbar in his right hand and a stack of glowing rainbow scratch-off cards in his left. Single giant cyclops eye glints with shameless greed, horizontal pink ears flapping excitedly. Gaze locked steadily forward with expressive oversized facial exaggeration and zero 3D gloss."
+framing = "medium"
+aspect = "16:9"
+duration = 7
+model = "veo-fast"
+selected_model = "veo-fast"
+room_id = "room_neon_kiosk"
+arc_phase = "phase_2_heist_execution"
+acoustic_space = "neon_kiosk_hum"
+camera_motion = "35mm comic lens, dynamic Dutch-angle snap push-in to Ximu's cyclops eye"
+ref_image = "characters/images/ximu_anchor.png"
+characters = ["Ximu"]
+speaker = "Ximu"
+line = "抢？读书人的事能叫抢吗？我这是用钛合金撬棍刮奖！"
+micro_beats = [
+    "Beat 1 (0.0-1.5s): Ximu plants his feet on the counter floor, hoisting the gleaming crowbar like a samurai sword.",
+    "Beat 2 (1.5-3.0s): Single giant pupil widens to comic proportions, reflecting neon magenta scratch-off logos.",
+    "Beat 3 (3.0-4.5s): Pink ears perk upward at 45 degrees as wide mouth opens in triumphant crooked grin.",
+    "Beat 4 (4.5-6.0s): Vigorous scratching motion showers metallic silver shavings onto the glass counter."
+]
+facial_progression = "Single eyelid widens in wild excitement -> pupil dilates -> mouth curls into arrogant broad grin -> pink ears wiggle."
+prop_interaction = "Sharp edge of titanium crowbar scraping holographic foil off interstellar lottery card with spark bursts."
+listener_reaction = "Libei in background frantically glances at the blinking red lookout alarm horn."
+env_micro_physics = "Silver scratch-off coating flakes drift like confetti through glowing neon cyan lighting."
+sub_beat_emotions = ["smug", "greedy", "audacious", "euphoric"]
+character_card = "西木|宇宙头号通缉犯 · 哲学强盗地精"
+
+[[scenes]]
+id = "ep01_05"
+era = "modern"
+action = "50mm comic closeup of @Libei staring dumbfounded at the freshly scraped prize ticket. Green frog-hood bulging eyes seem to mirror his own popping yellow eyes. Lower jaw drops wide open in comic disbelief, teeth chattering slightly. Both hands frozen mid-air pointing in absolute bewilderment at the prize icon. Gaze locked steadily forward with comfortable headroom and sharp comic ink lines."
+framing = "closeup"
+aspect = "16:9"
+duration = 5
+model = "veo-fast"
+selected_model = "veo-fast"
+room_id = "room_neon_kiosk"
+arc_phase = "phase_2_heist_execution"
+acoustic_space = "neon_kiosk_hum"
+camera_motion = "50mm comic prime lens, rapid comedic crash-zoom into Libei's jaw drop"
+ref_image = "characters/images/libei_anchor.png"
+characters = ["Libei"]
+speaker = "Libei"
+line = "等等！你刮出来的特等奖怎么是一只机械尖叫鸡？"
+micro_beats = [
+    "Beat 1 (0.0-1.2s): Libei thrusts his face forward, yellow eyeballs expanding in total shock.",
+    "Beat 2 (1.2-2.5s): Mouth drops into perfect comic 'O' shape, lower masseter hanging loose.",
+    "Beat 3 (2.5-3.8s): Pointing index finger shakes vigorously at the glowing hologram on the ticket.",
+    "Beat 4 (3.8-5.0s): Eyebrows tilt upward into sheer cartoon despair."
+]
+facial_progression = "Eyelids retract fully -> jaw drops slack -> masseter freezes in disbelief -> brow arches into pathetic triangle."
+prop_interaction = "Trembling fingers attempting to touch the vibrating neon chicken icon on the scratched surface."
+listener_reaction = "Ximu's horizontal ears flutter with boundless pride."
+env_micro_physics = "Holographic prize ticket emits yellow warning sparks and a faint electronic squawk."
+sub_beat_emotions = ["shocked", "baffled", "speechless", "hysterical"]
+
+[[scenes]]
+id = "ep01_06"
+era = "modern"
+action = "50mm comic low-angle medium shot of @Ximu holding up a chrome-plated cybernetic screaming chicken toy. The mechanical chicken has blinking red LED eyes and brass joints. Ximu's single cyclops eye crinkles into a supremely cunning squint, teeth showing in a triumphant goblin grin. He squeezes the rubber neck of the toy firmly with tactile feedback. 2D vibrant cel animation with bold comic ink borders."
+framing = "medium"
+aspect = "16:9"
+duration = 6
+model = "veo-fast"
+selected_model = "veo-fast"
+room_id = "room_neon_kiosk"
+arc_phase = "phase_2_heist_execution"
+acoustic_space = "neon_kiosk_hum"
+camera_motion = "50mm comic prime lens, low-angle hero push-in with comic speed lines"
+ref_image = "characters/images/ximu_anchor.png"
+characters = ["Ximu"]
+speaker = "Ximu"
+line = "赚大了！只要捏爆它的脖子，全星际雷达都得瘫痪！"
+micro_beats = [
+    "Beat 1 (0.0-1.5s): Ximu hoists the chrome rubber chicken above his head like an Olympic trophy.",
+    "Beat 2 (1.5-3.0s): Green stubby fingers clamp down on the toy's mechanical throat with tactile grip.",
+    "Beat 3 (3.0-4.5s): The toy lets out a distorted 8-bit sonic screech that shakes the frame border.",
+    "Beat 4 (4.5-6.0s): Ximu bursts into proud laughter, pink ears flapping in sonic resonance."
+]
+facial_progression = "Cyclops eyelid narrows into sly grin -> cheek muscles lift -> wide mouth bares blunt teeth -> pink ears vibrate."
+prop_interaction = "Green fleshy fingers squeezing the corrugated rubber neck of the chrome mechanical chicken."
+listener_reaction = "Libei covers his frog-hood ears in agony as holographic sparks shower around him."
+env_micro_physics = "Distorted concentric sonic shockwaves ripple through the neon kiosk air, flickering overhead lamps."
+sub_beat_emotions = ["triumphant", "eccentric", "maniacal", "delighted"]
+
+# ============================================================================
+# Beat 3: 离奇反转 · 集市大典上的荒诞先进个人 (Shot 7-9)
+# ============================================================================
+
+[[scenes]]
+id = "ep01_07"
+era = "modern"
+action = "35mm comic medium wide shot at the Lanke Bazaar plaza podium. @PinkWeirdo stands tall on a rusted metal crate, impossibly long pink noodle neck swaying gently. Single giant eye stares blankly into the camera without blinking, wearing his white tank top and bright red '星际和平先进个人' satin sash. He taps an antique rusted megaphone with his rubbery webbed hand. Gritty wasteland comic aesthetic."
+framing = "medium"
+aspect = "16:9"
+duration = 8
+model = "veo-fast"
+selected_model = "veo-fast"
+room_id = "room_bazaar_plaza"
+arc_phase = "phase_3_bizarre_twist"
+acoustic_space = "ruin_wind_ambience"
+camera_motion = "35mm comic lens, slow crane tilt up along PinkWeirdo's long noodle neck"
+ref_image = "characters/images/pinkweirdo_anchor.png"
+characters = ["PinkWeirdo"]
+speaker = "PinkWeirdo"
+line = "肃静！本人正式宣布，今日和平杰出个人得主是这位绿师傅！"
+micro_beats = [
+    "Beat 1 (0.0-1.5s): Long pink neck flexes like a swan, positioning teardrop head over rusted microphone.",
+    "Beat 2 (1.5-3.0s): Single round eyeball blinks once slowly, pupils contracting into a tiny pinprick.",
+    "Beat 3 (3.0-4.5s): Rubbery arm gestures dramatically toward Ximu standing beside him with the screaming chicken.",
+    "Beat 4 (4.5-6.0s): Megaphone screeches with acoustic feedback as red satin sash flutters in breeze."
+]
+facial_progression = "Unblinking eye dilates -> jaw drops into serene goofy smile -> neck oscillates gracefully -> head nods once."
+prop_interaction = "Rubbery three-fingered pink hand gripping the scratched metal handle of the vintage megaphone."
+listener_reaction = "Alien market crowd blinks in silent confusion, crickets chirping across the plaza."
+env_micro_physics = "Tattered festival bunting banners flap in dry desert gusts, throwing dancing shadows."
+sub_beat_emotions = ["pompous", "deadpan", "absurd", "solemn"]
+character_card = "巴奇|星际和平代表 · 终极荒诞怪咖"
+
+[[scenes]]
+id = "ep01_08"
+era = "modern"
+action = "50mm comic over-the-shoulder medium shot of @Kato leaning against the bazaar perimeter barricade, completely breaking character. Massive purple jaw drops so hard his lower fangs rattle, forehead crests glowing red with indignation. His heavy leather gauntlet points aggressively at Ximu on stage. Gaze locked toward the podium with comfortable headroom and high-contrast comic shadow hatching."
+framing = "medium"
+aspect = "16:9"
+duration = 7
+model = "veo-fast"
+selected_model = "veo-fast"
+room_id = "room_bazaar_plaza"
+arc_phase = "phase_3_bizarre_twist"
+acoustic_space = "ruin_wind_ambience"
+camera_motion = "50mm comic prime lens, snappy whip-pan from podium to Kato's enraged face"
+ref_image = "characters/images/kato_anchor.png"
+characters = ["Kato"]
+speaker = "Kato"
+line = "开什么星际玩笑！他手里捏着赃物还在朝台下敬礼！"
+micro_beats = [
+    "Beat 1 (0.0-1.2s): Kato stomps combat boot onto rusted barrier, horns trembling with fury.",
+    "Beat 2 (1.2-2.5s): Glabella veins pulse visibly under purple skin as upper lip curls back in disgust.",
+    "Beat 3 (2.5-3.8s): Heavy arm slams down on the railing, denting the sheet metal with loud clang.",
+    "Beat 4 (3.8-5.0s): Eyes bulge in utter exasperation, head locked in furious confrontation."
+]
+facial_progression = "Forehead crests flush crimson -> glabella scowls deeply -> nostrils flare -> jaw opens wide in explosive shout."
+prop_interaction = "Spiked tactical gauntlet gripping and bending rusted iron rebar of the perimeter barrier."
+listener_reaction = "Xiaodai calmly documents Kato's elevated blood pressure on her holo-pad."
+env_micro_physics = "Sparks fly from crushed metal railing as dust settles around Kato's boots."
+sub_beat_emotions = ["enraged", "indignant", "shocked", "furious"]
+
+[[scenes]]
+id = "ep01_09"
+era = "modern"
+action = "50mm comic closeup of @Xiaodai reviewing a fresh parking violation ticket on her glowing bounty tablet. Purple bob hair catches ambient neon light, round glasses tinted green by terminal logs. Her lip corners remain frozen in completely serene deadpan equilibrium. Gaze locked steadily forward, maintaining effortless composure amidst the shouting chaos."
+framing = "closeup"
+aspect = "16:9"
+duration = 5
+model = "veo-fast"
+selected_model = "veo-fast"
+room_id = "room_bazaar_plaza"
+arc_phase = "phase_3_bizarre_twist"
+acoustic_space = "ruin_wind_ambience"
+camera_motion = "50mm comic prime lens, steady static frame highlighting deadpan delivery"
+ref_image = "characters/images/xiaodai_anchor.png"
+characters = ["Xiaodai"]
+speaker = "Xiaodai"
+line = "警报解除。因为主办方把抓捕队长的车给当场扣了。"
+micro_beats = [
+    "Beat 1 (0.0-1.2s): Xiaodai raises right eyebrow above the rim of her circular spectacles.",
+    "Beat 2 (1.2-2.5s): Small finger taps the screen, highlighting a red tow-truck hologram.",
+    "Beat 3 (2.5-3.8s): Speaks with chillingly flat, melodic deadpan rhythm.",
+    "Beat 4 (3.8-5.0s): Tilts holo-pad toward camera showing Kato's armored cruiser being clamped."
+]
+facial_progression = "Right eyebrow raises 5mm -> eyelids remain level -> mouth forms minimal articulation -> glasses reflect clamp icon."
+prop_interaction = "Dainty purple finger double-tapping holographic notification badge with satisfying digital chirp."
+listener_reaction = "Kato's roar of anguish echoes across the distant bazaar in off-screen agony."
+env_micro_physics = "Holographic red tow clamp icon spins in mid-air with flashing warning triangles."
+sub_beat_emotions = ["composed", "amused", "ironic", "impassive"]
+
+# ============================================================================
+# Beat 4: 终局狂欢 · 霓虹酒馆牌桌上的离谱大逃杀 (Shot 10-12)
+# ============================================================================
+
+[[scenes]]
+id = "ep01_10"
+era = "modern"
+action = "35mm comic medium shot inside the underground Lanke Tavern. On camera-left, @Libei sits with both purple hands clutching his green frog hood, rocking back and forth in utter comic hysteria. Center foreground features a floating magnetic poker table with glowing holographic cards. Yellow sclera eyes wide with cartoon terror as sweat drops splash comically."
+framing = "medium"
+aspect = "16:9"
+duration = 5
+model = "veo-fast"
+selected_model = "veo-fast"
+room_id = "room_lanke_tavern"
+arc_phase = "phase_4_absurd_escape"
+acoustic_space = "tavern_jazz_chatter"
+camera_motion = "35mm comic lens, fast tracking dolly from Libei's shaking hands to the poker table"
+ref_image = "characters/images/libei_anchor.png"
+characters = ["Libei"]
+speaker = "Libei"
+line = "救命啊！通缉队长拿爆能枪坐在咱对面跟咱斗地主！"
+micro_beats = [
+    "Beat 1 (0.0-1.2s): Libei clutches head with both hands, frog hood bulging eyes wobbling.",
+    "Beat 2 (1.2-2.5s): Oversized cartoon sweat drop plops onto the neon tabletop.",
+    "Beat 3 (2.5-3.8s): Pointing trembling finger across the table at the hulking bounty hunter.",
+    "Beat 4 (3.8-5.0s): Sinks down into chair, pulling hoodie strings tight over chin."
+]
+facial_progression = "Eyeballs bulge with red capillary lines -> mouth trembles in wavy line -> masseter shudders -> chin tucks in fear."
+prop_interaction = "Clammy hands pulling the neon-green frog hood drawstring into tight knot around trembling jaw."
+listener_reaction = "Across the table, Kato in disguise begrudgingly arranges his hand of floating poker cards."
+env_micro_physics = "Giant comic sweat droplet bounces off the glossy table, splashing into glowing blue energy drink."
+sub_beat_emotions = ["hysterical", "despairing", "frenetic", "overwhelmed"]
+
+[[scenes]]
+id = "ep01_11"
+era = "modern"
+action = "50mm comic medium shot of @Ximu lounging back in his tavern booth seat on camera-right. Perched atop his green bald head is a serene, fluffy white cat with blue eyes acting as a luxury wig. Ximu holds a fan of glowing holographic playing cards in one hand, slamming down a winning combo onto the floating magnetic table with his other hand. Single cyclops eye radiates absolute, unearned confidence."
+framing = "medium"
+aspect = "16:9"
+duration = 6
+model = "veo-fast"
+selected_model = "veo-fast"
+room_id = "room_lanke_tavern"
+arc_phase = "phase_4_absurd_escape"
+acoustic_space = "tavern_jazz_chatter"
+camera_motion = "50mm comic prime lens, slow upward tilt from card slam to the white cat on Ximu's head"
+ref_image = "characters/images/ximu_anchor.png"
+characters = ["Ximu"]
+speaker = "Ximu"
+line = "慌什么！四个二带两王，长官，这局你输了洗碗去！"
+micro_beats = [
+    "Beat 1 (0.0-1.5s): Ximu snaps four glowing holographic '2' cards onto the center magnetic field with loud electric pop.",
+    "Beat 2 (1.5-3.0s): Fluffy white cat on his head purrs contentedly, twitching one pink ear without moving.",
+    "Beat 3 (3.0-4.5s): Ximu leans back with huge smug grin, pointing thumb toward the kitchen dish pit.",
+    "Beat 4 (4.5-6.0s): Floating holographic chips tumble directly into Ximu's hoodie pocket."
+]
+facial_progression = "Single eyelid lowers into cocky wink -> broad toothy smirk stretches across green face -> chin lifts in triumph."
+prop_interaction = "Green stubby fingers slapping glowing blue holographic playing cards onto magnetic table surface."
+listener_reaction = "Kato's hand holding his blaster slowly lowers in stunned card-game defeat."
+env_micro_physics = "Cat fur gently wafts in the ceiling fan breeze while holographic score counters shower golden confetti."
+sub_beat_emotions = ["smug", "invincible", "hilarious", "triumphant"]
+
+[[scenes]]
+id = "ep01_12"
+era = "modern"
+action = "35mm comic wide closing shot of the entire tavern table. @PinkWeirdo leans his long noodle neck over the booth divider from behind, adjusting his red '星际和平先进个人' sash with solemn dignity. Beside him, Ximu winks with the white cat perched on his head, Libei stares slack-jawed, and Kato wears a dishwashing apron in furious surrender. Classic 2D comic iris-out closing frame with vibrant cyberpunk colors."
+framing = "medium"
+aspect = "16:9"
+duration = 6
+model = "veo-fast"
+selected_model = "veo-fast"
+room_id = "room_lanke_tavern"
+arc_phase = "phase_4_absurd_escape"
+acoustic_space = "tavern_jazz_chatter"
+camera_motion = "35mm comic lens, slow comedic pull-back revealing the full ridiculous tableau"
+ref_image = "characters/images/pinkweirdo_anchor.png"
+characters = ["PinkWeirdo"]
+speaker = "PinkWeirdo"
+line = "烂柯星反扒大获全胜，感谢猫咪赞助商提供的假发！"
+micro_beats = [
+    "Beat 1 (0.0-1.5s): PinkWeirdo bows long neck smoothly into center frame, waving his megaphone solemnly.",
+    "Beat 2 (1.5-3.0s): White cat on Ximu's head gives camera a knowing blink and gentle meow.",
+    "Beat 3 (3.0-4.5s): Ximu raises a celebratory mug of foaming neon cider, clinking against the chicken toy.",
+    "Beat 4 (4.5-6.0s): Comic black circular iris-out contracts toward Ximu's grinning cyclops eye for the fade."
+]
+facial_progression = "PinkWeirdo's single eye shines in philosophical joy -> mouth curves into calm circle -> neck curves gracefully."
+prop_interaction = "Rubbery pink hand tipping an imaginary hat toward the camera as white cat grooms its left paw."
+listener_reaction = "All characters freeze in comedic pose as celebratory neon jazz horns swell."
+env_micro_physics = "Neon bar lights flare into colorful starbursts as foam bubbles overflow from cider mugs."
+sub_beat_emotions = ["philosophical", "celebratory", "whimsical", "grand"]

@@ -205,6 +205,31 @@ pub fn resolve_gflow_credits_cache() -> PathBuf {
         }
     }
 
+    // Check workspace local fallbacks first if present
+    if let Ok(cwd) = std::env::current_dir() {
+        let mut dirs = vec![cwd.clone()];
+        if let Some(p1) = cwd.parent() {
+            dirs.push(p1.to_path_buf());
+            if let Some(p2) = p1.parent() {
+                dirs.push(p2.to_path_buf());
+            }
+        }
+        for d in dirs {
+            let ws_cache = d.join(".gflow_credits_cache.json");
+            if ws_cache.exists() {
+                return ws_cache;
+            }
+            let ws_direct = d.join("credits_cache.json");
+            if ws_direct.exists() {
+                return ws_direct;
+            }
+        }
+    }
+    let dot_fallback = PathBuf::from(".gflow_credits_cache.json");
+    if dot_fallback.exists() {
+        return dot_fallback;
+    }
+
     let home = std::env::var("HOME")
         .or_else(|_| std::env::var("USERPROFILE"))
         .unwrap_or_default();

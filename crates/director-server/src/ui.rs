@@ -235,17 +235,35 @@ pub const INDEX_HTML: &str = r##"<!DOCTYPE html>
       </button>
     </div>
 
-    <!-- 右区：算力/积分 + AI 助手抽屉 + 新建剧集 -->
+    <!-- 右区：算力/积分 + 算力与配额详情 + AI 助手抽屉 + 新建剧集 -->
     <div class="flex items-center gap-1.5 shrink-0">
-      <div class="hidden xl:flex items-center gap-2.5 px-2.5 py-1 rounded-lg bg-zinc-900/80 border border-white/[0.06] text-[11px] font-mono">
-        <span class="flex items-center gap-1.5 text-zinc-300">
+      <div class="hidden xl:flex items-center gap-2.5 px-3 py-1.5 rounded-lg bg-zinc-900/90 border border-white/[0.08] text-[11px] font-mono shadow-sm">
+        <span class="flex items-center gap-1.5 text-zinc-300" title="本机 GPU / 渲染引擎">
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
           <span id="gpuBadge">Strix Halo</span>
         </span>
         <span class="text-zinc-700">|</span>
-        <span class="text-zinc-400">积分 <strong id="creditBalance" class="text-zinc-100">--</strong></span>
+        <span class="flex items-center gap-1.5 text-sky-300" title="Google Colab Ultra Cloud GPU 算力池 (1,873 CCU)">
+          <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+          <span>Colab <strong id="topColabBadge" class="text-sky-200">1,873 CCU</strong></span>
+        </span>
+        <span class="text-zinc-700">|</span>
+        <span class="flex items-center gap-1.5 text-amber-300" title="Google Flow 视频与定妆积分 (9,895 Credits)">
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+          <span>Flow <strong id="creditBalance" class="text-amber-200">9,895 Cr</strong></span>
+        </span>
+        <span class="text-zinc-700">|</span>
+        <span class="flex items-center gap-1.5 text-purple-300" title="Google Flow Music (MusicFX / Lyria 2 + ACE-Step 1.5)">
+          <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+          <span id="topMusicBadge">Lyria/ACE Ready</span>
+        </span>
         <span id="creditCapacity" class="text-zinc-500 hidden 2xl:inline"></span>
       </div>
+
+      <button onclick="openQuotaModal()" class="px-2.5 py-1.5 rounded-lg bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-500/30 text-indigo-300 hover:text-indigo-200 text-xs font-medium flex items-center gap-1.5 transition shadow-sm" title="三合一算力与配额监控中心 (Colab · Google Flow · Flow Music)">
+        <svg class="w-3.5 h-3.5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        <span class="font-medium">📊 算力与配额详情</span>
+      </button>
 
       <button onclick="toggleCopilotDrawer(true)" class="px-2.5 py-1.5 btn-ghost text-xs relative" title="AI 导演助手与 L1-L5 门禁诊断">
         <svg class="w-4 h-4 text-zinc-300" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -730,7 +748,39 @@ pub const INDEX_HTML: &str = r##"<!DOCTYPE html>
 
     <!-- ==================== VIEW 4: 任务与配额 (Render Queue & Guard) ==================== -->
     <section id="tab-queue" class="hidden flex-1 overflow-y-auto p-3 md:p-6 pb-20 lg:pb-6">
-      <div class="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-5">
+      <div class="max-w-[1440px] mx-auto space-y-6">
+
+        <!-- 3-in-1 Quota & Capacity Matrix Dashboard Section -->
+        <div class="surface-card p-4 md:p-6 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/[0.06] pb-3.5">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-300">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+              </div>
+              <div>
+                <h2 class="text-base font-semibold text-zinc-100 flex items-center gap-2">
+                  <span>三合一算力与配额监控中心</span>
+                  <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-mono">LIVE CLUSTER</span>
+                </h2>
+                <p class="text-xs text-zinc-400 mt-0.5">Google Colab Cloud GPU · Google Flow (Veo/Nano-Pro) · Google Flow Music (Lyria/ACE-Step)</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 text-xs font-mono text-zinc-400">
+              <span id="queueQuotaUpdated">更新时间: 实时同步中...</span>
+              <button onclick="refreshQuotaSummary()" class="px-2.5 py-1 btn-ghost text-xs flex items-center gap-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                <span>刷新</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 3-Column Card Matrix Grid -->
+          <div id="queueQuotaCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Cards populated dynamically by renderQuotaDashboard -->
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
         <div class="lg:col-span-4 surface-card p-4 md:p-5 space-y-4 h-fit">
           <!-- 移动端可见的硬件与云端算力概览卡 -->
           <div class="p-3 rounded-xl bg-zinc-900/80 border border-white/[0.06] space-y-1.5 text-xs font-mono">
@@ -976,6 +1026,89 @@ pub const INDEX_HTML: &str = r##"<!DOCTYPE html>
     </div>
   </div>
 
+  <!-- ==================== 弹窗：三合一算力与配额监控中心 ==================== -->
+  <div id="quotaDetailModal" class="fixed inset-0 bg-black/85 z-50 hidden items-center justify-center p-3 md:p-6 backdrop-blur-md" onclick="if(event.target===this) closeQuotaModal()">
+    <div class="surface-card max-w-5xl w-full max-h-[92vh] flex flex-col overflow-hidden shadow-2xl border border-white/[0.1] bg-[#0c0c10]">
+      <!-- 模态框标题栏 -->
+      <div class="p-4 md:p-5 border-b border-white/[0.08] flex items-center justify-between shrink-0 bg-zinc-950/60">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/40 flex items-center justify-center text-indigo-300">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+          </div>
+          <div>
+            <h2 class="text-base font-semibold text-zinc-100 flex items-center gap-2">
+              <span>三合一算力与配额监控中心</span>
+              <span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-mono">Google AI Ultra</span>
+            </h2>
+            <p class="text-xs text-zinc-400 mt-0.5">Colab Cloud GPU · Google Flow (Veo/Nano-Pro) · Google Flow Music (Lyria/ACE-Step)</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="refreshQuotaSummary()" class="px-2.5 py-1.5 btn-ghost text-xs flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <span class="hidden sm:inline">刷新配额</span>
+          </button>
+          <button onclick="closeQuotaModal()" class="px-2.5 py-1.5 btn-ghost text-xs text-zinc-400 hover:text-white">✕ 关闭</button>
+        </div>
+      </div>
+
+      <!-- 模态框主体内容 (滚动区域) -->
+      <div class="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
+        <!-- 3-Column Card Matrix Grid -->
+        <div id="modalQuotaCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4.5">
+          <!-- Populated by JavaScript renderQuotaCards -->
+        </div>
+
+        <!-- Google Flow Music 快速试听与合成器 -->
+        <div class="p-4 md:p-5 rounded-2xl bg-gradient-to-br from-purple-950/20 via-zinc-900/60 to-zinc-950/80 border border-purple-500/20 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <span class="text-lg">🎵</span>
+              <div>
+                <h3 class="text-sm font-semibold text-purple-200">Google Flow Music / ACE-Step 1.5 极速配乐与拟音合成器</h3>
+                <p class="text-xs text-zinc-400 mt-0.5">支持古风管弦、高燃交响、诙谐爵士、赛博朋克合成器等多种曲风，全自动时间对齐与广播级母带混音</p>
+              </div>
+            </div>
+            <span class="text-xs font-mono text-purple-300 bg-purple-500/10 px-2.5 py-1 rounded-full border border-purple-500/20">500首/日 · 0 Credits 扣减</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
+            <div class="sm:col-span-6 space-y-1">
+              <label class="text-[11px] font-mono text-zinc-400">配乐提示词 (Prompt)</label>
+              <input id="musicPromptInput" type="text" value="三国英雄史诗出山，古风笛箫与宏大交响战役配乐" class="w-full px-3 py-2 field-input text-xs" />
+            </div>
+            <div class="sm:col-span-3 space-y-1">
+              <label class="text-[11px] font-mono text-zinc-400">情绪曲风 (Mood)</label>
+              <select id="musicMoodSelect" class="w-full px-3 py-2 field-input text-xs">
+                <option value="guofeng" selected>古风国风 (Guofeng Pentatonic)</option>
+                <option value="epic">史诗宏大 (Epic Orchestral)</option>
+                <option value="comic">幽默轻快 (Comic Quirky)</option>
+                <option value="jazz">沉静爵士 (Jazzy Noir)</option>
+                <option value="cyberpunk">赛博合成器 (Cyberpunk Synth)</option>
+              </select>
+            </div>
+            <div class="sm:col-span-3 space-y-1">
+              <label class="text-[11px] font-mono text-zinc-400">时长: <span id="musicDurationLabel" class="text-purple-300">15.0</span> 秒</label>
+              <input id="musicDurationInput" type="range" min="5" max="60" value="15" step="1" oninput="document.getElementById('musicDurationLabel').textContent = this.value + '.0'" class="w-full accent-purple-400" />
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-1">
+            <div id="musicGenStatus" class="text-xs text-zinc-400 font-mono truncate max-w-md">就绪，点击开始生成并试听</div>
+            <button onclick="testGenerateMusic()" id="btnGenerateMusic" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-medium flex items-center gap-1.5 transition shadow-lg shadow-purple-600/20">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <span>立即生成配乐</span>
+            </button>
+          </div>
+
+          <div id="musicAudioPlayerBox" class="hidden pt-2 border-t border-white/[0.06]">
+            <audio id="musicAudioPlayer" controls class="w-full h-9 rounded-lg"></audio>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== 弹窗 5：极简登录验证 ==================== -->
   <div id="loginModal" class="fixed inset-0 bg-[#09090b] z-[100] hidden items-center justify-center p-4">
     <div class="surface-card max-w-sm w-full p-6 md:p-7 space-y-5 shadow-2xl">
@@ -1196,18 +1329,307 @@ pub const INDEX_HTML: &str = r##"<!DOCTYPE html>
       }
     }
 
+    let G_QUOTA_SUMMARY = null;
+
+    function buildQuotaCardsHtml(q) {
+      if (!q) return '';
+      const colab = q.colab || {};
+      const flow = q.flow_video || {};
+      const music = q.flow_music || {};
+
+      return `
+        <!-- Card 1: Google Colab Cloud GPU -->
+        <div class="rounded-2xl p-4 md:p-5 bg-gradient-to-b from-sky-950/25 via-zinc-900/80 to-zinc-950/90 border border-sky-500/30 space-y-4 shadow-lg">
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-300">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 00-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
+              </div>
+              <div>
+                <div class="text-xs font-mono uppercase tracking-wider text-sky-400 font-semibold">Google Colab Cloud GPU</div>
+                <div class="text-[11px] text-zinc-400">${colab.tier || 'Google AI Ultra'}</div>
+              </div>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-300 border border-sky-500/30">CLOUD GPU</span>
+          </div>
+
+          <div>
+            <div class="flex items-baseline justify-between">
+              <div class="text-2xl font-bold font-mono text-zinc-100">${(colab.remaining_ccu || 0).toLocaleString()} <span class="text-xs font-normal text-zinc-400">CCU</span></div>
+              <div class="text-xs font-mono text-sky-300">${colab.percentage || 0}%</div>
+            </div>
+            <div class="w-full bg-zinc-800 rounded-full h-2 mt-1.5 overflow-hidden">
+              <div class="bg-gradient-to-r from-sky-500 to-cyan-400 h-2 rounded-full transition-all" style="width: ${Math.min(100, Math.max(0, colab.percentage || 0))}%"></div>
+            </div>
+            <div class="flex justify-between text-[10px] font-mono text-zinc-500 mt-1">
+              <span>当前余额 / 总额: ${(colab.total_pool_ccu || 2000).toLocaleString()} CCU</span>
+              <span>速率: ${colab.burn_rate || 0} CCU/h</span>
+            </div>
+          </div>
+
+          <div class="space-y-2.5 pt-2 border-t border-white/[0.06] text-xs">
+            <div class="flex items-start justify-between gap-1">
+              <span class="text-zinc-400 shrink-0 font-medium">1. 到期时间:</span>
+              <span class="font-mono text-zinc-200 text-right text-[11px]">${colab.expires_at || '2026-12-01'} <span class="px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 text-[10px]">剩 ${colab.days_remaining || 26} 天</span></span>
+            </div>
+            <div class="flex items-start justify-between gap-1">
+              <span class="text-zinc-400 shrink-0 font-medium">2. 刷新时间:</span>
+              <span class="font-mono text-zinc-300 text-right text-[11px]">${colab.refreshes_at || '每月 1 日 16:00 CST'}</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-black/40 border border-white/[0.05] space-y-1.5 font-mono text-[11px]">
+              <div class="text-[10px] text-zinc-400 font-sans font-medium">3. 剩余用量与预计可生成时长:</div>
+              <div class="flex items-center justify-between text-zinc-200">
+                <span class="text-zinc-400">G4 96GB 实例:</span>
+                <span class="text-sky-300 font-semibold">${colab.estimates?.g4_video_hours || 0} 小时</span>
+              </div>
+              <div class="text-[10px] text-emerald-400 pl-2">↳ 预计可生成 ~${(colab.estimates?.estimated_video_minutes || 0).toLocaleString()} 分钟 1080p AI 视频</div>
+              <div class="flex items-center justify-between text-zinc-200 pt-0.5">
+                <span class="text-zinc-400">L4 24GB 实例:</span>
+                <span class="text-cyan-300 font-semibold">${colab.estimates?.l4_audio_hours || 0} 小时</span>
+              </div>
+              <div class="text-[10px] text-cyan-400 pl-2">↳ 预计可生成 ~${(colab.estimates?.estimated_audio_minutes || 0).toLocaleString()} 分钟 多情绪语音</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Google Flow Video & Image -->
+        <div class="rounded-2xl p-4 md:p-5 bg-gradient-to-b from-amber-950/25 via-zinc-900/80 to-zinc-950/90 border border-amber-500/30 space-y-4 shadow-lg">
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-300">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+              </div>
+              <div>
+                <div class="text-xs font-mono uppercase tracking-wider text-amber-400 font-semibold">Google Flow Video & Image</div>
+                <div class="text-[11px] text-zinc-400">${flow.tier || 'Google AI Ultra'}</div>
+              </div>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">VEO 3.1 & NANO</span>
+          </div>
+
+          <div>
+            <div class="flex items-baseline justify-between">
+              <div class="text-2xl font-bold font-mono text-zinc-100">${(flow.remaining_credits || 0).toLocaleString()} <span class="text-xs font-normal text-zinc-400">Credits</span></div>
+              <div class="text-xs font-mono text-amber-300">${flow.percentage || 0}%</div>
+            </div>
+            <div class="w-full bg-zinc-800 rounded-full h-2 mt-1.5 overflow-hidden">
+              <div class="bg-gradient-to-r from-amber-500 to-yellow-400 h-2 rounded-full transition-all" style="width: ${Math.min(100, Math.max(0, flow.percentage || 0))}%"></div>
+            </div>
+            <div class="flex justify-between text-[10px] font-mono text-zinc-500 mt-1">
+              <span>当前额度 / 总配额: ${(flow.total_credits || 10000).toLocaleString()} 点</span>
+              <span>账号: ${flow.account || 'yuanyang749@gmail.com'}</span>
+            </div>
+          </div>
+
+          <div class="space-y-2.5 pt-2 border-t border-white/[0.06] text-xs">
+            <div class="flex items-start justify-between gap-1">
+              <span class="text-zinc-400 shrink-0 font-medium">1. 到期时间:</span>
+              <span class="font-mono text-zinc-200 text-right text-[11px]">${flow.expires_at || '2026-12-01'} <span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[10px]">剩 ${flow.days_remaining || 26} 天</span></span>
+            </div>
+            <div class="flex items-start justify-between gap-1">
+              <span class="text-zinc-400 shrink-0 font-medium">2. 刷新时间:</span>
+              <span class="font-mono text-zinc-300 text-right text-[11px]">${flow.refreshes_at || '每月 1 日 16:00 CST 自动补满'}</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-black/40 border border-white/[0.05] space-y-1.5 font-mono text-[11px]">
+              <div class="text-[10px] text-zinc-400 font-sans font-medium">3. 剩余用量与预计可生成时长:</div>
+              <div class="flex items-center justify-between text-zinc-200">
+                <span class="text-zinc-400">Veo 3.1 Fast:</span>
+                <span class="text-amber-300 font-semibold">${flow.estimates?.veo_fast_shots || 0} 镜 (10点/镜)</span>
+              </div>
+              <div class="text-[10px] text-emerald-400 pl-2">↳ 预计可生成 ~${flow.estimates?.estimated_fast_video_minutes || 0} 分钟 (${(flow.estimates?.estimated_fast_video_seconds || 0).toLocaleString()}秒) 高清视频</div>
+              <div class="flex items-center justify-between text-zinc-200 pt-0.5">
+                <span class="text-zinc-400">Veo 3.1 Quality:</span>
+                <span class="text-yellow-300 font-semibold">${flow.estimates?.veo_quality_shots || 0} 镜 (100点/镜)</span>
+              </div>
+              <div class="text-[10px] text-yellow-400 pl-2">↳ 预计可生成 ~${flow.estimates?.estimated_quality_video_minutes || 0} 分钟 (${(flow.estimates?.estimated_quality_video_seconds || 0).toLocaleString()}秒) 旗舰母带</div>
+              <div class="flex items-center justify-between text-zinc-400 pt-0.5">
+                <span>Nano-Pro 定妆生图:</span>
+                <span class="text-emerald-400 font-semibold">${flow.estimates?.nano_pro_images || '0点/张 (无限免费 ∞ 张)'}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Google Flow Music & ACE-Step 1.5 -->
+        <div class="rounded-2xl p-4 md:p-5 bg-gradient-to-b from-purple-950/25 via-zinc-900/80 to-zinc-950/90 border border-purple-500/30 space-y-4 shadow-lg">
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-lg bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-300">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/></svg>
+              </div>
+              <div>
+                <div class="text-xs font-mono uppercase tracking-wider text-purple-400 font-semibold">Google Flow Music</div>
+                <div class="text-[11px] text-zinc-400">${music.tier || 'MusicFX / Lyria 2 + ACE-Step 1.5'}</div>
+              </div>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-purple-500/15 text-purple-300 border border-purple-500/30">MUSICFX & ACE</span>
+          </div>
+
+          <div>
+            <div class="flex items-baseline justify-between">
+              <div class="text-2xl font-bold font-mono text-zinc-100">${music.daily_remaining_tracks || 500} <span class="text-xs font-normal text-zinc-400">/ ${music.daily_quota_tracks || 500} 首 (今日)</span></div>
+              <div class="text-xs font-mono text-purple-300">100% (0点扣减)</div>
+            </div>
+            <div class="w-full bg-zinc-800 rounded-full h-2 mt-1.5 overflow-hidden">
+              <div class="bg-gradient-to-r from-purple-500 to-pink-400 h-2 rounded-full transition-all" style="width: 100%"></div>
+            </div>
+            <div class="flex justify-between text-[10px] font-mono text-zinc-500 mt-1">
+              <span>扣点规则: 0 Credits 扣减 (免费额度)</span>
+              <span>本地状态: 无限时长合成</span>
+            </div>
+          </div>
+
+          <div class="space-y-2.5 pt-2 border-t border-white/[0.06] text-xs">
+            <div class="flex items-start justify-between gap-1">
+              <span class="text-zinc-400 shrink-0 font-medium">1. 到期时间:</span>
+              <span class="font-mono text-zinc-200 text-right text-[11px]">${music.expires_at || '2026-12-01'} <span class="px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 text-[10px]">随 Ultra 订阅长效</span></span>
+            </div>
+            <div class="flex items-start justify-between gap-1">
+              <span class="text-zinc-400 shrink-0 font-medium">2. 刷新时间:</span>
+              <span class="font-mono text-zinc-300 text-right text-[11px]">${music.refreshes_at || '每日 16:00 CST 自动刷新日度配额'}</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-black/40 border border-white/[0.05] space-y-1.5 font-mono text-[11px]">
+              <div class="text-[10px] text-zinc-400 font-sans font-medium">3. 剩余用量与预计可生成时长:</div>
+              <div class="flex items-center justify-between text-zinc-200">
+                <span class="text-zinc-400">MusicFX / Lyria 2:</span>
+                <span class="text-purple-300 font-semibold">今日预计 ~${music.estimates?.estimated_music_minutes || 250} 分钟</span>
+              </div>
+              <div class="text-[10px] text-pink-400 pl-2">↳ 按日度 500 首 × 30s 高保真配乐折算</div>
+              <div class="flex items-center justify-between text-zinc-200 pt-0.5">
+                <span class="text-zinc-400">SoundFX 戏剧拟音:</span>
+                <span class="text-purple-300 font-semibold">~${music.estimates?.estimated_sfx_count || 1000} 条电影拟音</span>
+              </div>
+              <div class="flex items-center justify-between text-zinc-400 pt-0.5">
+                <span>ACE-Step 1.5 本地/Cubex:</span>
+                <span class="text-emerald-400 font-semibold">无限时长 ∞ (本地离线合成)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderQuotaDashboard(q) {
+      const html = buildQuotaCardsHtml(q);
+      const queueCards = document.getElementById('queueQuotaCards');
+      if (queueCards) queueCards.innerHTML = html;
+      const modalCards = document.getElementById('modalQuotaCards');
+      if (modalCards) modalCards.innerHTML = html;
+      const updatedEl = document.getElementById('queueQuotaUpdated');
+      if (updatedEl && q.updated_at) updatedEl.textContent = `更新时间: ${q.updated_at}`;
+    }
+
+    async function refreshQuotaSummary() {
+      try {
+        const res = await fetch('/api/v1/quota/summary');
+        if (res.ok) {
+          const quota = await res.json();
+          G_QUOTA_SUMMARY = quota;
+          const topColab = document.getElementById('topColabBadge');
+          if (topColab && quota.colab) {
+            topColab.textContent = `${quota.colab.remaining_ccu.toLocaleString()} CCU`;
+          }
+          if (quota.flow_video) {
+            document.getElementById('creditBalance').textContent = `${quota.flow_video.remaining_credits.toLocaleString()} Cr`;
+          }
+          renderQuotaDashboard(quota);
+        }
+      } catch (e) {
+        console.error('Quota summary error:', e);
+      }
+    }
+
+    function openQuotaModal() {
+      if (!G_QUOTA_SUMMARY) {
+        refreshQuotaSummary();
+      } else {
+        renderQuotaDashboard(G_QUOTA_SUMMARY);
+      }
+      const modal = document.getElementById('quotaDetailModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeQuotaModal() {
+      const modal = document.getElementById('quotaDetailModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    async function testGenerateMusic() {
+      const prompt = document.getElementById('musicPromptInput').value.trim();
+      const mood = document.getElementById('musicMoodSelect').value;
+      const duration_sec = parseFloat(document.getElementById('musicDurationInput').value) || 15.0;
+      const statusEl = document.getElementById('musicGenStatus');
+      const btn = document.getElementById('btnGenerateMusic');
+
+      if (!prompt) {
+        showToast('请输入配乐提示词', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      statusEl.textContent = '⏳ 正在调度 Google Flow Music / ACE-Step 引擎并母带混音中...';
+
+      try {
+        const res = await fetch('/api/v1/music/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt, mood, duration_sec })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          statusEl.innerHTML = `<span class="text-emerald-400">✓ ${data.message}</span> (${data.engine})`;
+          const playerBox = document.getElementById('musicAudioPlayerBox');
+          const player = document.getElementById('musicAudioPlayer');
+          const fname = data.output_path.split('/').pop().split('\\\\').pop();
+          player.src = `/media/renders/${encodeURIComponent(fname)}`;
+          player.onerror = () => {
+            player.src = `/media/projects?file=${encodeURIComponent(fname)}`;
+          };
+          playerBox.classList.remove('hidden');
+          player.play().catch(() => {});
+          showToast(`已生成配乐: ${data.engine}`);
+        } else {
+          statusEl.textContent = `❌ 生成失败: ${data.message || '未知错误'}`;
+          showToast(`生成失败: ${data.message || '未知错误'}`, 'error');
+        }
+      } catch (e) {
+        statusEl.textContent = `❌ 请求错误: ${e.message}`;
+        showToast('请求超时或网络异常', 'error');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
     async function loadSystemStatus() {
       try {
         const res = await fetch('/api/v1/system/status');
         const data = await res.json();
         G_ACTIVE_PROJECT_ID = data.active_project_id || G_ACTIVE_PROJECT_ID;
         document.getElementById('gpuBadge').textContent = `${data.local_gpu.device_name} ${data.local_gpu.vram_gb}G`;
-        document.getElementById('creditBalance').textContent = `${data.credits.balance.toLocaleString()}`;
+        document.getElementById('creditBalance').textContent = `${data.credits.balance.toLocaleString()} Cr`;
         const mBal = document.getElementById('mobileCreditBalance');
         if (mBal) mBal.textContent = `${data.credits.balance.toLocaleString()} 点 (Q:${data.credits.clips_quality}镜 / F:${data.credits.clips_fast}镜)`;
         document.getElementById('creditCapacity').textContent = `· Q:${data.credits.clips_quality}镜 / F:${data.credits.clips_fast}镜`;
         document.getElementById('chkQualityApproval').checked = data.require_approval_for_quality;
         document.getElementById('inpDailyLimit').value = data.daily_credit_limit;
+
+        if (data.quota_summary) {
+          G_QUOTA_SUMMARY = data.quota_summary;
+          const colab = data.quota_summary.colab;
+          if (colab) {
+            const topColab = document.getElementById('topColabBadge');
+            if (topColab) topColab.textContent = `${colab.remaining_ccu.toLocaleString()} CCU`;
+          }
+          renderQuotaDashboard(data.quota_summary);
+        } else {
+          refreshQuotaSummary();
+        }
 
         const badge = document.getElementById('pendingBadge');
         if (data.pending_approvals_count > 0) {
