@@ -87,6 +87,17 @@ class QuantitativeMetrics:
     head_sharpness: float
     tail_sharpness: float
     sharpness_drift_pct: float
+    non_rigid_motion_score: float = 0.0
+    non_rigid_ratio: float = 0.0
+    character_internal_motion: float = 0.0
+    mean_shift_variance: float = 0.0
+    global_camera_explained_ratio: float = 0.0
+    static_slideshow_detected: bool = False
+    static_slideshow_veto: bool = False
+    passed_veto_gates: bool = True
+    hard_cut_count: int = 0
+    hard_cut_frequency_per_min: float = 0.0
+    mean_cut_jump_discontinuity: float = 0.0
     anomalies: List[str] = field(default_factory=list)
 
 
@@ -115,6 +126,8 @@ class VideoCriticReport:
     token_cost_estimate: Dict[str, Any]
     evaluator_mode: str
     evaluation_timestamp: str
+    static_slideshow_veto: bool = False
+    passed_veto_gates: bool = True
 
 
 # ==============================================================================
@@ -255,6 +268,178 @@ class QuantitativePhysicsAnalyzer:
         timestamps = np.arange(n_frames) / self.sample_fps
         return frames, timestamps
 
+    def detect_non_rigid_motion_and_cuts(self, frames: np.ndarray) -> Dict[str, Any]:
+        """
+        Anti-Slideshow / Ken Burns Pan-Zoom & Continuity Discontinuity Detector:
+        1. Divides sampled frames into a 4x4 spatial grid (16 blocks).
+        2. Estimates local 2D translation shifts (dx, dy) for each block using 2D FFT phase correlation.
+        3. Computes global camera translation shift (median dx, dy) and compensated residual pixel difference.
+        4. In static slideshows / Ken Burns pan-zoom, all blocks move rigidly together or global shift explains >85% of diff.
+        5. In genuine AI animated video, character head/limbs/torso deform non-rigidly relative to background.
+        6. Detects hard scene cuts (raw_diff > 35.0) and measures visual/structural discontinuity jumps.
+        """
+        n_frames = len(frames)
+        if n_frames < 2:
+            return {
+                "non_rigid_motion_score": 0.0,
+                "non_rigid_ratio": 0.0,
+                "character_internal_motion": 0.0,
+                "mean_shift_variance": 0.0,
+                "global_camera_explained_ratio": 0.0,
+                "static_slideshow_detected": True,
+                "static_slideshow_veto": True,
+                "passed_veto_gates": False,
+                "hard_cut_count": 0,
+                "hard_cut_frequency_per_min": 0.0,
+                "mean_cut_jump_discontinuity": 0.0,
+                "anomalies": ["Video has fewer than 2 frames."]
+            }
+
+        # Grayscale luminance
+        Y = (0.299 * frames[:, :, :, 0] + 0.587 * frames[:, :, :, 1] + 0.114 * frames[:, :, :, 2]).astype(np.float32)
+        H, W = Y.shape[1:3]
+        grid_h, grid_w = 4, 4
+        bh, bw = H // grid_h, W // grid_w
+        window = np.hanning(bh)[:, None] * np.hanning(bw)[None, :]
+
+        hard_cuts: List[Tuple[int, float]] = []
+        explained_ratios: List[float] = []
+        shift_stds: List[float] = []
+        shift_vars: List[float] = []
+        char_internals: List[float] = []
+        non_rigid_count = 0
+        total_valid = 0
+
+        center_indices = [5, 6, 9, 10]
+        outer_indices = [0, 1, 2, 3, 4, 7, 8, 11, 12, 13, 14, 15]
+
+        for t in range(n_frames - 1):
+            f1 = Y[t]
+            f2 = Y[t + 1]
+            raw_diff = float(np.mean(np.abs(f2 - f1)))
+
+            # Hard cut detection (scene transition jump)
+            if raw_diff > 35.0:
+                hard_cuts.append((t, raw_diff))
+                continue
+
+            total_valid += 1
+
+            # 4x4 spatial block phase correlation
+            shifts = []
+            for i in range(grid_h):
+                for j in range(grid_w):
+                    b1 = f1[i * bh:(i + 1) * bh, j * bw:(j + 1) * bw]
+                    b2 = f2[i * bh:(i + 1) * bh, j * bw:(j + 1) * bw]
+
+                    w1 = (b1 - np.mean(b1)) * window
+                    w2 = (b2 - np.mean(b2)) * window
+
+                    F1 = np.fft.fft2(w1)
+                    F2 = np.fft.fft2(w2)
+                    cross = F1 * np.conj(F2)
+                    R = cross / (np.abs(cross) + 1e-7)
+                    corr = np.fft.ifft2(R).real
+
+                    py, px = np.unravel_index(np.argmax(corr), corr.shape)
+                    dy = py - bh if py > bh // 2 else py
+                    dx = px - bw if px > bw // 2 else px
+                    shifts.append((dx, dy))
+
+            shifts_arr = np.array(shifts, dtype=np.float32)
+            med_dx = float(np.median(shifts_arr[:, 0]))
+            med_dy = float(np.median(shifts_arr[:, 1]))
+
+            # Translation-compensated residual pixel difference after shifting by median global camera shift
+            idx_x, idx_y = int(round(med_dx)), int(round(med_dy))
+            f1_shifted = np.roll(f1, shift=(idx_y, idx_x), axis=(0, 1))
+            mask = np.ones_like(f1, dtype=bool)
+            if idx_y > 0:
+                mask[:idx_y, :] = False
+            elif idx_y < 0:
+                mask[idx_y:, :] = False
+            if idx_x > 0:
+                mask[:, :idx_x] = False
+            elif idx_x < 0:
+                mask[:, idx_x:] = False
+
+            comp_diff = float(np.mean(np.abs(f2[mask] - f1_shifted[mask]))) if np.any(mask) else raw_diff
+            explained = max(0.0, (raw_diff - comp_diff) / (raw_diff + 1e-5))
+
+            # Block shift divergence across the 16 blocks
+            s_std = float(np.std(shifts_arr[:, 0]) + np.std(shifts_arr[:, 1]))
+            s_var = float(np.var(shifts_arr[:, 0]) + np.var(shifts_arr[:, 1]))
+
+            # Character internal motion relative to peripheral camera/background motion
+            c_shifts = shifts_arr[center_indices]
+            o_shifts = shifts_arr[outer_indices]
+            o_med = np.median(o_shifts, axis=0)
+            char_int = float(np.mean(np.linalg.norm(c_shifts - o_med, axis=1)))
+
+            explained_ratios.append(explained)
+            shift_stds.append(s_std)
+            shift_vars.append(s_var)
+            char_internals.append(char_int)
+
+            # A transition is non-rigid character animation if local blocks diverge or character deforms relative to background
+            if (s_std >= 0.35 or char_int >= 0.25) and explained < 0.85:
+                non_rigid_count += 1
+
+        total_valid = max(1, total_valid)
+        non_rigid_ratio = non_rigid_count / total_valid
+        mean_char_int = float(np.mean(char_internals)) if char_internals else 0.0
+        mean_shift_var = float(np.mean(shift_vars)) if shift_vars else 0.0
+        mean_shift_std = float(np.mean(shift_stds)) if shift_stds else 0.0
+        mean_explained = float(np.mean(explained_ratios)) if explained_ratios else 0.0
+
+        # Non-rigid motion score (0 - 100)
+        non_rigid_motion_score = max(0.0, min(100.0, non_rigid_ratio * 150.0 + min(1.5, mean_char_int) * 25.0))
+
+        # Ken Burns / Slideshow detection criteria:
+        # 1. Global camera shift explains > 85% of motion across the video
+        # 2. Non-rigid motion score < 25.0
+        # 3. All blocks move rigidly together with very low character internal motion (< 0.15) and block shift std (< 0.30)
+        # 4. Non-rigid ratio < 18%
+        static_slideshow_detected = (
+            (non_rigid_motion_score < 25.0) or
+            (non_rigid_ratio < 0.18) or
+            (mean_char_int < 0.15 and mean_shift_std < 0.30) or
+            (mean_explained > 0.85)
+        )
+        static_slideshow_veto = static_slideshow_detected or (non_rigid_motion_score < 25.0)
+        passed_veto_gates = not static_slideshow_veto
+
+        # Scene cut jump discontinuity metrics
+        hard_cut_count = len(hard_cuts)
+        cut_freq = (hard_cut_count / max(0.1, self.duration)) * 60.0
+        mean_cut_jump = float(np.mean([c[1] for c in hard_cuts])) if hard_cuts else 0.0
+
+        detector_anomalies: List[str] = []
+        if static_slideshow_veto:
+            detector_anomalies.append(
+                "HARD VETO [STATIC_SLIDESHOW_DETECTED]: Video consists of static keyframes with camera pan/zoom (motion comic / PPT) rather than genuine character animation."
+            )
+
+        if hard_cut_count >= 3 and static_slideshow_veto:
+            detector_anomalies.append(
+                f"Scene cut jump discontinuity detected: {hard_cut_count} hard cuts (frequency: {cut_freq:.1f} cuts/min, avg jump: {mean_cut_jump:.1f}) without transition or matching composition."
+            )
+
+        return {
+            "non_rigid_motion_score": round(non_rigid_motion_score, 1),
+            "non_rigid_ratio": round(non_rigid_ratio, 3),
+            "character_internal_motion": round(mean_char_int, 3),
+            "mean_shift_variance": round(mean_shift_var, 3),
+            "global_camera_explained_ratio": round(mean_explained * 100.0, 1),
+            "static_slideshow_detected": static_slideshow_detected,
+            "static_slideshow_veto": static_slideshow_veto,
+            "passed_veto_gates": passed_veto_gates,
+            "hard_cut_count": hard_cut_count,
+            "hard_cut_frequency_per_min": round(cut_freq, 1),
+            "mean_cut_jump_discontinuity": round(mean_cut_jump, 1),
+            "anomalies": detector_anomalies
+        }
+
     def analyze(self) -> QuantitativeMetrics:
         frames, timestamps = self.extract_frames_pipe()
         audio_rms, audio_db = self.extract_audio_envelope()
@@ -270,6 +455,12 @@ class QuantitativePhysicsAnalyzer:
         anomalies: List[str] = []
 
         # ----------------------------------------------------------------------
+        # 0. Anti-Slideshow Non-Rigid Deformation & Continuity Cut Detector
+        # ----------------------------------------------------------------------
+        det = self.detect_non_rigid_motion_and_cuts(frames)
+        anomalies.extend(det["anomalies"])
+
+        # ----------------------------------------------------------------------
         # 1. Beat Motion Scores across 4 Dramatic Beats
         # ----------------------------------------------------------------------
         frame_diffs = np.mean(np.abs(frames[1:].astype(float) - frames[:-1].astype(float)), axis=(1, 2, 3))
@@ -277,7 +468,7 @@ class QuantitativePhysicsAnalyzer:
 
         # Dramatic beats windowing
         dur = self.duration
-        if dur >= 5.0:
+        if 5.0 <= dur <= 10.0:
             beat_defs = [
                 ("Beat 1: Airlock", 0.0, 1.1),
                 ("Beat 2: Dialogue", 1.1, 2.7),
@@ -285,9 +476,9 @@ class QuantitativePhysicsAnalyzer:
                 ("Beat 4: Tail Anchor", 4.5, dur)
             ]
         else:
-            # Scaled proportionally for shorter videos
+            # Scaled proportionally for shorter (<5s) or longer multi-scene videos (>10s)
             beat_defs = [
-                ("Beat 1: Airlock", 0.0, 0.20 * dur),
+                ("Beat 1: Setup", 0.0, 0.20 * dur),
                 ("Beat 2: Dialogue", 0.20 * dur, 0.55 * dur),
                 ("Beat 3: Climax", 0.55 * dur, 0.82 * dur),
                 ("Beat 4: Tail Anchor", 0.82 * dur, dur)
@@ -316,9 +507,9 @@ class QuantitativePhysicsAnalyzer:
                     freeze_penalty += 15.0
                     anomalies.append(f"Wooden statue freeze detected during {b_name} (motion: {mean_m:.2f})")
 
-            # Hold->Pop stutter detection (Frame-22 artifact)
+            # Hold->Pop stutter detection (Frame-22 freeze-then-pop artifact)
             hold_pop = False
-            if stutter_r > 4.5 and peak_m > 4.8:
+            if stutter_r > 4.5 and peak_m > 4.8 and mean_m < 0.80:
                 hold_pop = True
                 stutter_penalty += 12.0
                 anomalies.append(f"Hold->Pop motion pop stutter in {b_name} (stutter ratio: {stutter_r:.1f}x)")
@@ -335,18 +526,33 @@ class QuantitativePhysicsAnalyzer:
 
         overall_motion_score = max(0.0, min(100.0, 100.0 - freeze_penalty - stutter_penalty))
 
+        # Hard Veto clamp on overall motion score
+        if det["static_slideshow_veto"]:
+            overall_motion_score = min(overall_motion_score, 25.0)
+
         # ----------------------------------------------------------------------
         # 2. AV Lip Sync Score (Mouth ROI Motion vs Audio Envelope)
         # ----------------------------------------------------------------------
-        y1, y2 = int(0.42 * H), int(0.85 * H)
-        x1, x2 = int(0.32 * W), int(0.68 * W)
+        if H > W:
+            # Vertical/portrait video (e.g. 9:16)
+            y1, y2 = int(0.20 * H), int(0.55 * H)
+            x1, x2 = int(0.25 * W), int(0.75 * W)
+        else:
+            # Landscape video (e.g. 16:9)
+            y1, y2 = int(0.35 * H), int(0.78 * H)
+            x1, x2 = int(0.32 * W), int(0.68 * W)
+
         mouth_crop = frames[:, y1:y2, x1:x2, :].astype(float)
         mouth_diffs = np.mean(np.abs(mouth_crop[1:] - mouth_crop[:-1]), axis=(1, 2, 3))
         mouth_motion = np.concatenate([[0.0], mouth_diffs])
 
         # Active speech vs silent airlock intervals
-        speech_time_mask = (timestamps >= beat_defs[1][1]) & (timestamps <= beat_defs[2][2])
-        silence_time_mask = (timestamps < beat_defs[0][2]) | (timestamps >= beat_defs[3][1])
+        if dur <= 10.0:
+            speech_time_mask = (timestamps >= beat_defs[1][1]) & (timestamps <= beat_defs[2][2])
+            silence_time_mask = (timestamps < beat_defs[0][2]) | (timestamps >= beat_defs[3][1])
+        else:
+            speech_time_mask = (audio_db >= -28.0)
+            silence_time_mask = (audio_db < -35.0)
 
         # Correlation in speech zone
         if np.any(speech_time_mask) and np.std(audio_rms[speech_time_mask]) > 1e-4 and np.std(mouth_motion[speech_time_mask]) > 1e-4:
@@ -360,8 +566,9 @@ class QuantitativePhysicsAnalyzer:
         speech_mouth_mean = float(np.mean(mouth_motion[speech_time_mask])) if np.any(speech_time_mask) else 1.0
         silence_mouth_mean = float(np.mean(mouth_motion[silence_time_mask])) if np.any(silence_time_mask) else 0.0
 
+        silence_frames_count = int(np.sum(silence_time_mask))
         silence_leak_ratio = silence_mouth_mean / (speech_mouth_mean + 1e-4)
-        if silence_leak_ratio > 0.45 and silence_mouth_mean > 0.40:
+        if silence_frames_count >= 12 and silence_leak_ratio > 0.55 and silence_mouth_mean > 1.2:
             anomalies.append(f"Phantom mouth movement during silent airlock/tail (ratio: {silence_leak_ratio:.2f})")
             silence_suppr_score = max(0.0, 100.0 - silence_leak_ratio * 100.0)
         else:
@@ -374,11 +581,11 @@ class QuantitativePhysicsAnalyzer:
         # ----------------------------------------------------------------------
         # 3. Anti-Fog Contrast & High-Frequency Sharpness Score
         # ----------------------------------------------------------------------
-        Y = 0.299 * frames[:, :, :, 0] + 0.587 * frames[:, :, :, 1] + 0.114 * frames[:, :, :, 2]
+        Y_full = 0.299 * frames[:, :, :, 0] + 0.587 * frames[:, :, :, 1] + 0.114 * frames[:, :, :, 2]
         sample_pct = max(1, int(0.15 * n_frames))
 
-        head_Y = Y[:sample_pct]
-        tail_Y = Y[-sample_pct:]
+        head_Y = Y_full[:sample_pct]
+        tail_Y = Y_full[-sample_pct:]
 
         head_c = float(np.mean(np.std(head_Y, axis=(1, 2))))
         tail_c = float(np.mean(np.std(tail_Y, axis=(1, 2))))
@@ -395,10 +602,10 @@ class QuantitativePhysicsAnalyzer:
         s_drift = (tail_s - head_s) / (head_s + 1e-5)
 
         fog_penalty = 0.0
-        if c_drift < -0.22:
+        if c_drift < -0.30 or (c_drift < -0.24 and s_drift < -0.20):
             fog_penalty += 25.0
             anomalies.append(f"H3 Join Match fogging/haze detected: contrast collapsed by {abs(c_drift):.1%}")
-        if s_drift < -0.25:
+        if s_drift < -0.28:
             fog_penalty += 20.0
             anomalies.append(f"Photocopy blur drift detected: sharpness collapsed by {abs(s_drift):.1%}")
 
@@ -421,6 +628,17 @@ class QuantitativePhysicsAnalyzer:
             head_sharpness=round(head_s, 2),
             tail_sharpness=round(tail_s, 2),
             sharpness_drift_pct=round(s_drift * 100.0, 1),
+            non_rigid_motion_score=det["non_rigid_motion_score"],
+            non_rigid_ratio=det["non_rigid_ratio"],
+            character_internal_motion=det["character_internal_motion"],
+            mean_shift_variance=det["mean_shift_variance"],
+            global_camera_explained_ratio=det["global_camera_explained_ratio"],
+            static_slideshow_detected=det["static_slideshow_detected"],
+            static_slideshow_veto=det["static_slideshow_veto"],
+            passed_veto_gates=det["passed_veto_gates"],
+            hard_cut_count=det["hard_cut_count"],
+            hard_cut_frequency_per_min=det["hard_cut_frequency_per_min"],
+            mean_cut_jump_discontinuity=det["mean_cut_jump_discontinuity"],
             anomalies=anomalies
         )
 
@@ -504,7 +722,8 @@ class SlowFastContactSheetGenerator:
         draw.rectangle([0, 0, W_TOTAL, 32], fill=(24, 28, 38))
         v_stem = Path(self.video_path).name
         score_text = f"PHYSICS SCORE: {metrics.overall_motion_score:.1f}" if metrics else "ZERO-TOKEN PHYSICS"
-        hdr_txt = f"GOOGLE SLOWFAST CRITIC SHEET | 258 TOKENS (<90KB) | {v_stem} | {self.duration:.2f}s | {score_text}"
+        veto_text = f" | VETO: {'VETOED' if metrics.static_slideshow_veto else 'PASS'}" if metrics else ""
+        hdr_txt = f"GOOGLE SLOWFAST CRITIC SHEET | 258 TOKENS (<90KB) | {v_stem} | {self.duration:.2f}s | {score_text}{veto_text}"
         draw.text((12, 8), hdr_txt, fill=(215, 225, 245))
 
         # ----------------------------------------------------------------------
@@ -619,7 +838,7 @@ class SlowFastContactSheetGenerator:
         sheet.save(str(self.output_path), format="JPEG", quality=quality, optimize=True, progressive=True)
         size_kb = os.path.getsize(str(self.output_path)) / 1024.0
 
-        while size_kb >= 89.0 and quality > 30:
+        while size_kb >= 89.0 and quality > 15:
             quality -= 5
             sheet.save(str(self.output_path), format="JPEG", quality=quality, optimize=True, progressive=True)
             size_kb = os.path.getsize(str(self.output_path)) / 1024.0
@@ -703,12 +922,20 @@ class VideoQualityCritic:
         fidelity_score = round(metrics.anti_fog_contrast_score, 1)
 
         overall = round(0.35 * micro_acting_score + 0.35 * lip_sync_score + 0.30 * fidelity_score, 1)
-        passed = overall >= 80.0 and len(metrics.anomalies) == 0
+        passed_veto = metrics.passed_veto_gates and not metrics.static_slideshow_veto
+        passed = overall >= 80.0 and len(metrics.anomalies) == 0 and passed_veto
+
+        if metrics.static_slideshow_veto:
+            overall = min(overall, 25.0)
+            micro_acting_score = min(micro_acting_score, 25.0)
+            passed = False
 
         re_render = None
         if not passed:
             recommendations = []
-            if micro_acting_score < 80.0:
+            if metrics.static_slideshow_veto:
+                recommendations.append("HARD VETO: Replace static keyframe slideshow (Ken Burns PPT) with genuine generative AI video models (Wan2.1 / MiniMax H3 / Veo) featuring continuous non-rigid skeletal deformation.")
+            elif micro_acting_score < 80.0:
                 recommendations.append("Strengthen 5-Step Causal Action Chain prompt; increase Beat 2/3 dynamic motion.")
             if lip_sync_score < 80.0:
                 recommendations.append("Verify 1.1s silent preparatory airlock and ensure mouth closes firmly on speech pause.")
@@ -730,7 +957,9 @@ class VideoQualityCritic:
             sheet_file_size_kb=sheet_kb,
             token_cost_estimate=asdict(token_estimate),
             evaluator_mode="offline-physics-deterministic",
-            evaluation_timestamp=time.strftime("%Y-%m-%d %H:%M:%S")
+            evaluation_timestamp=time.strftime("%Y-%m-%d %H:%M:%S"),
+            static_slideshow_veto=metrics.static_slideshow_veto,
+            passed_veto_gates=metrics.passed_veto_gates
         )
 
     def _evaluate_with_gemini(
@@ -755,6 +984,8 @@ Quantitative Metrics:
 - Beat Motion Scores: {json.dumps([asdict(b) for b in metrics.beat_motion_scores])}
 - AV Lip Sync Score: {metrics.av_lip_sync_score} (Speech correlation: {metrics.speech_correlation})
 - Anti-Fog Contrast Score: {metrics.anti_fog_contrast_score} (Contrast drift: {metrics.contrast_drift_pct}%, Sharpness drift: {metrics.sharpness_drift_pct}%)
+- Non-Rigid Motion Score: {metrics.non_rigid_motion_score} (Ratio: {metrics.non_rigid_ratio:.1%}, Internal motion: {metrics.character_internal_motion:.2f}, Slideshow detected: {metrics.static_slideshow_detected})
+- Hard Cuts: {metrics.hard_cut_count} (Frequency: {metrics.hard_cut_frequency_per_min}/min, Avg jump: {metrics.mean_cut_jump_discontinuity})
 - Identified Physics Anomalies: {json.dumps(metrics.anomalies)}
 
 Inspect the Contact Sheet:
@@ -804,21 +1035,43 @@ Return strictly a JSON object with:
                 data = json.loads(resp.read().decode("utf-8"))
                 text_out = data["candidates"][0]["content"]["parts"][0]["text"]
                 parsed = json.loads(text_out)
+
+                overall_val = float(parsed.get("overall_score", 85.0))
+                micro_val = float(parsed.get("micro_acting_score", 85.0))
+                passed_veto = metrics.passed_veto_gates and not metrics.static_slideshow_veto
+                passed_val = bool(parsed.get("passed", True)) and passed_veto
+
+                if metrics.static_slideshow_veto:
+                    overall_val = min(overall_val, 25.0)
+                    micro_val = min(micro_val, 25.0)
+                    passed_val = False
+
+                issues = list(parsed.get("issues", []))
+                for anom in metrics.anomalies:
+                    if anom not in issues:
+                        issues.append(anom)
+
+                re_rec = parsed.get("re_render_recommendation")
+                if metrics.static_slideshow_veto:
+                    re_rec = "HARD VETO: Replace static keyframe slideshow with genuine generative AI video models (Wan2.1 / MiniMax H3 / Veo) featuring continuous non-rigid character animation."
+
                 return VideoCriticReport(
                     video_path=str(self.video_path),
-                    overall_score=float(parsed.get("overall_score", 85.0)),
-                    micro_acting_score=float(parsed.get("micro_acting_score", 85.0)),
+                    overall_score=overall_val,
+                    micro_acting_score=micro_val,
                     lip_sync_score=float(parsed.get("lip_sync_score", 85.0)),
                     visual_fidelity_score=float(parsed.get("visual_fidelity_score", 85.0)),
-                    passed=bool(parsed.get("passed", True)),
-                    issues=list(parsed.get("issues", metrics.anomalies)),
-                    re_render_recommendation=parsed.get("re_render_recommendation"),
+                    passed=passed_val,
+                    issues=issues,
+                    re_render_recommendation=re_rec,
                     quantitative_metrics=asdict(metrics),
                     slowfast_sheet_path=str(sheet_path),
                     sheet_file_size_kb=sheet_kb,
                     token_cost_estimate=asdict(token_estimate),
                     evaluator_mode=f"gemini-vlm-{self.model}",
-                    evaluation_timestamp=time.strftime("%Y-%m-%d %H:%M:%S")
+                    evaluation_timestamp=time.strftime("%Y-%m-%d %H:%M:%S"),
+                    static_slideshow_veto=metrics.static_slideshow_veto,
+                    passed_veto_gates=metrics.passed_veto_gates
                 )
         except Exception as e:
             sys.stderr.write(f"[WARN] Gemini API call failed ({e}), falling back to deterministic offline scorer.\n")
@@ -944,10 +1197,15 @@ def run_self_test() -> int:
         print(f"      Dimensions: {w}x{h} px | File Size: {report.sheet_file_size_kb:.2f} KB (< 90 KB: PASS)")
         print(f"      VLM Token Cost: 258 tokens (Reduction vs raw 37,152 tokens: {report.token_cost_estimate['token_reduction_vs_raw_pct']}%)")
 
-        print("[4/4] Validating VideoCriticReport JSON Structure...")
+        print("[4/4] Validating VideoCriticReport JSON Structure & Hard Veto Gates...")
         assert report.overall_score >= 80.0, f"Benchmark video failed score threshold: {report.overall_score}"
         assert report.passed, f"Benchmark video was marked as failed: {report.issues}"
+        assert report.passed_veto_gates, "Benchmark video failed hard veto gates!"
+        assert not report.static_slideshow_veto, "Benchmark video falsely flagged as static slideshow!"
+        assert report.quantitative_metrics["non_rigid_motion_score"] >= 25.0, "Benchmark video non-rigid motion score below threshold!"
         print(f"      Overall Score: {report.overall_score:.1f} / 100.0 (PASS: {report.passed})")
+        print(f"      Veto Gates Passed: {report.passed_veto_gates} (Slideshow Veto: {report.static_slideshow_veto})")
+        print(f"      Non-Rigid Deformation Score: {report.quantitative_metrics['non_rigid_motion_score']:.1f} (Ratio: {report.quantitative_metrics['non_rigid_ratio']*100:.1f}%)")
         print(f"      Micro-Acting Score: {report.micro_acting_score:.1f}")
         print(f"      Lip-Sync Score: {report.lip_sync_score:.1f}")
         print(f"      Visual Fidelity Score: {report.visual_fidelity_score:.1f}")
@@ -1002,6 +1260,8 @@ def main():
     if args.agent_mode in ("codex", "claude", "antigravity") and not args.json:
         print(f"### Video Critic Report: {Path(args.video).name}")
         print(f"- **Verdict**: {'✅ PASSED' if report.passed else '❌ FAILED'} (Overall: {report.overall_score:.1f}/100)")
+        print(f"- **Veto Gates**: {'✅ PASSED' if report.passed_veto_gates else '❌ VETO TRIGGERED: STATIC SLIDESHOW DETECTED'}")
+        print(f"- **Non-Rigid Motion**: {report.quantitative_metrics.get('non_rigid_motion_score', 0.0):.1f}/100.0 (Non-rigid ratio: {report.quantitative_metrics.get('non_rigid_ratio', 0.0)*100:.1f}%)")
         print(f"- **Micro-Acting**: {report.micro_acting_score:.1f} | **Lip-Sync**: {report.lip_sync_score:.1f} | **Fidelity**: {report.visual_fidelity_score:.1f}")
         print(f"- **SlowFast Sheet**: `{report.slowfast_sheet_path}` ({report.sheet_file_size_kb:.1f} KB, 258 tokens)")
         if report.issues:
