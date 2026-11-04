@@ -61,7 +61,7 @@ impl AgentPluginManifest {
             }
             let p = Path::new(cmd);
             if p.is_absolute() {
-                return p.exists();
+                return p.is_file();
             }
             which_in_path(cmd).is_some()
         } else {
@@ -111,28 +111,37 @@ pub fn current_os() -> &'static str {
     }
 }
 
-/// Checks if a binary command is executable or exists on PATH.
+/// Checks if a binary command is executable or exists on PATH (plus standard user/system bin dirs).
 pub fn which_in_path(bin_name: &str) -> Option<PathBuf> {
+    let mut search_dirs: Vec<PathBuf> = Vec::new();
     if let Ok(paths) = std::env::var("PATH") {
         let separator = if cfg!(target_os = "windows") { ';' } else { ':' };
-        for dir in paths.split(separator) {
-            let p = Path::new(dir).join(bin_name);
-            if p.is_file() {
-                return Some(p);
-            }
-            #[cfg(target_os = "windows")]
-            {
-                let with_exe = Path::new(dir).join(format!("{}.exe", bin_name));
-                if with_exe.is_file() {
-                    return Some(with_exe);
-                }
-                let with_cmd = Path::new(dir).join(format!("{}.cmd", bin_name));
-                if with_cmd.is_file() {
-                    return Some(with_cmd);
-                }
-                let with_bat = Path::new(dir).join(format!("{}.bat", bin_name));
-                if with_bat.is_file() {
-                    return Some(with_bat);
+        for dir in paths.split(separator).filter(|d| !d.is_empty()) {
+            search_dirs.push(PathBuf::from(dir));
+        }
+    }
+    if let Ok(home) = std::env::var("HOME").or_else(|_| std::env::var("USERPROFILE")) {
+        let hp = PathBuf::from(home);
+        search_dirs.push(hp.join(".local").join("bin"));
+        search_dirs.push(hp.join(".cargo").join("bin"));
+        search_dirs.push(hp.join(".dsh").join("bin"));
+    }
+    #[cfg(not(target_os = "windows"))]
+    {
+        search_dirs.push(PathBuf::from("/opt/homebrew/bin"));
+        search_dirs.push(PathBuf::from("/usr/local/bin"));
+    }
+    for dir in search_dirs {
+        let p = dir.join(bin_name);
+        if p.is_file() {
+            return Some(p);
+        }
+        #[cfg(target_os = "windows")]
+        {
+            for ext in ["exe", "cmd", "bat"] {
+                let with_ext = dir.join(format!("{}.{}", bin_name, ext));
+                if with_ext.is_file() {
+                    return Some(with_ext);
                 }
             }
         }
@@ -199,7 +208,7 @@ impl AgentPluginRegistry {
                 ]
             };
             for cand in candidates {
-                if cand.exists() {
+                if cand.is_file() {
                     antigravity_bin = Some(cand);
                     break;
                 }
@@ -424,7 +433,7 @@ impl AgentPluginRegistry {
             command: None,
             args_template: vec![],
             env: BTreeMap::new(),
-            http_endpoint: http_url.or_else(|| Some("http://localhost:11434/v1".to_string())),
+            http_endpoint: http_url.or_else(|| Some("http://127.0.0.1:11434/v1".to_string())),
             capabilities: vec![
                 "expand_micro_acting".to_string(),
                 "decompose_storyboard".to_string(),
@@ -439,8 +448,37 @@ impl AgentPluginRegistry {
         self.register_plugin(openai_manifest);
     }
 
-    /// Registers or updates a plugin manifest in the registry.
-    pub fn register_plugin(&mut self, manifest: AgentPluginManifest) {
+    /// Registers or updates a plugin manifest in the registry, preserving auto-discovered binary paths
+    /// when a declarative TOML/JSON manifest leaves `command` empty or uses a bare binary name.
+    pub fn register_plugin(&mut self, mut manifest: AgentPluginManifest) {
+        let cmd_empty = manifest
+            .command
+            .as_deref()
+            .map(|s| s.trim().is_empty())
+            .unwrap_or(true);
+        if cmd_empty {
+            if let Some(existing) = self.plugins.get(&manifest.id) {
+                if existing
+                    .command
+                    .as_deref()
+                    .map(|s| !s.trim().is_empty())
+                    .unwrap_or(false)
+                {
+                    manifest.command = existing.command.clone();
+                }
+            }
+        } else if let Some(cmd) = manifest.command.clone() {
+            let p = Path::new(&cmd);
+            if !p.is_absolute() {
+                if let Some(resolved) = which_in_path(&cmd) {
+                    manifest.command = Some(resolved.to_string_lossy().to_string());
+                } else if let Some(existing) = self.plugins.get(&manifest.id) {
+                    if existing.check_binary_exists() {
+                        manifest.command = existing.command.clone();
+                    }
+                }
+            }
+        }
         self.plugins.insert(manifest.id.clone(), manifest);
     }
 
@@ -559,7 +597,8 @@ impl AgentPluginRegistry {
             };
 
             let client = reqwest::Client::builder()
-                .timeout(std::time::Duration::from_secs(60))
+                .connect_timeout(std::time::Duration::from_secs(2))
+                .timeout(std::time::Duration::from_secs(30))
                 .build()?;
 
             let model_name = plugin.model.as_deref().unwrap_or("qwen2.5:32b");
@@ -654,11 +693,12 @@ impl AgentPluginRegistry {
             cmd.env(k, v);
         }
 
+        cmd.stdin(std::process::Stdio::null());
         debug!("Executing CLI agent: {:?} with args {:?}", bin_cmd, processed_args);
 
-        let out = tokio::time::timeout(std::time::Duration::from_secs(90), cmd.output())
+        let out = tokio::time::timeout(std::time::Duration::from_secs(25), cmd.output())
             .await
-            .map_err(|_| anyhow::anyhow!("Agent CLI execution timed out after 90 seconds"))??;
+            .map_err(|_| anyhow::anyhow!("Agent CLI execution timed out after 25 seconds"))??;
 
         let stdout = String::from_utf8_lossy(&out.stdout).to_string();
         let stderr = String::from_utf8_lossy(&out.stderr).to_string();
