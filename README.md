@@ -79,3 +79,25 @@ python run_pipeline.py --preview-ep 1 --engine h3
 # 5. 正式渲染成片 (需先通过 DirectorLinter 0 Error 门禁)
 python run_pipeline.py --render-ep 1 --engine flow
 ```
+
+## 独立配音和配乐
+
+`director-speech` 接收原文，按音色和语气生成 WAV。可选 Gemini TTS 预设音色，或用已有的 Qwen3-TTS VoiceDesign 环境按自然语言设计音色。两种方式都支持单独生成旁白和角色台词。
+
+`director-bgm` 可用 Google Flow Music 录音室根据 prompt 生成并下载纯器乐配乐。批处理可以通过 Gemini API 调用同样在 Flow Music 提供的 Lyria 3.5，输出 MP3。API 路径使用对应项目的密钥与额度。
+
+在所需设备的仓库根目录运行安装命令。每个 `--client` 选择一款已安装的客户端。Windows 可以用 `py -3` 替换 `python3`。
+
+```sh
+python3 scripts/install_audio_skills.py --client codex --client antigravity --client dsh
+python3 scripts/install_audio_skills.py --client codex --client antigravity --client dsh --check
+```
+
+在客户端新会话中调用 `director-speech` 或 `director-bgm`。在终端可直接运行下面的命令。Gemini API 读取已配置的 `GEMINI_API_KEY` 或 `GOOGLE_API_KEY`。
+
+```sh
+python3 scripts/director_audio.py speech --text "我们走吧。" --voice Kore --style "用普通话轻声说，带一点释然" --output output/dialogue.wav
+python3 scripts/director_audio.py music --prompt "纪录片的安静开场，稀疏钢琴和弦乐，约 30 秒" --output output/opening.mp3
+```
+
+[语音技能](.agents/skills/director-speech/SKILL.md) · [配乐技能](.agents/skills/director-bgm/SKILL.md) · [Google Flow Music](https://flowmusic.google/) · [Lyria API](https://ai.google.dev/gemini-api/docs/music-generation)
