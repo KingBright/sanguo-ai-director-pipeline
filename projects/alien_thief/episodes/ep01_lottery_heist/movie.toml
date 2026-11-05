@@ -45,6 +45,70 @@ voice = "spica"
 ref_image = "characters/images/pinkweirdo_anchor.png"
 
 # ============================================================================
+# Master-Stage Spatial Blocking & Slot Topology (L3 180° Axis-Lock)
+# ============================================================================
+
+[[master_stages]]
+id = "stage_A_neon_bazaar_plaza"
+name = "烂柯星霓虹集市广场"
+description = "贯穿废墟哨所、刮刮乐彩票亭与先进个人评选台的统一大场景（180度南向轴线锁死，机位严禁越轴翻转）"
+axis_lock = "180deg_south"
+
+[master_stages.slots.Libei]
+x_slot = 0.18
+z_depth = 1.2
+facing = "right"
+initial_props = "crouching_behind_mailbox"
+
+[master_stages.slots.Ximu]
+x_slot = 0.38
+z_depth = 1.0
+facing = "right"
+initial_props = "holding_titanium_crowbar"
+
+[master_stages.slots.Kato]
+x_slot = 0.68
+z_depth = 1.5
+facing = "left"
+initial_props = "brass_tactical_telescope"
+
+[master_stages.slots.Xiaodai]
+x_slot = 0.85
+z_depth = 1.6
+facing = "left"
+initial_props = "holding_bounty_pad"
+
+[[master_stages]]
+id = "stage_B_underground_poker_tavern"
+name = "烂柯星地下霓虹牌桌酒馆"
+description = "贯穿地下酒馆包间卡座、悬浮磁力扑克桌与吧台洗碗池的统一大场景（180度南向轴线锁死，左中右相对站位绝对锁定）"
+axis_lock = "180deg_south"
+
+[master_stages.slots.Libei]
+x_slot = 0.18
+z_depth = 1.1
+facing = "right"
+initial_props = "spilled_energy_mugs"
+
+[master_stages.slots.Ximu]
+x_slot = 0.45
+z_depth = 0.9
+facing = "right"
+initial_props = "white_cat_on_hat_and_royal_flush_cards"
+
+[master_stages.slots.Kato]
+x_slot = 0.72
+z_depth = 1.0
+facing = "left"
+initial_props = "blaster_and_dishwashing_apron"
+
+[master_stages.slots.PinkWeirdo]
+x_slot = 0.88
+z_depth = 1.4
+facing = "left"
+initial_props = "vintage_rusted_megaphone"
+
+# ============================================================================
 # Beat 1: 伏击侦查 · 废墟哨所内的穷鬼猎人组合 (Shot 1-3)
 # ============================================================================
 
@@ -58,6 +122,14 @@ duration = 6
 model = "veo-fast"
 selected_model = "veo-fast"
 room_id = "room_ruined_overlook"
+master_stage_id = "stage_A_neon_bazaar_plaza"
+sub_framing_rect = [0.50, 0.12, 0.50, 0.85]
+visible_characters = ["Kato", "Xiaodai"]
+prop_state_ledger = { "Ximu" = "holding_titanium_crowbar", "Libei" = "crouching_behind_mailbox", "Kato" = "holding_brass_telescope", "Xiaodai" = "holding_bounty_pad" }
+dialogue_turns = [
+    { speaker = "Kato", start_offset = 1.1, duration = 2.6, line = "锁定目标！通缉榜倒数第一的独眼地精正在靠近彩票亭！", mouth_roi = [0.22, 0.45, 0.08, 0.06] },
+    { speaker = "Xiaodai", start_offset = 3.9, duration = 1.8, line = "收到，目标危险等级：负数。", mouth_roi = [0.82, 0.42, 0.06, 0.05] }
+]
 arc_phase = "phase_1_setup_recon"
 acoustic_space = "ruin_wind_ambience"
 camera_motion = "35mm anamorphic lens, slow lateral truck right along cracked concrete rebar"
@@ -88,6 +160,14 @@ duration = 5
 model = "veo-fast"
 selected_model = "veo-fast"
 room_id = "room_ruined_overlook"
+master_stage_id = "stage_A_neon_bazaar_plaza"
+sub_framing_rect = [0.50, 0.12, 0.50, 0.85]
+visible_characters = ["Xiaodai", "Kato"]
+prop_state_ledger = { "Ximu" = "holding_titanium_crowbar", "Libei" = "crouching_behind_mailbox", "Kato" = "holding_brass_telescope", "Xiaodai" = "holding_bounty_pad" }
+dialogue_turns = [
+    { speaker = "Xiaodai", start_offset = 1.1, duration = 2.3, line = "悬赏金额两块五，耗油三千块，哥你真会理财。", mouth_roi = [0.65, 0.42, 0.06, 0.05] },
+    { speaker = "Kato", start_offset = 3.5, duration = 1.2, line = "闭嘴！这是赏金猎人的尊严！", mouth_roi = [0.28, 0.45, 0.08, 0.06] }
+]
 arc_phase = "phase_1_setup_recon"
 acoustic_space = "ruin_wind_ambience"
 camera_motion = "50mm comic prime lens, subtle slow push-in toward Xiaodai's round spectacles"
@@ -118,6 +198,14 @@ duration = 5
 model = "veo-fast"
 selected_model = "veo-fast"
 room_id = "room_ruined_overlook"
+master_stage_id = "stage_A_neon_bazaar_plaza"
+sub_framing_rect = [0.05, 0.15, 0.55, 0.85]
+visible_characters = ["Libei", "Ximu"]
+prop_state_ledger = { "Ximu" = "holding_titanium_crowbar", "Libei" = "crouching_behind_mailbox", "Kato" = "holding_brass_telescope", "Xiaodai" = "holding_bounty_pad" }
+dialogue_turns = [
+    { speaker = "Libei", start_offset = 1.1, duration = 2.3, line = "西木哥！对面狙击镜反光超刺眼，咱真要抢吗？", mouth_roi = [0.25, 0.48, 0.07, 0.05] },
+    { speaker = "Ximu", start_offset = 3.5, duration = 1.2, line = "怕什么！有哥的钛合金撬棍在！", mouth_roi = [0.72, 0.46, 0.08, 0.06] }
+]
 arc_phase = "phase_1_setup_recon"
 acoustic_space = "ruin_wind_ambience"
 camera_motion = "50mm comic prime lens, handheld low-angle jitter framing Libei's frog hood"
@@ -152,6 +240,14 @@ duration = 7
 model = "veo-fast"
 selected_model = "veo-fast"
 room_id = "room_neon_kiosk"
+master_stage_id = "stage_A_neon_bazaar_plaza"
+sub_framing_rect = [0.05, 0.15, 0.55, 0.85]
+visible_characters = ["Ximu", "Libei"]
+prop_state_ledger = { "Ximu" = "holding_titanium_crowbar", "Libei" = "crouching_behind_mailbox", "Kato" = "holding_brass_telescope", "Xiaodai" = "holding_bounty_pad" }
+dialogue_turns = [
+    { speaker = "Ximu", start_offset = 1.2, duration = 3.2, line = "抢？读书人的事能叫抢吗？我这是用钛合金撬棍刮奖！", mouth_roi = [0.68, 0.46, 0.08, 0.06] },
+    { speaker = "Libei", start_offset = 4.6, duration = 2.0, line = "可警报器已经叫得像杀猪了啊！", mouth_roi = [0.22, 0.48, 0.07, 0.05] }
+]
 arc_phase = "phase_2_heist_execution"
 acoustic_space = "neon_kiosk_hum"
 camera_motion = "35mm comic lens, dynamic Dutch-angle snap push-in to Ximu's cyclops eye"
@@ -182,6 +278,14 @@ duration = 5
 model = "veo-fast"
 selected_model = "veo-fast"
 room_id = "room_neon_kiosk"
+master_stage_id = "stage_A_neon_bazaar_plaza"
+sub_framing_rect = [0.05, 0.12, 0.55, 0.88]
+visible_characters = ["Libei", "Ximu"]
+prop_state_ledger = { "Ximu" = "holding_screaming_chicken", "Libei" = "crouching_behind_mailbox", "Kato" = "holding_brass_telescope", "Xiaodai" = "holding_bounty_pad" }
+dialogue_turns = [
+    { speaker = "Libei", start_offset = 1.1, duration = 2.4, line = "等等！你刮出来的特等奖怎么是一只机械尖叫鸡？", mouth_roi = [0.25, 0.48, 0.07, 0.05] },
+    { speaker = "Ximu", start_offset = 3.6, duration = 1.2, line = "没见识！这可是宇宙军用级隐身鸡！", mouth_roi = [0.72, 0.46, 0.08, 0.06] }
+]
 arc_phase = "phase_2_heist_execution"
 acoustic_space = "neon_kiosk_hum"
 camera_motion = "50mm comic prime lens, rapid comedic crash-zoom into Libei's jaw drop"
@@ -211,6 +315,14 @@ duration = 6
 model = "veo-fast"
 selected_model = "veo-fast"
 room_id = "room_neon_kiosk"
+master_stage_id = "stage_A_neon_bazaar_plaza"
+sub_framing_rect = [0.05, 0.15, 0.55, 0.85]
+visible_characters = ["Ximu", "Libei"]
+prop_state_ledger = { "Ximu" = "holding_screaming_chicken", "Libei" = "crouching_behind_mailbox", "Kato" = "holding_brass_telescope", "Xiaodai" = "holding_bounty_pad" }
+dialogue_turns = [
+    { speaker = "Ximu", start_offset = 1.2, duration = 2.8, line = "赚大了！只要捏爆它的脖子，全星际雷达都得瘫痪！", mouth_roi = [0.68, 0.46, 0.08, 0.06] },
+    { speaker = "Libei", start_offset = 4.2, duration = 1.5, line = "哥你别捏了！我的耳朵要聋了！", mouth_roi = [0.22, 0.48, 0.07, 0.05] }
+]
 arc_phase = "phase_2_heist_execution"
 acoustic_space = "neon_kiosk_hum"
 camera_motion = "50mm comic prime lens, low-angle hero push-in with comic speed lines"
@@ -244,6 +356,14 @@ duration = 8
 model = "veo-fast"
 selected_model = "veo-fast"
 room_id = "room_bazaar_plaza"
+master_stage_id = "stage_A_neon_bazaar_plaza"
+sub_framing_rect = [0.15, 0.10, 0.75, 0.88]
+visible_characters = ["PinkWeirdo", "Ximu", "Kato"]
+prop_state_ledger = { "Ximu" = "holding_screaming_chicken", "PinkWeirdo" = "holding_vintage_megaphone", "Kato" = "holding_brass_telescope", "Xiaodai" = "holding_bounty_pad" }
+dialogue_turns = [
+    { speaker = "PinkWeirdo", start_offset = 1.2, duration = 3.6, line = "肃静！本人正式宣布，今日和平杰出个人得主是这位绿师傅！", mouth_roi = [0.50, 0.35, 0.08, 0.07] },
+    { speaker = "Ximu", start_offset = 5.0, duration = 2.5, line = "低调低调，主要是这只鸡太有和平感召力了！", mouth_roi = [0.26, 0.48, 0.07, 0.06] }
+]
 arc_phase = "phase_3_bizarre_twist"
 acoustic_space = "ruin_wind_ambience"
 camera_motion = "35mm comic lens, slow crane tilt up along PinkWeirdo's long noodle neck"
@@ -274,6 +394,14 @@ duration = 7
 model = "veo-fast"
 selected_model = "veo-fast"
 room_id = "room_bazaar_plaza"
+master_stage_id = "stage_A_neon_bazaar_plaza"
+sub_framing_rect = [0.50, 0.12, 0.50, 0.85]
+visible_characters = ["Kato", "Xiaodai"]
+prop_state_ledger = { "Ximu" = "holding_screaming_chicken", "PinkWeirdo" = "holding_vintage_megaphone", "Kato" = "holding_brass_telescope", "Xiaodai" = "holding_bounty_pad" }
+dialogue_turns = [
+    { speaker = "Kato", start_offset = 1.2, duration = 3.2, line = "开什么星际玩笑！他手里捏着赃物还在朝台下敬礼！", mouth_roi = [0.32, 0.45, 0.08, 0.06] },
+    { speaker = "Xiaodai", start_offset = 4.6, duration = 2.0, line = "心率飙升至两百二，建议就地吸氧。", mouth_roi = [0.75, 0.42, 0.06, 0.05] }
+]
 arc_phase = "phase_3_bizarre_twist"
 acoustic_space = "ruin_wind_ambience"
 camera_motion = "50mm comic prime lens, snappy whip-pan from podium to Kato's enraged face"
@@ -303,6 +431,14 @@ duration = 5
 model = "veo-fast"
 selected_model = "veo-fast"
 room_id = "room_bazaar_plaza"
+master_stage_id = "stage_A_neon_bazaar_plaza"
+sub_framing_rect = [0.50, 0.12, 0.50, 0.85]
+visible_characters = ["Xiaodai", "Kato"]
+prop_state_ledger = { "Ximu" = "holding_screaming_chicken", "PinkWeirdo" = "holding_vintage_megaphone", "Kato" = "holding_brass_telescope", "Xiaodai" = "holding_bounty_pad" }
+dialogue_turns = [
+    { speaker = "Xiaodai", start_offset = 1.1, duration = 2.4, line = "警报解除。因为主办方把抓捕队长的车给当场扣了。", mouth_roi = [0.70, 0.42, 0.06, 0.05] },
+    { speaker = "Kato", start_offset = 3.6, duration = 1.2, line = "什么？！我的违章罚单怎么比通缉令还多？！", mouth_roi = [0.28, 0.45, 0.08, 0.06] }
+]
 arc_phase = "phase_3_bizarre_twist"
 acoustic_space = "ruin_wind_ambience"
 camera_motion = "50mm comic prime lens, steady static frame highlighting deadpan delivery"
@@ -336,6 +472,14 @@ duration = 5
 model = "veo-fast"
 selected_model = "veo-fast"
 room_id = "room_lanke_tavern"
+master_stage_id = "stage_B_underground_poker_tavern"
+sub_framing_rect = [0.15, 0.10, 0.75, 0.88]
+visible_characters = ["Libei", "Ximu", "Kato"]
+prop_state_ledger = { "Ximu" = "white_cat_on_hat_and_royal_flush_cards", "Libei" = "spilled_energy_mugs", "Kato" = "blaster_and_dishwashing_apron", "PinkWeirdo" = "vintage_rusted_megaphone" }
+dialogue_turns = [
+    { speaker = "Libei", start_offset = 1.1, duration = 2.3, line = "救命啊！通缉队长拿爆能枪坐在咱对面跟咱斗地主！", mouth_roi = [0.22, 0.48, 0.07, 0.05] },
+    { speaker = "Ximu", start_offset = 3.5, duration = 1.2, line = "安心打牌，头顶白猫能加运势！", mouth_roi = [0.55, 0.45, 0.08, 0.06] }
+]
 arc_phase = "phase_4_absurd_escape"
 acoustic_space = "tavern_jazz_chatter"
 camera_motion = "35mm comic lens, fast tracking dolly from Libei's shaking hands to the poker table"
@@ -365,6 +509,14 @@ duration = 6
 model = "veo-fast"
 selected_model = "veo-fast"
 room_id = "room_lanke_tavern"
+master_stage_id = "stage_B_underground_poker_tavern"
+sub_framing_rect = [0.35, 0.12, 0.55, 0.85]
+visible_characters = ["Ximu", "Kato"]
+prop_state_ledger = { "Ximu" = "white_cat_on_hat_and_royal_flush_cards", "Libei" = "spilled_energy_mugs", "Kato" = "blaster_and_dishwashing_apron", "PinkWeirdo" = "vintage_rusted_megaphone" }
+dialogue_turns = [
+    { speaker = "Ximu", start_offset = 1.2, duration = 2.8, line = "慌什么！四个二带两王，长官，这局你输了洗碗去！", mouth_roi = [0.45, 0.45, 0.08, 0.06] },
+    { speaker = "Kato", start_offset = 4.2, duration = 1.5, line = "算你狠……把围裙给我递过来！", mouth_roi = [0.78, 0.45, 0.08, 0.06] }
+]
 arc_phase = "phase_4_absurd_escape"
 acoustic_space = "tavern_jazz_chatter"
 camera_motion = "50mm comic prime lens, slow upward tilt from card slam to the white cat on Ximu's head"
@@ -394,6 +546,14 @@ duration = 6
 model = "veo-fast"
 selected_model = "veo-fast"
 room_id = "room_lanke_tavern"
+master_stage_id = "stage_B_underground_poker_tavern"
+sub_framing_rect = [0.0, 0.0, 1.0, 1.0]
+visible_characters = ["PinkWeirdo", "Ximu", "Kato", "Libei"]
+prop_state_ledger = { "Ximu" = "white_cat_on_hat_and_royal_flush_cards", "Libei" = "spilled_energy_mugs", "Kato" = "blaster_and_dishwashing_apron", "PinkWeirdo" = "vintage_rusted_megaphone" }
+dialogue_turns = [
+    { speaker = "PinkWeirdo", start_offset = 1.2, duration = 2.8, line = "烂柯星反扒大获全胜，感谢猫咪赞助商提供的假发！", mouth_roi = [0.88, 0.35, 0.07, 0.06] },
+    { speaker = "Ximu", start_offset = 4.1, duration = 1.6, line = "下期预告：我们要去偷全宇宙最大的猫爬架！", mouth_roi = [0.45, 0.45, 0.08, 0.06] }
+]
 arc_phase = "phase_4_absurd_escape"
 acoustic_space = "tavern_jazz_chatter"
 camera_motion = "35mm comic lens, slow comedic pull-back revealing the full ridiculous tableau"

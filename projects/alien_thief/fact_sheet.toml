@@ -71,6 +71,70 @@ camera_right = "Ximu wearing a smug grin with a fluffy white cat perched on his 
 interior_anchor_image = "characters/images/ximu_anchor.png"
 banned_topology_contradictions = ["boardroom", "ancient tent"]
 
+# ============================================================================
+# Master-Stage Spatial Blocking & Slot Topology (L3 180° Axis-Lock)
+# ============================================================================
+
+[[master_stages]]
+id = "stage_A_neon_bazaar_plaza"
+name = "烂柯星霓虹集市广场"
+description = "贯穿集市外景、废墟哨所、刮刮乐彩票亭与先进个人评选台的统一大场景（180度南向轴线锁死，机位严禁越轴翻转）"
+axis_lock = "180deg_south"
+
+[master_stages.slots.Libei]
+x_slot = 0.18
+z_depth = 1.2
+facing = "right"
+initial_props = "crouching_behind_mailbox"
+
+[master_stages.slots.Ximu]
+x_slot = 0.38
+z_depth = 1.0
+facing = "right"
+initial_props = "holding_titanium_crowbar"
+
+[master_stages.slots.Kato]
+x_slot = 0.68
+z_depth = 1.5
+facing = "left"
+initial_props = "brass_tactical_telescope"
+
+[master_stages.slots.Xiaodai]
+x_slot = 0.85
+z_depth = 1.6
+facing = "left"
+initial_props = "holding_bounty_pad"
+
+[[master_stages]]
+id = "stage_B_underground_poker_tavern"
+name = "烂柯星地下霓虹牌桌酒馆"
+description = "贯穿地下酒馆包间卡座、悬浮磁力扑克桌与吧台洗碗池的统一大场景（180度南向轴线锁死，左中右相对站位绝对锁定）"
+axis_lock = "180deg_south"
+
+[master_stages.slots.Libei]
+x_slot = 0.18
+z_depth = 1.1
+facing = "right"
+initial_props = "spilled_energy_mugs"
+
+[master_stages.slots.Ximu]
+x_slot = 0.45
+z_depth = 0.9
+facing = "right"
+initial_props = "white_cat_on_hat_and_royal_flush_cards"
+
+[master_stages.slots.Kato]
+x_slot = 0.72
+z_depth = 1.0
+facing = "left"
+initial_props = "blaster_and_dishwashing_apron"
+
+[master_stages.slots.PinkWeirdo]
+x_slot = 0.88
+z_depth = 1.4
+facing = "left"
+initial_props = "vintage_rusted_megaphone"
+
 [acoustic_spaces.ruin_wind_ambience]
 description = "废墟荒原呼啸狂风与外星杂音底噪"
 ffmpeg_bg_filter = "volume=0.30"

@@ -10,6 +10,8 @@ pub struct FactSheet {
     #[serde(default)]
     pub director_rules: DirectorRules,
     #[serde(default)]
+    pub master_stages: Vec<MasterStage>,
+    #[serde(default)]
     pub spatial_rooms: BTreeMap<String, SpatialRoom>,
     #[serde(default)]
     pub acoustic_spaces: BTreeMap<String, AcousticSpace>,
@@ -135,6 +137,48 @@ pub struct DialogueEvidenceRule {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct MasterStage {
+    pub id: String,
+    #[serde(default)]
+    pub name: String,
+    #[serde(default)]
+    pub description: String,
+    #[serde(default = "default_axis_lock")]
+    pub axis_lock: String,
+    #[serde(default)]
+    pub slots: BTreeMap<String, CharacterSlot>,
+}
+
+fn default_axis_lock() -> String {
+    "180deg_south".to_string()
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct CharacterSlot {
+    #[serde(default)]
+    pub x_slot: f64,
+    #[serde(default)]
+    pub z_depth: f64,
+    #[serde(default)]
+    pub facing: String,
+    #[serde(default)]
+    pub initial_props: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct DialogueTurn {
+    pub speaker: String,
+    #[serde(default)]
+    pub start_offset: f64,
+    #[serde(default)]
+    pub duration: f64,
+    #[serde(default)]
+    pub line: String,
+    #[serde(default)]
+    pub mouth_roi: Option<Vec<f64>>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct SpatialRoom {
     #[serde(default)]
     pub description: String,
@@ -207,6 +251,8 @@ pub struct MovieManifest {
     pub project: String,
     #[serde(default)]
     pub output_dir: Option<String>,
+    #[serde(default)]
+    pub master_stages: Vec<MasterStage>,
     #[serde(default)]
     pub characters: Vec<CharacterProfile>,
     #[serde(default)]
@@ -287,6 +333,17 @@ pub struct SceneSpec {
     pub emotion_mode: Option<String>, // "natural" | "t8mars_explosive" | "t8mars_fury" | "t8mars_weeping"
     #[serde(default)]
     pub character_card: Option<String>, // "Name|Role Title" for staggered glassmorphic intro card
+    // Master-Stage Spatial Blocking & Multi-Character Continuity Fields
+    #[serde(default)]
+    pub master_stage_id: Option<String>,
+    #[serde(default)]
+    pub sub_framing_rect: Option<Vec<f64>>,
+    #[serde(default)]
+    pub visible_characters: Vec<String>,
+    #[serde(default)]
+    pub prop_state_ledger: BTreeMap<String, String>,
+    #[serde(default)]
+    pub dialogue_turns: Vec<DialogueTurn>,
     // 4-Beat Micro-Acting & Detail Density Fields
     #[serde(default)]
     pub micro_beats: Vec<String>, // explicit 4-beat temporal descriptions
