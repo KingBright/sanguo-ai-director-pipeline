@@ -101,3 +101,19 @@ python3 scripts/director_audio.py music --prompt "纪录片的安静开场，稀
 ```
 
 [语音技能](.agents/skills/director-speech/SKILL.md) · [配乐技能](.agents/skills/director-bgm/SKILL.md) · [Google Flow Music](https://flowmusic.google/) · [Lyria API](https://ai.google.dev/gemini-api/docs/music-generation)
+
+## 从故事到表演和镜头
+
+`director-story` 将故事、人物关系与表演放在制片流程前面。“约 30 秒”表示故事体量，不是逐句字数配额。先明确人物目标、冲突与转折，记录稳定音色及每句的意图、重音、停顿和情绪，再根据实际试演安排镜头。长台词可以跨说话者与听者镜头，简短台词之后可以留反应。
+
+示例：[《两块五的尊严》故事与表演设计](projects/alien_thief/episodes/ep01_lottery_heist/story_v3.md)、[可执行脚本](projects/alien_thief/episodes/ep01_lottery_heist/story_v3.json)。
+
+```sh
+python3 scripts/install_audio_skills.py --client codex --skill director-story
+python3 scripts/episode_audio.py projects/alien_thief/episodes/ep01_lottery_heist/story_v3.json --model-root /path/to/models --output output/story-speech
+python3 scripts/clean_master.py projects/alien_thief/episodes/ep01_lottery_heist/story_v3.json --raw-dir output/story-clips --audio-dir output/story-speech --music output/real-score.mp3 --output output/story-master
+```
+
+语音脚本使用已安装的 Qwen3-TTS VoiceDesign/Base，后期需要 ffmpeg、numpy、soundfile。当前 Qwen Base 以合成参考声与标点控制表演，没有独立情绪指令接口；不能把 `delivery` 字段声称为已经执行的模型参数。精细表演仍需试演与选段。
+
+后期保留语音自然速度，根据实际对白和反应时长剪完整原帧；视频覆盖不足会报错要求补镜。逐帧来源校验、独立对白/音乐声轨及 SRT 随成片保存，不烧字幕。禁止局部贴帧、按音量拉扯嘴部、为评分加入测试音。`video_quality_critic.py --offline-only` 只给诊断，始终要求声画复核，不能凭高分批准成片。

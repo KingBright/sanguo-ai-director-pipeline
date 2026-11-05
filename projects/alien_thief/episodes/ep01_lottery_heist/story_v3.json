@@ -1,0 +1,137 @@
+{
+  "title": "两块五的尊严",
+  "target_duration_about": 30,
+  "premise": "想用抓贼恢复威风的猎人，被罚款和贼的假好心反将一军。",
+  "cast": {
+    "Kato": {
+      "seed": 141,
+      "voice": "中文动画巨魔男角色，低沉浑厚的低男中音，胸腔共鸣明显，沙砾般粗糙但字音清楚。像自以为威风的笨拙大叔，咬字重，句尾常低落。中慢速，有呼吸和反应停顿，不要全句吼叫，不要播音腔。",
+      "reference_text": "站住！我可是星际头号猎人。嗯……赏金的事，等会儿再说。"
+    },
+    "Xiaodai": {
+      "seed": 257,
+      "voice": "中文动画成年女角色，中低音区清冷干净女中音，稍带气声，音量克制，干脆平稳的咬字。用一本正经的冷幽默吐槽，慢半拍落包袱。语速从容，短句后留停顿。不要甜美撒娇，不要高尖幼童声，不要播音腔。",
+      "reference_text": "哥，账我算好了。赏金两块五，油钱三千。这个买卖……真不错。"
+    },
+    "Ximu": {
+      "seed": 481,
+      "voice": "中文动画地精成年男角色，中高音区尖而不刺耳，浓鼻腔共鸣，嗓音干涩带一点鸭嗓质地。市侩狡黠，得意的滑稽弹性腔调，关键字拖一下，句尾俏皮落下。悠闲中速，停顿清楚，不能一口气抢读。",
+      "reference_text": "别慌，嘿嘿，我自有办法。发财靠脑子，可不能光靠跑得快呀。"
+    }
+  },
+  "dialogue": [
+    {
+      "id": "line01",
+      "speaker": "Kato",
+      "text": "这回人赃俱获！我的名声，总算有救了。",
+      "delivery": "得意宣告，重音在人赃俱获；名声后轻停，后半句自我感动。",
+      "before": 0.3,
+      "after": 0.35,
+      "coverage": [
+        "shot01_establishing.mp4"
+      ]
+    },
+    {
+      "id": "line02",
+      "speaker": "Xiaodai",
+      "text": "赏金，两块五。",
+      "delivery": "低头核账，平淡报数；不要刻意抖包袱。留出对方表情反应。",
+      "before": 0.2,
+      "after": 0.65,
+      "coverage": [
+        "shot02.mp4"
+      ],
+      "music_gain": 0.6
+    },
+    {
+      "id": "line03",
+      "speaker": "Ximu",
+      "text": "长官，别这么生分。我就是替老板保管一下。保管费嘛……从赏金里扣？",
+      "delivery": "装熟套近乎，越来越一本正经；临时想到保管费，停顿后试探上扬。长句不是赶读。",
+      "before": 0.2,
+      "after": 0.3,
+      "coverage": [
+        "shot03.mp4",
+        "shot04.mp4"
+      ]
+    },
+    {
+      "id": "line04",
+      "speaker": "Kato",
+      "text": "还想收费？我今天非……",
+      "delivery": "恼怒打断，突然发现异常而中断，尾部不能补完。",
+      "before": 0.15,
+      "after": 0.1,
+      "coverage": [
+        "shot04.mp4"
+      ]
+    },
+    {
+      "id": "line05",
+      "speaker": "Xiaodai",
+      "text": "哥，飞船拖走了。罚款三千。",
+      "delivery": "看见上方拖车后平静提醒；三千平读，之后让卡托反应。",
+      "before": 0.35,
+      "after": 0.6,
+      "coverage": [
+        "shot05.mp4"
+      ],
+      "music_gain": 0.08
+    },
+    {
+      "id": "line06",
+      "speaker": "Ximu",
+      "text": "啧。要不……我先借你两块五？",
+      "delivery": "故作体贴，试探地给出荒唐建议；让两块五呼应开头。",
+      "before": 0.2,
+      "after": 1.1,
+      "coverage": [
+        "shot06.mp4"
+      ],
+      "reaction_video": "shot04.mp4",
+      "music_gain": 0.6,
+      "reaction_start_frame": 117
+    }
+  ],
+  "visuals": [
+    {
+      "id": "shot01",
+      "initial_frame": "keyframes/story_hunters.jpg",
+      "action": "The huge purple horned hunter at left proudly addresses someone offscreen left, points once, lifts his chin as if recovering his dignity. The small purple-haired woman at right watches, unimpressed. Clear expressive eyebrows, restrained natural speech movement, do not walk away.",
+      "duration_intent": 6,
+      "accepted_coverage": "shot01_establishing.mp4",
+      "coverage_note": "采用本次已生成的原生 720p 广场建立镜头；另一次生成只返回 360p，保留为未采用候选。"
+    },
+    {
+      "id": "shot02",
+      "initial_frame": "keyframes/story_hunters.jpg",
+      "action": "The small purple-haired woman at right glances down, then looks up with a completely dry expression and briefly speaks. The large purple hunter at left loses a little of his confident smile. A quiet comic pause. Only the woman talks.",
+      "duration_intent": 6
+    },
+    {
+      "id": "shot03",
+      "initial_frame": "keyframes/story_thieves.jpg",
+      "action": "The short green cyclops at right speaks at length to the hunter offscreen right. He begins with a friendly open palm, draws a hand to his chest while pretending to be helpful, then rubs two fingers together and ends with one sly raised eyebrow as if proposing a fee. The purple hooded young partner at left watches silently. A continuous small performance, preserve exactly one eye and the large pink ears.",
+      "duration_intent": 8
+    },
+    {
+      "id": "shot04",
+      "initial_frame": "keyframes/story_hunters.jpg",
+      "action": "The large purple horned hunter at left starts an indignant objection, raises one finger, then stops with his mouth half open. His energy collapses into a long blank embarrassed stare. The woman at right calmly watches. Leave a quiet reaction at the end. No new props.",
+      "duration_intent": 6
+    },
+    {
+      "id": "shot05",
+      "initial_frame": "keyframes/story_hunters.jpg",
+      "action": "The small purple-haired woman notices something high offscreen, tilts her eyes upward, gives the large hunter a matter-of-fact reminder, then looks back to him. He looks up and realizes his mistake, shoulders slumping. The incident stays offscreen; do not add spaceships into the image.",
+      "duration_intent": 6,
+      "coverage_note": "生成服务两次返回 status 4，采用本次已生成的同场景仰望反应镜头；记录实际来源，不做局部修补。"
+    },
+    {
+      "id": "shot06",
+      "initial_frame": "keyframes/story_thieves.jpg",
+      "action": "The short green cyclops at right studies the hunter offscreen, gives a tiny sympathetic head tilt, then slyly offers a single coin with an exaggeratedly kind smile. His purple hooded companion at left looks away trying not to laugh. No one changes identity, no extra fingers.",
+      "duration_intent": 6
+    }
+  ]
+}

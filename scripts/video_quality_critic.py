@@ -128,6 +128,7 @@ class VideoCriticReport:
     evaluation_timestamp: str
     static_slideshow_veto: bool = False
     passed_veto_gates: bool = True
+    acceptance_status: str = "review_required"
 
 
 # ==============================================================================
@@ -923,7 +924,11 @@ class VideoQualityCritic:
 
         overall = round(0.35 * micro_acting_score + 0.35 * lip_sync_score + 0.30 * fidelity_score, 1)
         passed_veto = metrics.passed_veto_gates and not metrics.static_slideshow_veto
-        passed = overall >= 80.0 and len(metrics.anomalies) == 0 and passed_veto
+        # Motion magnitude, contrast and an audio envelope cannot establish good
+        # acting, correct mouth geometry, or phoneme-level sync. In particular a
+        # frozen rectangle pasted into moving footage can score highly here.
+        # Offline measurements are diagnostics, never final acceptance.
+        passed = False
 
         if metrics.static_slideshow_veto:
             overall = min(overall, 25.0)
@@ -938,9 +943,10 @@ class VideoQualityCritic:
             elif micro_acting_score < 80.0:
                 recommendations.append("Strengthen 5-Step Causal Action Chain prompt; increase Beat 2/3 dynamic motion.")
             if lip_sync_score < 80.0:
-                recommendations.append("Verify 1.1s silent preparatory airlock and ensure mouth closes firmly on speech pause.")
+                recommendations.append("Review speech and visible speaker timing against the original clips. Do not freeze or warp regions to improve this proxy metric.")
             if fidelity_score < 80.0:
-                recommendations.append("Apply JoinMatch anti-fog clamp (strength=0.35) to mitigate cross-segment haze.")
+                recommendations.append("Compare source and mastered frames for contrast loss before applying any correction.")
+            recommendations.append("Watch the complete video and check dialogue, identity, cuts and artifacts; these numerical metrics do not establish quality.")
             re_render = " | ".join(recommendations)
 
         return VideoCriticReport(
@@ -950,7 +956,7 @@ class VideoQualityCritic:
             lip_sync_score=lip_sync_score,
             visual_fidelity_score=fidelity_score,
             passed=passed,
-            issues=metrics.anomalies,
+            issues=[*metrics.anomalies, "Manual visual and audio review required; offline metrics cannot approve a finished video."],
             re_render_recommendation=re_render,
             quantitative_metrics=asdict(metrics),
             slowfast_sheet_path=str(sheet_path),
@@ -1199,7 +1205,8 @@ def run_self_test() -> int:
 
         print("[4/4] Validating VideoCriticReport JSON Structure & Hard Veto Gates...")
         assert report.overall_score >= 80.0, f"Benchmark video failed score threshold: {report.overall_score}"
-        assert report.passed, f"Benchmark video was marked as failed: {report.issues}"
+        assert not report.passed, "Offline proxy measurements must not approve final quality"
+        assert report.acceptance_status == "review_required"
         assert report.passed_veto_gates, "Benchmark video failed hard veto gates!"
         assert not report.static_slideshow_veto, "Benchmark video falsely flagged as static slideshow!"
         assert report.quantitative_metrics["non_rigid_motion_score"] >= 25.0, "Benchmark video non-rigid motion score below threshold!"
@@ -1214,7 +1221,7 @@ def run_self_test() -> int:
         print(json.dumps(asdict(report), indent=2, ensure_ascii=False))
 
     print("\n" + "=" * 72)
-    print("ALL VERIFICATIONS PASSED: video_quality_critic.py is 100% operational.")
+    print("Diagnostic self-test passed; finished videos still require visual and audio review.")
     print("=" * 72)
     return 0
 
@@ -1259,7 +1266,8 @@ def main():
 
     if args.agent_mode in ("codex", "claude", "antigravity") and not args.json:
         print(f"### Video Critic Report: {Path(args.video).name}")
-        print(f"- **Verdict**: {'✅ PASSED' if report.passed else '❌ FAILED'} (Overall: {report.overall_score:.1f}/100)")
+        verdict = "REVIEW REQUIRED" if report.evaluator_mode == "offline-physics-deterministic" else ("PASSED" if report.passed else "FAILED")
+        print(f"- **Verdict**: {verdict} (Diagnostic score: {report.overall_score:.1f}/100)")
         print(f"- **Veto Gates**: {'✅ PASSED' if report.passed_veto_gates else '❌ VETO TRIGGERED: STATIC SLIDESHOW DETECTED'}")
         print(f"- **Non-Rigid Motion**: {report.quantitative_metrics.get('non_rigid_motion_score', 0.0):.1f}/100.0 (Non-rigid ratio: {report.quantitative_metrics.get('non_rigid_ratio', 0.0)*100:.1f}%)")
         print(f"- **Micro-Acting**: {report.micro_acting_score:.1f} | **Lip-Sync**: {report.lip_sync_score:.1f} | **Fidelity**: {report.visual_fidelity_score:.1f}")

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install standalone audio skills into selected clients' user skill directories."""
+"""Install director audio/story skills into selected clients' user skill directories."""
 
 import argparse
 import hashlib
@@ -10,14 +10,16 @@ import tempfile
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SKILLS = ("director-speech", "director-bgm")
+SKILLS = ("director-speech", "director-bgm", "director-story")
 
 
 def payload(name):
-    return {
+    files = {
         Path("SKILL.md"): (REPO_ROOT / ".agents" / "skills" / name / "SKILL.md").read_bytes(),
-        Path("scripts/director_audio.py"): (REPO_ROOT / "scripts" / "director_audio.py").read_bytes(),
     }
+    scripts = ("episode_audio.py", "clean_master.py") if name == "director-story" else ("director_audio.py",)
+    files.update({Path("scripts") / script: (REPO_ROOT / "scripts" / script).read_bytes() for script in scripts})
+    return files
 
 
 def matches(target, files):
@@ -52,14 +54,16 @@ def main():
     }
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--client", required=True, action="append", choices=roots)
+    parser.add_argument("--skill", action="append", choices=SKILLS, help="Install selected skills (default: all).")
     parser.add_argument("--check", action="store_true", help="Verify installed files without copying.")
     args = parser.parse_args()
 
-    files_by_skill = {name: payload(name) for name in SKILLS}
+    selected = args.skill or SKILLS
+    files_by_skill = {name: payload(name) for name in selected}
     targets = {
         roots[client] / name: files_by_skill[name]
         for client in args.client
-        for name in SKILLS
+        for name in selected
     }
     for target, files in targets.items():
         if (args.check or os.path.lexists(target)) and not matches(target, files):
