@@ -106,14 +106,18 @@ python3 scripts/director_audio.py music --prompt "纪录片的安静开场，稀
 
 `director-story` 将故事、人物关系与表演放在制片流程前面。“约 30 秒”表示故事体量，不是逐句字数配额。先明确人物目标、冲突与转折，记录稳定音色及每句的意图、重音、停顿和情绪，再根据实际试演安排镜头。长台词可以跨说话者与听者镜头，简短台词之后可以留反应。
 
-示例：[《两块五的尊严》故事与表演设计](projects/alien_thief/episodes/ep01_lottery_heist/story_v3.md)、[可执行脚本](projects/alien_thief/episodes/ep01_lottery_heist/story_v3.json)。
+当前制作示例：[《这钱眼熟》故事](projects/alien_thief/episodes/ep02_wallet/story.md)、[带真实对白的音频条件镜头计划](projects/alien_thief/episodes/ep02_wallet/performance.json)、[制作记录](projects/alien_thief/episodes/ep02_wallet/production.md)。[故事与表演方法](.agents/skills/director-story/references/story-performance-method.md)要求主要冲突在画面里有结果，逐镜检查说话者、听者、嘴形与道具，再进入剪辑。
+
+出镜对白使用实际验证的音频条件动画或原生画音联合生成。下面的本地路线读取完整原速对白，并保留同一条声轨；需要已安装的 H3/DiffSynth GPU 环境和本地模型，不自动下载模型。
 
 ```sh
 python3 scripts/install_audio_skills.py --client codex --skill director-story
-python3 scripts/episode_audio.py projects/alien_thief/episodes/ep01_lottery_heist/story_v3.json --model-root /path/to/models --output output/story-speech
-python3 scripts/clean_master.py projects/alien_thief/episodes/ep01_lottery_heist/story_v3.json --raw-dir output/story-clips --audio-dir output/story-speech --music output/real-score.mp3 --output output/story-master
+python3 scripts/h3_performance.py projects/alien_thief/episodes/ep02_wallet/performance.json --model-root /path/to/MiniMax-H3 --output output/new-take
+python3 scripts/native_av_master.py /path/to/reviewed-edit.json --raw-dir output/new-take --music output/real-score.mp3 --output output/new-master
 ```
+
+历史 V3《两块五的尊严》已被用户拒绝：故事未完成、音画不同步、人物表演不足。其技术记录不能作为作品通过的示例。`clean_master.py` 保留用于旁白、画外音和后配音草案；它不生成口型，不能替代上述出镜对白路线。
 
 语音脚本使用已安装的 Qwen3-TTS VoiceDesign/Base，后期需要 ffmpeg、numpy、soundfile。当前 Qwen Base 以合成参考声与标点控制表演，没有独立情绪指令接口；不能把 `delivery` 字段声称为已经执行的模型参数。精细表演仍需试演与选段。
 
-后期保留语音自然速度，根据实际对白和反应时长剪完整原帧；视频覆盖不足会报错要求补镜。逐帧来源校验、独立对白/音乐声轨及 SRT 随成片保存，不烧字幕。禁止局部贴帧、按音量拉扯嘴部、为评分加入测试音。`video_quality_critic.py --offline-only` 只给诊断，始终要求声画复核，不能凭高分批准成片。
+后期保留语音自然速度，根据实际对白和反应时长剪完整原帧；视频覆盖不足会报错要求补镜。制片时保存逐帧来源校验与独立声轨；需要字幕时输出独立 SRT，不烧入画面。禁止局部贴帧、按音量拉扯嘴部、为评分加入测试音。`video_quality_critic.py --offline-only` 只给诊断，始终要求声画复核，不能凭高分批准成片。

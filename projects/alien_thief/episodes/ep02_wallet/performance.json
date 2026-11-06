@@ -30,9 +30,9 @@
       "keyframe_from": "bribe",
       "before": 0.35,
       "after": 0.7,
-      "seed": 423,
+      "seed": 443,
       "text": "等会儿……这不是我的钱包吗？",
-      "prompt": "Continue the exact two adult aliens in this hand drawn comedy. The purple horned man stops being smug. During the supplied Mandarin line 等会儿……这不是我的钱包吗？ he pats his empty coat pocket with his free hand during the hesitation, looks at the brown wallet, then slowly raises his eyes to the green cyclops. His deep rough voice and visible mouth follow the supplied audio exactly. His expression changes from puzzled to quietly offended, not rage. Green cyclops mouth remains closed, trying to maintain an innocent smile while watching the discovery. The green man still holds the SAME open brown wallet with two coins in the SAME extended hand throughout. The purple man keeps his metal handcuffs in his other hand. Stable camera, purposeful restrained acting, no cuts, no new characters, no subtitles."
+      "prompt": "A clean hand drawn animated comedy scene, same two adult male aliens. The purple horned bounty hunter speaks the supplied audio, with natural lip articulation and the exact pauses of the recording. During the early hesitation, his EMPTY hand already resting on his hip, on the VIEWER LEFT side of his body, slides down to pat the coat pocket directly below it. His OTHER hand on the VIEWER RIGHT keeps holding the metal handcuffs lowered beside his thigh, completely visible and stationary throughout. He feels that his pocket is empty, looks down at the brown wallet held by the green cyclops, then raises his eyes to the green man as the question ends. He becomes quietly offended and embarrassed. Green cyclops stays silent, trying to maintain an innocent smile. The SAME open brown wallet and two coins remain in the green extended hand continuously. The speaking performance exists only in the AUDIO track. The foreground and bottom of the image are clean uncaptioned animation, with no subtitles, captions, written dialogue, typography or overlays anywhere. Retain existing shop signs only. Preserve bodies, faces, clothes, stable camera and lighting. No cuts, no new characters."
     },
     {
       "id": "explain",
@@ -42,7 +42,9 @@
       "after": 1.0,
       "seed": 424,
       "text": "主要是您钱包里……就这么多。",
-      "prompt": "Continue this original 2D hand drawn scene with the same two adult male aliens. Green cyclops speaks the supplied Mandarin audio with precisely matching mouth articulation: 主要是您钱包里……就这么多。 He first earnestly explains the low offer as if the other man complained about the price. During the hesitation he glances into the wallet, then at the purple man. As he finishes he realizes he has admitted taking the wallet: his smile drains away, ears droop slightly, eye widens, and he closes his mouth. The purple horned man listens without speaking, raises one eyebrow and opens his empty hand expectantly toward the wallet. Keep the same brown wallet held open in the green man extended hand throughout; do not make it disappear or change hands yet. Handcuffs remain with purple man. Preserve identities, outfits, anatomy and background. Stable camera, no cuts, no subtitles, no extra characters."
+      "prompt": "Continue this original 2D hand drawn scene with the same two adult male aliens. Green cyclops speaks the supplied Mandarin audio with matching mouth articulation and exact timing. He first earnestly explains the low offer as if the other man complained about the price. While explaining the amount he glances briefly into the wallet, then looks back at the purple man on the final words. Immediately AFTER the last spoken word he realizes he has admitted taking the wallet: his smile drains away, ears droop slightly, eye widens, and he closes his mouth. The purple horned man listens without speaking, raises one eyebrow and opens his empty hand expectantly toward the wallet. Keep the same brown wallet held open in the green man extended hand throughout; do not make it disappear or change hands yet. Handcuffs remain with purple man. Preserve identities, outfits, anatomy and background. Stable camera, no cuts, no subtitles, no extra characters. Keep the foreground and lower image clean and uncaptioned: dialogue is heard only in the audio, with no written dialogue, subtitles, captions, typography or overlays. Retain only existing shop signs.",
+      "cfg_scale": 2.0,
+      "negative_prompt": "subtitles, subtitle overlay, Chinese captions at the bottom, written dialogue, white text with black outlines across lower edge, text overlays, extra limbs, distorted face"
     },
     {
       "id": "recover",
@@ -60,10 +62,10 @@
       "dialogue": false,
       "keyframe_from": "recover",
       "before": 0,
-      "after": 0,
-      "seed": 432,
+      "after": 0.3,
+      "seed": 435,
       "text": "",
-      "prompt": "Continue exactly from this frame, a hand drawn animated comedy. No dialogue, both mouths closed. The purple horned bounty hunter holds the green adult cyclops firmly by the upper arm and walks him away down the alley toward the background. Green man reluctantly walks beside him, ears drooping, shoulders slumped. Purple keeps his recovered brown wallet securely in his own other hand against his chest. Show both actually taking several steps together away from the camera, maintaining their anatomy, identity and clothes. They remain physically connected at the held upper arm. Natural leg and foot motion, no teleportation, no cuts, no camera motion, no text, no additional characters. The arrest has succeeded and the thief cannot escape."
+      "prompt": "A continuous hand drawn animated shot, exact same two adult male aliens. No speech. The purple horned bounty hunter turns LEFT into side profile, his face now pointing toward the left edge of the screen. The green cyclops also turns LEFT into side profile. Purple holds green by the upper arm and escorts him walking FORWARD together toward SCREEN LEFT, past the blue vending machine and out of the left edge of the frame. Both look in the direction they are walking, not at the camera. Both take natural coordinated forward steps, green in front and purple following close behind, maintaining contact with the green upper arm. Purple keeps his single recovered brown wallet securely in his other hand against his chest throughout. Green is embarrassed, ears drooping. Static camera, background stays fixed. Preserve clothes and anatomy, no backwards walking, no scaling down, no cuts or subtitles."
     }
   ]
 }

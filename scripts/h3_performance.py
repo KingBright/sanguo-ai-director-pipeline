@@ -27,6 +27,13 @@ def frame_budget(samples, rate, before, after):
     return max(22, math.ceil((needed-5)/17)*17+5)
 
 
+def guidance_scale(value=1.):
+    value = float(value)
+    if not math.isfinite(value) or value < 1:
+        raise ValueError('cfg_scale must be finite and at least1')
+    return value
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('manifest', type=Path)
@@ -46,6 +53,7 @@ def main():
         raise ValueError('H3 width and height must be multiples of64')
     scheduled = set()
     for shot in shots:
+        shot['cfg_scale'] = guidance_scale(shot.get('cfg_scale', 1.))
         if Path(shot['id']).name != shot['id'] or shot['id'] in ('.', '..'):
             raise ValueError('Shot id must be a simple filename')
         if (a.output/shot['id']).exists():
@@ -94,11 +102,12 @@ def main():
         sf.write(out/'condition.wav',audio,rate,subtype='FLOAT')
         record={**shot,'audio_sha256':digest(source_audio),'keyframe_sha256':digest(source_image),
                 'frames':frames,'fps':24,'audio_mode':'audio_conditioned_generation','speed':1,
+                'negative_guidance_active':shot['cfg_scale'] != 1.,
                 'status':'rendering','started_at':time.time(),'acceptance':'not_reviewed'}
         receipt=out/'generation.json';receipt.write_text(json.dumps(record,ensure_ascii=False,indent=2),encoding='utf-8')
-        print(f"RENDER {shot['id']} {frames} frames",flush=True)
+        print(f"RENDER {shot['id']} {frames} frames cfg={shot['cfg_scale']} negative_guidance={record['negative_guidance_active']}",flush=True)
         result=pipe(prompt=shot['prompt'],negative_prompt=shot.get('negative_prompt','extra limbs, subtitles, distorted face, disappearing objects'),
-            height=height,width=width,num_frames=frames,num_inference_steps=4,cfg_scale=1.,flow_shift=12.,audio_flow_shift=3.,
+            height=height,width=width,num_frames=frames,num_inference_steps=4,cfg_scale=shot['cfg_scale'],flow_shift=12.,audio_flow_shift=3.,
             keyframes=[Image.open(source_image).convert('RGB')],keyframe_indices=[0],keyframe_strengths=[1.],
             retake_audio=torch.from_numpy(audio.T.copy()),retake_audio_sample_rate=rate,seconds_regions_to_retake=[],seed=shot.get('seed',401))
         pictures=result[0]
