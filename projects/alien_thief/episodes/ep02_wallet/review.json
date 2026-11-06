@@ -1,0 +1,126 @@
+{
+  "title": "这钱眼熟",
+  "user_acceptance": "not_reviewed",
+  "story": {
+    "premise": "惯偷用赏金猎人自己的钱包行贿，解释金额时暴露偷窃。",
+    "required_visible_outcome": [
+      "钱包归还",
+      "猎人控制惯偷手腕",
+      "二人离场"
+    ]
+  },
+  "rejected_takes": [
+    {
+      "take": "V3",
+      "reason": "用户指出故事未完、严重口型不同步、人物缺乏活人感。"
+    },
+    {
+      "take": "Omni pilot",
+      "reason": "约7秒钱包消失。"
+    },
+    {
+      "take": "recognize take1",
+      "reason": "模型生成字幕，持铐手摸口袋连续性不清。"
+    },
+    {
+      "take": "explain take1",
+      "reason": "模型生成乱码字幕；cfg=1下负面分支未执行。"
+    },
+    {
+      "take": "departure take1",
+      "reason": "朝向错误，人物倒着走。"
+    },
+    {
+      "take": "first complete edit",
+      "reason": "17.583秒解释到取钱包姿势与构图跳变；虽然620帧/PCM/解码均通过，仍拒绝为最终片。"
+    }
+  ],
+  "first_edit_technical": {
+    "frames": 620,
+    "duration": 25.833333,
+    "native_pcm_preserved": true,
+    "isolated_flash_candidates": 0,
+    "ssim": 0.9876,
+    "lufs": -20.68,
+    "true_peak_dbtp": -4.18
+  },
+  "performance_limits": [
+    "抽帧、ASR和保留声轨不等于逐音素嘴形对齐证明。",
+    "未以真实速度音画试听确认每个音素。",
+    "用户审美与完成度评价独立记录。"
+  ],
+  "final_status": "complete_candidate_delivered_for_user_review",
+  "file": "this-money-looks-familiar-v4-final.mp4",
+  "sha256": "ac73c632f8eb97672d3d1c0f65addf5d389b30cc70e240c9daf7cde99ba07591",
+  "duration": 25.791666666666668,
+  "frames": 619,
+  "native_pcm_preserved": true,
+  "speed": 1,
+  "ssim": 0.988295,
+  "lufs": -20.73,
+  "true_peak_dbtp": -4.18,
+  "isolated_flash_candidates": 0,
+  "dialogue_check": "All five lines present in ASR; homophone 一码 instead of 一马; ASR boundaries are approximate, not lip alignment proof.",
+  "visual_review": {
+    "method": "0.25-second contact sheets, full-resolution wallet transfer samples and adjacent-frame cut checks",
+    "story_events": {
+      "wallet_taken": 18.4,
+      "wallet_pocketed": 19.0,
+      "wrist_control": 21.5,
+      "departure": 23.5
+    },
+    "cut_continuity": "previous 17.583-second pose reset removed by regenerating from actual preceding last frame; final five cuts visually checked",
+    "ending": "green exits first, purple follows screen left maintaining wrist contact; a narrow coat edge remains at final frame",
+    "performance": "Correct speaker ownership and listener reactions visible at sampled points; no phoneme-level acceptance claimed."
+  },
+  "shots": [
+    {
+      "id": "intro",
+      "first_frame": 0,
+      "end_frame": 84,
+      "offset": 0,
+      "duration": 3.5,
+      "source_sha256": "f457f6f845d6c21bc9a06277cd20ac10980a968e2892206619abf1605fbd0d37"
+    },
+    {
+      "id": "bribe",
+      "first_frame": 0,
+      "end_frame": 107,
+      "offset": 3.5,
+      "duration": 4.458333333333333,
+      "source_sha256": "449a99fd940d6252563c7dbb1b262c9555924df2b06d97f9ace46d5d171cb11b"
+    },
+    {
+      "id": "recognize",
+      "first_frame": 0,
+      "end_frame": 124,
+      "offset": 7.958333333333333,
+      "duration": 5.166666666666667,
+      "source_sha256": "4b81b41692bc4ba4a473e680cf730a0c11f973ad715fdc012de932c261bc47ca"
+    },
+    {
+      "id": "explain",
+      "first_frame": 0,
+      "end_frame": 107,
+      "offset": 13.125,
+      "duration": 4.458333333333333,
+      "source_sha256": "f4da72ed491d2da502fbbdf28b057afc7ab44c5e17869234b85eb095a9724f90"
+    },
+    {
+      "id": "recover",
+      "first_frame": 0,
+      "end_frame": 124,
+      "offset": 17.583333333333332,
+      "duration": 5.166666666666667,
+      "source_sha256": "81c022c5552d8a4c6cfa60e2756073ba53c48913386e7c89062b2afd2a612c53"
+    },
+    {
+      "id": "departure",
+      "first_frame": 0,
+      "end_frame": 73,
+      "offset": 22.75,
+      "duration": 3.0416666666666665,
+      "source_sha256": "cb373b9c13687115e51eff76507934d5da40a2850cbcc0cfc8d51ef24d2ecc56"
+    }
+  ]
+}

@@ -49,12 +49,12 @@
     {
       "id": "recover",
       "audio": "audio/ending.wav",
-      "keyframe": "keyframes/confrontation-duo.png",
       "before": 0.3,
       "after": 0.7,
       "seed": 431,
       "text": "钱包还我。人，跟我走！",
-      "prompt": "Two adult male aliens in the same hand drawn animated alley. Purple horned bounty hunter on the right speaks exactly the supplied Mandarin audio 钱包还我。人，跟我走！ His mouth moves with the actual words and closes in pauses. During the first sentence he firmly takes the single brown wallet from the green cyclops extended hand using his free hand, and holds it visibly against his own chest. During the second sentence he steps next to the green man and takes hold of his upper arm with his other hand. End with the wallet visibly in purple man hand and the green cyclops held at the arm. Green man does not speak; his ears droop and his eye follows the wallet with regret. Purposeful natural body movement, believable hands, preserve exact character designs and clothes. Wallet transfers once from green to purple, never vanishes or duplicates. Only two characters, steady camera, no cuts or text."
+      "prompt": "Continue exactly from this hand drawn frame, same two adult male aliens and static camera. The purple horned bounty hunter speaks the supplied Mandarin audio with matching mouth movements, closing his mouth in the pauses. His already extended EMPTY hand takes the single open brown wallet from the green cyclops extended hand during the first sentence. He draws the wallet back and tucks it visibly into his inner coat breast pocket, with the brown wallet top still visible. During the second sentence he steps closer and uses that now free hand to take the green man by the wrist. His other hand, on the viewer right, continuously holds the metal handcuffs beside his thigh. End with the recovered wallet secure in purple coat and purple holding the green wrist, ready to lead him away. Green stays silent, his eye following the wallet, his shoulders falling in defeat. Only the purple character speaks. Purposeful natural body movement, coherent hands, no teleporting or duplicate wallet, preserve exact faces and clothing. The scene is uncaptioned animation; speech is audio only. No subtitles, text overlays, cuts, extra characters or music.",
+      "keyframe_from": "explain"
     },
     {
       "id": "departure",
@@ -62,10 +62,10 @@
       "dialogue": false,
       "keyframe_from": "recover",
       "before": 0,
-      "after": 0.3,
+      "after": 0,
       "seed": 435,
       "text": "",
-      "prompt": "A continuous hand drawn animated shot, exact same two adult male aliens. No speech. The purple horned bounty hunter turns LEFT into side profile, his face now pointing toward the left edge of the screen. The green cyclops also turns LEFT into side profile. Purple holds green by the upper arm and escorts him walking FORWARD together toward SCREEN LEFT, past the blue vending machine and out of the left edge of the frame. Both look in the direction they are walking, not at the camera. Both take natural coordinated forward steps, green in front and purple following close behind, maintaining contact with the green upper arm. Purple keeps his single recovered brown wallet securely in his other hand against his chest throughout. Green is embarrassed, ears drooping. Static camera, background stays fixed. Preserve clothes and anatomy, no backwards walking, no scaling down, no cuts or subtitles."
+      "prompt": "Continue exactly from this final pose in the same hand drawn alley. No speech. The purple horned bounty hunter and green adult cyclops both turn LEFT into SIDE PROFILE, facing screen left. Purple keeps hold of green wrist and leads him walking FORWARD to SCREEN LEFT past the blue vending machine and out of frame. Both look in the direction of their travel; do not face the camera or walk backwards. Green walks in front, purple follows closely, maintaining wrist contact. Purple keeps his recovered brown wallet securely tucked in his coat breast pocket and handcuffs in his other hand, never changing or duplicating props. Green lowers his head in embarrassment. Natural coordinated forward steps and weight shifts, consistent character proportions and clothing. Static camera, fixed background, no dialogue, no subtitles, no cuts, no zoom."
     }
   ]
 }
