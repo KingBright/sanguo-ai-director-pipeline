@@ -1,0 +1,5 @@
+Tool: built-in image_gen (2026-11-06)
+Reference/edit target: confrontation.png
+Output: confrontation-duo.png
+
+Edit this animation keyframe with one composition change: completely remove the purple-haired girl with glasses on the far right, replacing her with the existing empty alley/background. Keep only the two adult male alien characters, the green cyclops on the left and the horned purple bounty hunter on the right. Preserve their exact faces, body proportions, poses, wardrobe, eye directions, open brown wallet and its two coins, handcuffs, framing, linework, textured coloring and neon alley lighting. No other changes. No added text or new characters.

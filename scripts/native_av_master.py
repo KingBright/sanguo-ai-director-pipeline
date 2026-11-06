@@ -49,6 +49,9 @@ def master(manifest, raw_dir, output, music=None):
         raise FileExistsError(output)
     if not manifest.get("shots"):
         raise ValueError("No shots")
+    audio_mode = manifest.get("audio_mode", "native_joint_generation")
+    if audio_mode not in ("native_joint_generation", "audio_conditioned_generation"):
+        raise ValueError("This editor requires a native or audio-conditioned performance")
     prepared = []
     signature = None
     for shot in manifest["shots"]:
@@ -114,7 +117,7 @@ def master(manifest, raw_dir, output, music=None):
     if rate != RATE or not np.array_equal(voice, recovered):
         raise RuntimeError("Native performance PCM was changed")
     report = {"title": manifest["title"], "duration": cursor, "shots": records,
-              "audio_mode": "native_joint_generation", "speed": 1,
+              "audio_mode": audio_mode, "speed": 1,
               "verified_frames": len(hashes), "native_pcm_preserved": True,
               "music": str(music) if music else None, "music_sha256": sha(music) if music else None,
               "acceptance": "candidate_requires_story_and_performance_review",
