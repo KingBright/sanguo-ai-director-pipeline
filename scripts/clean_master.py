@@ -77,7 +77,7 @@ def sha(path):
 
 def frame_hashes(path):
     data = run(["ffmpeg", "-v", "error", "-i", str(path), "-map", "0:v:0", "-an",
-                "-vsync", "0", "-f", "framemd5", "-"]).decode()
+                "-fps_mode", "passthrough", "-f", "framemd5", "-"]).decode()
     return [line.rsplit(",", 1)[-1].strip() for line in data.splitlines() if line and not line.startswith("#")]
 
 
