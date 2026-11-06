@@ -17,7 +17,7 @@ def payload(name):
     files = {
         Path("SKILL.md"): (REPO_ROOT / ".agents" / "skills" / name / "SKILL.md").read_bytes(),
     }
-    scripts = ("episode_audio.py", "clean_master.py", "native_av_master.py") if name == "director-story" else ("director_audio.py",)
+    scripts = ("episode_audio.py", "clean_master.py", "native_av_master.py", "h3_performance.py") if name == "director-story" else ("director_audio.py",)
     files.update({Path("scripts") / script: (REPO_ROOT / "scripts" / script).read_bytes() for script in scripts})
     if name == "director-story":
         files[Path("references/story-performance-method.md")] = (REPO_ROOT / ".agents/skills/director-story/references/story-performance-method.md").read_bytes()

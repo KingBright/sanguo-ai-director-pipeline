@@ -22,6 +22,7 @@ description: 将故事制作成剧情短片或动画，先设计人物目标、�
 ## 执行能力与边界
 
 - `scripts/episode_audio.py` 在已有 Qwen3-TTS 环境和本地模型目录中建立原创合成音色，再用 Base 固定身份。需要 torch、qwen-tts、soundfile、numpy。不会自动下载模型。当前表演控制来自合成参考声与台词标点，Base 没有独立情绪指令接口；`delivery` 是试演验收标准，不能声称已作为模型参数执行。
+- `scripts/h3_performance.py` 使用已安装的 MiniMax H3/DiffSynth 本地模型，把指定对白作为生成条件。输入 `shots[{id,audio,keyframe,prompt,before,after,seed}]`，按实际语音长度向上对齐后端帧数，保留完整声音及反应时间；不下载模型、不加速。已完成单镜音频条件试镜，不能据此批准任意新镜头。每次重做使用新输出目录，单镜记录输入哈希与状态。需要 torch、diffsynth、Pillow、soundfile、numpy 和已验证的 GPU 环境。
 - 镜头使用项目已有的真实视频生成后端。先确认当前 CLI/API 支持的选项；按已完成的表演申请足够覆盖。不要把静态推拉包装成完整角色动画，也不要用伪口型迎合质检分数。
 - `scripts/native_av_master.py` 剪辑原生画音素材，按同一帧区间裁切画面和原声，保存原始PCM并核对。输入 `shots[{id,file,first_frame,end_frame,text,review}]`，只输出候选片；不能用声轨保留证明模型嘴形正确。
 - `scripts/clean_master.py` 是后配音剪辑器，不生成口型。需要 ffmpeg/ffprobe、numpy、soundfile。它按对白实际长度及前后反应时间分配完整原帧，允许一句话跨多个覆盖镜头。不足时明确失败。先将明确标记的素材统一为 BT.709 并记录转换，再无损剪辑并逐帧核对；不改变画面结构或播放速度。色彩标记缺失时要求先明确处理。输出独立声轨与可选 SRT，不烧入字幕。
