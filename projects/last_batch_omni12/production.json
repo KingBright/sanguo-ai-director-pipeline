@@ -3,10 +3,10 @@
   "model": "Omni 1.2 Flash",
   "date": "2026-11-07",
   "status": "candidate_user_not_reviewed",
-  "duration_seconds": 54.91666666666667,
+  "duration_seconds": 54.75,
   "native_pcm_preserved": true,
   "speed": 1,
-  "verified_frames": 1318,
+  "verified_frames": 1314,
   "sources": [
     {
       "file": "02-chain.mp4",
@@ -17,7 +17,7 @@
     {
       "file": "07-tail-native.mp4",
       "source_sha256": "7ee95b5226898466bf38d404bb898a41fbc669d0766fce0466628c52c2c93db2",
-      "first_frame": 0,
+      "first_frame": 4,
       "end_frame": 720
     }
   ],
@@ -31,5 +31,7 @@
     "voice_continuity": "Not independently aurally verified across extensions.",
     "user": "not_reviewed"
   },
-  "report": "master-candidate/report.json"
+  "report": "master-candidate-v2/report.json",
+  "delivery": "last-batch-final.mp4",
+  "join_fix": "Exclude 4 leading frames of native tail and identical audio interval to remove transient double image; no dialogue removed."
 }

@@ -13,10 +13,10 @@
     {
       "id": "generosity_and_handoff",
       "file": "07-tail-native.mp4",
-      "first_frame": 0,
+      "first_frame": 4,
       "end_frame": 720,
       "text": "这份，也带上吧。 / 那……多少钱？ / 下回，带他们进来吃。 / 谢谢。 / 来，趁热吃。",
-      "review": "Native continuation from first chain tail; box reaches children on screen. Extra pizzas persist on counter; detailed lip sync and voice consistency not verified."
+      "review": "Native continuation from first chain tail; box reaches children on screen. Extra pizzas persist on counter; detailed lip sync and voice consistency not verified. First four silent leading frames excluded after join review found a transient double image."
     }
   ]
 }
