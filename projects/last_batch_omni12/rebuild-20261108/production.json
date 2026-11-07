@@ -1,0 +1,31 @@
+{
+  "title": "一起吃",
+  "date": "2026-11-08",
+  "status": "candidate_requires_user_review",
+  "project_url": "https://flow.google.com/project/fc281829-0391-49d7-9633-6c9befe4b494",
+  "model": "Omni 1.2 Flash",
+  "delivery": "eat-together-v2.mp4",
+  "delivery_sha256": "2f49997be46189a05a1cd8a016b9b9a7b97462126e8d418a504f343cac08c9c3",
+  "duration_seconds": 44.5,
+  "verified_frames": 1068,
+  "native_pcm_preserved": true,
+  "playback_speed": 1,
+  "source_lineage": {
+    "prelude-25.mp4": "15s first-frame-guided opening plus10s actual native Extend, whole25s reviewed",
+    "prelude-closeup.mov": {
+      "parent": "prelude-25.mp4",
+      "transform": "crop=768:432:512:96,scale=1280:720,colorspace=all=bt709:range=tv:format=yuv420p",
+      "use_interval": [
+        15,
+        25
+      ],
+      "source_pcm_byte_equal": true
+    },
+    "pilot-01.mp4": "selected0-9.5s with complete visible transfer; whole15s fails and its later failed tail is excluded",
+    "ending-01.mp4": "independent native AV shot guided by actual served-state frame from pilot, not native Extend"
+  },
+  "reviews": "review.json",
+  "technical_report": "technical-report.json",
+  "tests": "4 native master tests passed, including declared fail/unverified blocks and missing-evidence blocks",
+  "installed_clients": "Current Mac Codex, Antigravity, DeepSeek harness verified; this update not claimed deployed to all other devices"
+}

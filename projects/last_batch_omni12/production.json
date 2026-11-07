@@ -2,7 +2,7 @@
   "project_url": "https://flow.google.com/project/248021b6-0135-41f9-baa0-c10b2ce850d9",
   "model": "Omni 1.2 Flash",
   "date": "2026-11-07",
-  "status": "candidate_user_not_reviewed",
+  "status": "rejected_by_user",
   "duration_seconds": 54.75,
   "native_pcm_preserved": true,
   "speed": 1,
@@ -24,12 +24,12 @@
   "generation": "15s opening; native Extend reveal; failed dough continuation rejected; new native continuation with second cooked pizza; native coin refusal and box handoff. Scene splitting used to keep continuation input below 30s.",
   "export": "Full scene export exceeded 240s without download. Timeline right-click Download succeeded for native 30s tail. File 06-scene-export.mp4 was captured by a still-armed listener during tail download and is a duplicate tail, not a full scene.",
   "review": {
-    "story": "Owner adds food and refuses payment; children visibly receive box.",
-    "visual": "Contact sheets show stable principal identities and room; rejected cooked-pizza-to-dough transformation replaced. Background pizza count persists inconsistently; box contents not visibly verified.",
+    "story": "FAILED: takeaway premise and dine-in ending not coherently established; outcome receipt does not prove food provenance",
+    "visual": "FAILED: extra pizza visible at opening; additional pizzas/hand in native tail; known counter pizzas remain after a separately sourced box is handed over",
     "dialogue": "ASR covers intended nine lines; small-word omissions vary between ASR passes.",
     "lip_sync": "Not phoneme-level verified; same-generation audio/video timing preserved.",
     "voice_continuity": "Not independently aurally verified across extensions.",
-    "user": "not_reviewed"
+    "user": "rejected: multiplying pizzas, disconnected hand, unexplained boxed pizza, takeout/dine-in and children location unclear"
   },
   "report": "master-candidate-v2/report.json",
   "delivery": "last-batch-final.mp4",

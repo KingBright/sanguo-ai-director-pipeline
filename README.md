@@ -137,4 +137,8 @@ python3 scripts/install_audio_skills.py --client codex --client antigravity --cl
 
 ### Flow Omni 1.2 Flash 原生画音接续
 
-`director-story` 已加入[实测新模型与接续操作](.agents/skills/director-story/references/flow-omni12.md)。[《最后一炉》](projects/last_batch_omni12/story.md)完成54.9秒候选片，原生画音同区间剪辑；[制作记录](projects/last_batch_omni12/production.json)列出接续时长限制、返工、下载方式及未完成的口型/音色验收。实际媒体保留本地，不上传大视频到Git。
+`director-story` 已加入[实测新模型与接续操作](.agents/skills/director-story/references/flow-omni12.md)。[《最后一炉》](projects/last_batch_omni12/story.md)的54.75秒版本已被用户拒收：剧情混用堂食与外带，关键食物发生复制及不明来源。[复盘与重做](projects/last_batch_omni12/rebuild-20261108/root-cause.md)记录了提示冲突、模型失误、操作问题和验收漏项，不能将该片作为合格示例。实际媒体保留本地，不上传大视频到Git。
+
+涉及道具转移的新片使用[剧情因果与连续性检查](.agents/skills/director-story/references/continuity-and-causality.md)，在原生剪辑清单中设置 `continuity_required: true`；关键项失败、未知或证据文件缺失时停止渲染。该检查读取人工观察记录，不自动识别视频是否正确。
+
+重做样片[《一起吃》](projects/last_batch_omni12/rebuild-20261108/story.md)为44.5秒，统一堂食，开场母子三人均在店内，唯一披萨完整移到餐桌，母亲最后坐下。[逐项审核](projects/last_batch_omni12/rebuild-20261108/review.json)与[制作证据](projects/last_batch_omni12/rebuild-20261108/production.json)保留失败小样、首尾帧试验与采用区间。仍待用户评审，不据此声称模型已解决一般物体守恒或逐音素口型。

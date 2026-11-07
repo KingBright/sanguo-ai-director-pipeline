@@ -41,6 +41,33 @@ class NativePerformanceTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 inspect_clip(p/'source.mov', 40, 60)
 
+    def test_declared_prop_failure_blocks_before_any_render_or_source_access(self):
+        # A known bad shot must not reach FFmpeg even when its file is absent.
+        for result in ("fail", "unverified", None):
+            with self.subTest(result=result), tempfile.TemporaryDirectory() as directory:
+                p = Path(directory)
+                shot = {"id": "food-transfer", "file": "never-open.mp4",
+                        "first_frame": 0, "end_frame": 24,
+                        "continuity": {"story_causality": "pass", "object_identity": result,
+                                       "actor_positions": "pass", "action": "pass",
+                                       "evidence": ["review/transfer-frames.jpg"]}}
+                with self.assertRaisesRegex(ValueError, "object_identity"):
+                    master({"title": "rejected", "continuity_required": True,
+                            "shots": [shot]}, p, p / "out")
+                self.assertFalse((p / "out").exists())
+
+    def test_pass_labels_without_actual_evidence_do_not_allow_rendering(self):
+        with tempfile.TemporaryDirectory() as directory:
+            p = Path(directory)
+            shot = {"id": "unsubstantiated", "file": "never-open.mp4",
+                    "continuity": {"story_causality": "pass", "object_identity": "pass",
+                                   "actor_positions": "pass", "action": "pass",
+                                   "evidence": ["does-not-exist.jpg"]}}
+            with self.assertRaisesRegex(ValueError, "evidence file missing"):
+                master({"title": "no evidence", "continuity_required": True,
+                        "shots": [shot]}, p, p / "out")
+            self.assertFalse((p / "out").exists())
+
     def test_silent_video_is_not_accepted_as_a_native_performance(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / 'silent.mp4'

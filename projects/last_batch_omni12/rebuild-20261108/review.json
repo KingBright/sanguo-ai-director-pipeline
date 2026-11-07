@@ -1,0 +1,125 @@
+{
+  "old_film": "rejected_by_user",
+  "pilot_01": {
+    "file": "pilot-01.mp4",
+    "whole_clip": "fail",
+    "setup": "one pizza on board at stand; mother standing; two children already seated; dining table empty",
+    "transfer_observation": "At 2fps full-clip contact and 8fps 3.5-9.5s detail, owner moves board with pizza using connected arms onto dining table; original stand empty immediately after transfer",
+    "failure": "Around 10-11s a second pizza reappears at original stand while delivered pizza remains on table",
+    "evidence": [
+      "pilot-01-contact.jpg",
+      "transfer-detail.jpg"
+    ],
+    "use_in_full_film": "not approved; only a reviewed shorter action interval might be usable, not entire 15s"
+  },
+  "pilot_02": {
+    "status": "object_transfer_pass_in_reviewed_frames",
+    "model": "Omni 1.2 Flash",
+    "seconds": 10,
+    "first_frame": "anchor-start.png",
+    "last_frame": "anchor-served.png",
+    "changed_conditions": "Explicit first AND last frames; only transfer action; mother remains standing; shorter duration",
+    "limits": "Multiple conditions changed: not a controlled causal comparison and not proof that prompts universally fix continuity",
+    "file": "pilot-02.mp4",
+    "evidence": [
+      "pilot-02-contact.jpg"
+    ],
+    "observations": "One pizza and board move from stand to table; original stand remains empty through final frame in 4fps review. Both children seated throughout. Unexpected subtitle overlays during dialogue.",
+    "delivery_use": "not used as whole clip due subtitle overlays; final action may use separately reviewed interval from pilot_01 before its failed tail."
+  },
+  "opening_01": {
+    "file": "opening-01.mp4",
+    "interval": [
+      0,
+      15
+    ],
+    "story_causality": "pass",
+    "object_identity": "pass",
+    "actor_positions": "pass",
+    "action": "pass",
+    "evidence": [
+      "opening-01-contact.jpg",
+      "opening-01-asr.json"
+    ],
+    "observations": "Only one pizza on service stand; empty dining table; mother standing, two children seated. Price 20 and budget 12 explicitly spoken, no transaction completed."
+  },
+  "concern": {
+    "file": "prelude-25.mp4",
+    "interval": [
+      15,
+      25
+    ],
+    "story_causality": "pass",
+    "object_identity": "pass",
+    "actor_positions": "pass",
+    "action": "pass",
+    "evidence": [
+      "concern-contact.jpg",
+      "prelude-25-asr.json"
+    ],
+    "observations": "Child addresses mother not owner; mother replies she will eat at home; owner listens; food untouched, no people enter/exit."
+  },
+  "ending_01": {
+    "file": "ending-01.mp4",
+    "interval": [
+      0,
+      10
+    ],
+    "story_causality": "pass",
+    "object_identity": "pass",
+    "actor_positions": "pass",
+    "action": "pass",
+    "evidence": [
+      "ending-01-contact.jpg",
+      "ending-01-asr.json"
+    ],
+    "observations": "Mother visibly sits in available chair. Both children seated throughout. Single pizza on dining table; service stand empty throughout. No takeout props or food transfer."
+  },
+  "decision_extension": {
+    "status": "failed_twice_same_conditions",
+    "ui_error": "出错了。无法生成视频。",
+    "known": "opening native extension to25s succeeded; subsequent25-to35s extension failed twice; no source corruption in retained prelude25",
+    "unknown": "service provides no detailed reason; no quota or model-global failure can be inferred",
+    "fallback": "independent first-frame-guided native AV shot using actual final frame of prelude25; not reported as native Extend"
+  },
+  "selected_transfer": {
+    "file": "pilot-01.mp4",
+    "first_frame": 0,
+    "end_frame": 228,
+    "seconds": 9.5,
+    "story_causality": "pass",
+    "object_identity": "pass",
+    "actor_positions": "pass",
+    "action": "pass",
+    "evidence": [
+      "transfer-detail.jpg",
+      "transfer-end-detail.jpg",
+      "pilot-01-asr.json",
+      "transfer-frames-01.jpg",
+      "transfer-frames-02.jpg",
+      "transfer-frames-03.jpg",
+      "transfer-frames-04.jpg",
+      "transfer-frames-05.jpg"
+    ],
+    "observations": "Whole visible board-and-pizza pickup and placement kept. Stand empty after placement through selected last frame. Full original15s remains fail because later second pizza; that failed tail is excluded, not altered or propagated.",
+    "additional_review": "All24fps frames from4.0 through9.0 seconds inspected as five sheets: board/pizza move together, both acting hands connected to owner, origin empty after pickup, no extra food or disconnected acting hand observed in this selected interval."
+  },
+  "decision_independent": {
+    "status": "not_used_service_rejected",
+    "ui_message": "此提示可能违反了我们关于生成未成年人相关有害内容的政策。请尝试使用其他提示或发送反馈。",
+    "inference": "Benign intended shot, no detailed trigger provided; do not infer quota failure. No further retry.",
+    "edit_decision": "Omit optional leave-and-stop beat; child concern directly motivates owner gift, completing coherent story in44.5s."
+  },
+  "final": {
+    "file": "eat-together-v2.mp4",
+    "duration": 44.5,
+    "story": "Mother and two children dine in from start; enquiry is not a completed purchase; owner hears mother sacrifice her meal and explicitly offers one whole pizza; same food delivered and mother visibly joins children.",
+    "frame_review": "Full-source contact sheets plus24fps transfer detail and join sheets",
+    "whole_film_user_acceptance": "not_reviewed",
+    "limits": [
+      "No independent auditory or phoneme-level lip-sync verification",
+      "Small texture/signage variations remain; not claimed physically exact simulation",
+      "44.5 seconds rather than original about60-second target; optional repetitive departure beat omitted"
+    ]
+  }
+}

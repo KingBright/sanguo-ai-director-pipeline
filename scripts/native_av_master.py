@@ -44,6 +44,25 @@ def inspect_clip(path, first, end):
     return fps, (v["width"], v["height"])
 
 
+def validate_continuity(manifest, raw_dir):
+    """Block declared semantic failures; this does not perform visual recognition."""
+    if not manifest.get("continuity_required", False):
+        return
+    required = ("story_causality", "object_identity", "actor_positions", "action")
+    for shot in manifest.get("shots", []):
+        review = shot.get("continuity", {})
+        failed = [name for name in required if review.get(name) != "pass"]
+        if failed or not review.get("evidence"):
+            raise ValueError(
+                f"{shot.get('id', '<unnamed>')}: continuity review incomplete or failed: "
+                f"{', '.join(failed) or 'evidence missing'}. "
+                "Review the actual footage; encoder checks cannot approve story or objects."
+            )
+        for evidence in review["evidence"]:
+            if not isinstance(evidence, str) or not (raw_dir / evidence).is_file():
+                raise ValueError(f"{shot.get('id')}: continuity evidence file missing: {evidence}")
+
+
 def master(manifest, raw_dir, output, music=None):
     if output.exists():
         raise FileExistsError(output)
@@ -52,6 +71,7 @@ def master(manifest, raw_dir, output, music=None):
     audio_mode = manifest.get("audio_mode", "native_joint_generation")
     if audio_mode not in ("native_joint_generation", "audio_conditioned_generation"):
         raise ValueError("This editor requires a native or audio-conditioned performance")
+    validate_continuity(manifest, raw_dir)
     prepared = []
     signature = None
     for shot in manifest["shots"]:
@@ -122,6 +142,8 @@ def master(manifest, raw_dir, output, music=None):
               "music": str(music) if music else None, "music_sha256": sha(music) if music else None,
               "acceptance": "candidate_requires_story_and_performance_review",
               "user_acceptance": "not_reviewed",
+              "continuity_review_required": manifest.get("continuity_required", False),
+              "continuity_review_is_visual_proof": False,
               "limits": ["Preserved native timing is not proof that the model articulated correctly.",
                          "Source mouth motion, acting, voice continuity and narrative must be reviewed."]}
     (output / "report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")

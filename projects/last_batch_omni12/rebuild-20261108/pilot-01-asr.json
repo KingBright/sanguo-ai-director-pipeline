@@ -1,0 +1,54 @@
+[
+  {
+    "path": "projects/last_batch_omni12/rebuild-20261108/pilot-01.mp4",
+    "segments": [
+      {
+        "start": 1.1,
+        "end": 5.1,
+        "text": "这份请你们坐着慢慢吃",
+        "words": [
+          {
+            "start": 1.1,
+            "end": 1.6,
+            "word": "这"
+          },
+          {
+            "start": 1.6,
+            "end": 1.86,
+            "word": "份"
+          },
+          {
+            "start": 1.86,
+            "end": 2.28,
+            "word": "请"
+          },
+          {
+            "start": 2.28,
+            "end": 2.56,
+            "word": "你们"
+          },
+          {
+            "start": 2.56,
+            "end": 4.0,
+            "word": "坐"
+          },
+          {
+            "start": 4.0,
+            "end": 4.26,
+            "word": "着"
+          },
+          {
+            "start": 4.26,
+            "end": 4.7,
+            "word": "慢慢"
+          },
+          {
+            "start": 4.7,
+            "end": 5.1,
+            "word": "吃"
+          }
+        ]
+      }
+    ]
+  }
+]

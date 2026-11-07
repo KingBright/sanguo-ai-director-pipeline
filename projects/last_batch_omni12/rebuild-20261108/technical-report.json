@@ -1,0 +1,150 @@
+{
+  "title": "一起吃",
+  "duration": 44.5,
+  "shots": [
+    {
+      "id": "price_and_mother",
+      "file": "prelude-25.mp4",
+      "first_frame": 0,
+      "end_frame": 360,
+      "text": "师傅，这一份多少钱？ / 二十。 / 我只有十二……能买半份吗？",
+      "continuity": {
+        "story_causality": "pass",
+        "object_identity": "pass",
+        "actor_positions": "pass",
+        "action": "pass",
+        "evidence": [
+          "opening-01-contact.jpg",
+          "concern-contact.jpg",
+          "prelude-25-asr.json"
+        ]
+      },
+      "source": "/Users/jinliang/Workspace/sanguo-ai-director-pipeline/projects/last_batch_omni12/rebuild-20261108/prelude-25.mp4",
+      "source_sha256": "93bdf8522983f8943913ef6d745be4cb28dade2c7363f982e432e909ceed242c",
+      "offset": 0,
+      "duration": 15.0,
+      "audio_interval": [
+        0.0,
+        15.0
+      ],
+      "video_interval": [
+        0.0,
+        15.0
+      ],
+      "color_conversion": "colorspace=all=bt709:range=tv:format=yuv420p",
+      "audio_replaced": false
+    },
+    {
+      "id": "child_and_mother_closeup",
+      "file": "prelude-closeup.mov",
+      "first_frame": 360,
+      "end_frame": 600,
+      "text": "妈妈，你也没吃晚饭。 / 妈妈回家再吃。",
+      "continuity": {
+        "story_causality": "pass",
+        "object_identity": "pass",
+        "actor_positions": "pass",
+        "action": "pass",
+        "evidence": [
+          "concern-contact.jpg",
+          "concern-closeup.jpg",
+          "prelude-25-asr.json"
+        ]
+      },
+      "review": "Static whole-image crop of the reviewed native source, only during dialogue. Original source PCM compared byte-for-byte equal. No object transfer occurs or is concealed.",
+      "source": "/Users/jinliang/Workspace/sanguo-ai-director-pipeline/projects/last_batch_omni12/rebuild-20261108/prelude-closeup.mov",
+      "source_sha256": "b2374fa9db568676366b0dc06cc3bccb1e0a339ce4fc9149a96826f08148824a",
+      "offset": 15.0,
+      "duration": 10.0,
+      "audio_interval": [
+        15.0,
+        25.0
+      ],
+      "video_interval": [
+        15.0,
+        25.0
+      ],
+      "color_conversion": "colorspace=all=bt709:range=tv:format=yuv420p",
+      "audio_replaced": false
+    },
+    {
+      "id": "same_food_served",
+      "file": "pilot-01.mp4",
+      "first_frame": 0,
+      "end_frame": 228,
+      "text": "这份请你们。坐着，慢慢吃。",
+      "continuity": {
+        "story_causality": "pass",
+        "object_identity": "pass",
+        "actor_positions": "pass",
+        "action": "pass",
+        "evidence": [
+          "transfer-detail.jpg",
+          "transfer-end-detail.jpg",
+          "pilot-01-asr.json"
+        ]
+      },
+      "review": "Only reviewed0-9.5s interval retained. Entire original15s rejected for later duplication. Transfer source and destination visible; stand becomes empty; no occluding cut during transfer.",
+      "source": "/Users/jinliang/Workspace/sanguo-ai-director-pipeline/projects/last_batch_omni12/rebuild-20261108/pilot-01.mp4",
+      "source_sha256": "90246e527624a5a51e786edad484f275289a17d8b97004422ed2296673f9ced9",
+      "offset": 25.0,
+      "duration": 9.5,
+      "audio_interval": [
+        0.0,
+        9.5
+      ],
+      "video_interval": [
+        0.0,
+        9.5
+      ],
+      "color_conversion": "colorspace=all=bt709:range=tv:format=yuv420p",
+      "audio_replaced": false
+    },
+    {
+      "id": "mother_joins",
+      "file": "ending-01.mp4",
+      "first_frame": 0,
+      "end_frame": 240,
+      "text": "妈妈，一起吃。 / 好，一起。",
+      "continuity": {
+        "story_causality": "pass",
+        "object_identity": "pass",
+        "actor_positions": "pass",
+        "action": "pass",
+        "evidence": [
+          "ending-01-contact.jpg",
+          "ending-01-asr.json"
+        ]
+      },
+      "review": "First-frame-guided native AV from actual served state. Mother visibly sits; two children remain seated; one pizza stays on table and stand stays empty.",
+      "source": "/Users/jinliang/Workspace/sanguo-ai-director-pipeline/projects/last_batch_omni12/rebuild-20261108/ending-01.mp4",
+      "source_sha256": "479e6015619975083a4420b6dca3fd4f131e42f88267be548e739e6def288773",
+      "offset": 34.5,
+      "duration": 10.0,
+      "audio_interval": [
+        0.0,
+        10.0
+      ],
+      "video_interval": [
+        0.0,
+        10.0
+      ],
+      "color_conversion": "colorspace=all=bt709:range=tv:format=yuv420p",
+      "audio_replaced": false
+    }
+  ],
+  "audio_mode": "native_joint_generation",
+  "speed": 1,
+  "verified_frames": 1068,
+  "native_pcm_preserved": true,
+  "music": null,
+  "music_sha256": null,
+  "acceptance": "candidate_requires_story_and_performance_review",
+  "user_acceptance": "not_reviewed",
+  "continuity_review_required": true,
+  "continuity_review_is_visual_proof": false,
+  "limits": [
+    "Preserved native timing is not proof that the model articulated correctly.",
+    "Source mouth motion, acting, voice continuity and narrative must be reviewed."
+  ]
+}

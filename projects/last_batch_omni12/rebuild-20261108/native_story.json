@@ -1,0 +1,81 @@
+{
+  "title": "一起吃",
+  "audio_mode": "native_joint_generation",
+  "continuity_required": true,
+  "shots": [
+    {
+      "id": "price_and_mother",
+      "file": "prelude-25.mp4",
+      "first_frame": 0,
+      "end_frame": 360,
+      "text": "师傅，这一份多少钱？ / 二十。 / 我只有十二……能买半份吗？",
+      "continuity": {
+        "story_causality": "pass",
+        "object_identity": "pass",
+        "actor_positions": "pass",
+        "action": "pass",
+        "evidence": [
+          "opening-01-contact.jpg",
+          "concern-contact.jpg",
+          "prelude-25-asr.json"
+        ]
+      }
+    },
+    {
+      "id": "child_and_mother_closeup",
+      "file": "prelude-closeup.mov",
+      "first_frame": 360,
+      "end_frame": 600,
+      "text": "妈妈，你也没吃晚饭。 / 妈妈回家再吃。",
+      "continuity": {
+        "story_causality": "pass",
+        "object_identity": "pass",
+        "actor_positions": "pass",
+        "action": "pass",
+        "evidence": [
+          "concern-contact.jpg",
+          "concern-closeup.jpg",
+          "prelude-25-asr.json"
+        ]
+      },
+      "review": "Static whole-image crop of the reviewed native source, only during dialogue. Original source PCM compared byte-for-byte equal. No object transfer occurs or is concealed."
+    },
+    {
+      "id": "same_food_served",
+      "file": "pilot-01.mp4",
+      "first_frame": 0,
+      "end_frame": 228,
+      "text": "这份请你们。坐着，慢慢吃。",
+      "continuity": {
+        "story_causality": "pass",
+        "object_identity": "pass",
+        "actor_positions": "pass",
+        "action": "pass",
+        "evidence": [
+          "transfer-detail.jpg",
+          "transfer-end-detail.jpg",
+          "pilot-01-asr.json"
+        ]
+      },
+      "review": "Only reviewed0-9.5s interval retained. Entire original15s rejected for later duplication. Transfer source and destination visible; stand becomes empty; no occluding cut during transfer."
+    },
+    {
+      "id": "mother_joins",
+      "file": "ending-01.mp4",
+      "first_frame": 0,
+      "end_frame": 240,
+      "text": "妈妈，一起吃。 / 好，一起。",
+      "continuity": {
+        "story_causality": "pass",
+        "object_identity": "pass",
+        "actor_positions": "pass",
+        "action": "pass",
+        "evidence": [
+          "ending-01-contact.jpg",
+          "ending-01-asr.json"
+        ]
+      },
+      "review": "First-frame-guided native AV from actual served state. Mother visibly sits; two children remain seated; one pizza stays on table and stand stays empty."
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+[
+  {
+    "path": "projects/last_batch_omni12/rebuild-20261108/ending-01.mp4",
+    "segments": [
+      {
+        "start": 3.09,
+        "end": 4.69,
+        "text": "妈妈 一起吃",
+        "words": [
+          {
+            "start": 3.09,
+            "end": 3.59,
+            "word": "妈"
+          },
+          {
+            "start": 3.59,
+            "end": 3.83,
+            "word": "妈"
+          },
+          {
+            "start": 3.83,
+            "end": 4.23,
+            "word": " 一"
+          },
+          {
+            "start": 4.23,
+            "end": 4.41,
+            "word": "起"
+          },
+          {
+            "start": 4.41,
+            "end": 4.69,
+            "word": "吃"
+          }
+        ]
+      },
+      {
+        "start": 4.69,
+        "end": 6.25,
+        "text": "好 一起",
+        "words": [
+          {
+            "start": 4.69,
+            "end": 5.55,
+            "word": "好"
+          },
+          {
+            "start": 5.55,
+            "end": 5.99,
+            "word": " 一"
+          },
+          {
+            "start": 5.99,
+            "end": 6.25,
+            "word": "起"
+          }
+        ]
+      }
+    ]
+  }
+]
