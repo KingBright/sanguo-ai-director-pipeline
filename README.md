@@ -134,3 +134,7 @@ python3 scripts/install_audio_skills.py --client codex --client antigravity --cl
 在新会话中说：“用 director-playground 做一个收集三枚金币再回到飞船的小游戏，支持方向键和触屏，先保留私有草稿，试玩后导出源码 ZIP。”也可让它修改已有 Playground 项目。
 
 [技能说明](.agents/skills/director-playground/SKILL.md)涵盖创建、修改、真实试玩和ZIP导出。语音或配乐可在导出后的项目里按需集成；不宣称网站支持未验证的音频上传或公开 API。技能安装不会复制登录会话，也不保证账号具备创建资格。当前地区、年龄和额度要求见[官方帮助](https://playground.google/helpcenter)。
+
+### Flow Omni 1.2 Flash 原生画音接续
+
+`director-story` 已加入[实测新模型与接续操作](.agents/skills/director-story/references/flow-omni12.md)。[《最后一炉》](projects/last_batch_omni12/story.md)完成54.9秒候选片，原生画音同区间剪辑；[制作记录](projects/last_batch_omni12/production.json)列出接续时长限制、返工、下载方式及未完成的口型/音色验收。实际媒体保留本地，不上传大视频到Git。

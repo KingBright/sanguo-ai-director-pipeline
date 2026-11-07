@@ -1,0 +1,22 @@
+{
+  "title": "最后一炉",
+  "audio_mode": "native_joint_generation",
+  "shots": [
+    {
+      "id": "opening_and_reveal",
+      "file": "02-chain.mp4",
+      "first_frame": 0,
+      "end_frame": 598,
+      "text": "这个……能切成八块吗？ / 切八块，也不会变多啊。 / 我知道。 / 他们说，分得细一点，就能吃慢一点。",
+      "review": "Stable room and identities at sampled frames; Mandarin ASR matched; phoneme-level lip sync not approved."
+    },
+    {
+      "id": "generosity_and_handoff",
+      "file": "07-tail-native.mp4",
+      "first_frame": 0,
+      "end_frame": 720,
+      "text": "这份，也带上吧。 / 那……多少钱？ / 下回，带他们进来吃。 / 谢谢。 / 来，趁热吃。",
+      "review": "Native continuation from first chain tail; box reaches children on screen. Extra pizzas persist on counter; detailed lip sync and voice consistency not verified."
+    }
+  ]
+}
