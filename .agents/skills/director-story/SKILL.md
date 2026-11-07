@@ -19,6 +19,8 @@ description: 将故事制作成剧情短片或动画，先设计人物目标、�
 
 需要完整制作与验收标准时，读 [故事与表演制作方法](references/story-performance-method.md)。
 
+使用 Google Flow Omni 1.2 Flash 制作原生画音或接续长片时，读 [Flow 新模型与接续操作](references/flow-omni12.md)，以网页实际模型和报价为准。
+
 ## 执行能力与边界
 
 - `scripts/episode_audio.py` 在已有 Qwen3-TTS 环境和本地模型目录中建立原创合成音色，再用 Base 固定身份。需要 torch、qwen-tts、soundfile、numpy。不会自动下载模型。当前表演控制来自合成参考声与台词标点，Base 没有独立情绪指令接口；`delivery` 是试演验收标准，不能声称已作为模型参数执行。

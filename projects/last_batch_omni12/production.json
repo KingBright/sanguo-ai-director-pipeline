@@ -1,0 +1,14 @@
+{
+  "project_url": "https://flow.google.com/project/248021b6-0135-41f9-baa0-c10b2ce850d9",
+  "model": "Omni 1.2 Flash",
+  "browser_space": 223,
+  "first_clip": {
+    "file": "01-native.mp4",
+    "duration": 15.04,
+    "sha256": "fe92083fdb91b31b4c37e4ab1e3fab335319c1f221532717bd5b41de7024ab7c",
+    "asr": "01-asr.json",
+    "visual_review": "1fps contact sheet: stable faces and room; no visible abrupt cuts; detailed phoneme sync not verified"
+  },
+  "pending": "first native Extend 10s submitted; observe original scene; no duplicate request",
+  "target_seconds_about": 60
+}
