@@ -121,3 +121,16 @@ python3 scripts/native_av_master.py /path/to/reviewed-edit.json --raw-dir output
 语音脚本使用已安装的 Qwen3-TTS VoiceDesign/Base，后期需要 ffmpeg、numpy、soundfile。当前 Qwen Base 以合成参考声与标点控制表演，没有独立情绪指令接口；不能把 `delivery` 字段声称为已经执行的模型参数。精细表演仍需试演与选段。
 
 后期保留语音自然速度，根据实际对白和反应时长剪完整原帧；视频覆盖不足会报错要求补镜。制片时保存逐帧来源校验与独立声轨；需要字幕时输出独立 SRT，不烧入画面。禁止局部贴帧、按音量拉扯嘴部、为评分加入测试音。`video_quality_critic.py --offline-only` 只给诊断，始终要求声画复核，不能凭高分批准成片。
+
+## Google Playground 游戏创作
+
+`director-playground` 接入 [Google Labs Playground](https://playground.google/)，通过浏览器创建、对话修改、试玩并导出网页游戏。它与 AI Studio 的模型 Playground、Project Genie 分开，保留现有语音、配乐和视频能力。
+
+```sh
+python3 scripts/install_audio_skills.py --client codex --client antigravity --client dsh --skill director-playground
+python3 scripts/install_audio_skills.py --client codex --client antigravity --client dsh --skill director-playground --check
+```
+
+在新会话中说：“用 director-playground 做一个收集三枚金币再回到飞船的小游戏，支持方向键和触屏，先保留私有草稿，试玩后导出源码 ZIP。”也可让它修改已有 Playground 项目。
+
+[技能说明](.agents/skills/director-playground/SKILL.md)涵盖创建、修改、真实试玩和ZIP导出。语音或配乐可在导出后的项目里按需集成；不宣称网站支持未验证的音频上传或公开 API。技能安装不会复制登录会话，也不保证账号具备创建资格。当前地区、年龄和额度要求见[官方帮助](https://playground.google/helpcenter)。
