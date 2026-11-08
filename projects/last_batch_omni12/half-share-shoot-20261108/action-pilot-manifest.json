@@ -1,0 +1,42 @@
+{
+  "title": "剩下的半份：切分与移盘动作试拍（非完整短片）",
+  "audio_mode": "native_joint_generation",
+  "continuity_required": true,
+  "shots": [
+    {
+      "id": "04-cut",
+      "file": "raw/04-cut.mp4",
+      "first_frame": 0,
+      "end_frame": 144,
+      "text": "No scripted dialogue; physical action pilot only.",
+      "continuity": {
+        "story_causality": "pass",
+        "object_identity": "pass",
+        "actor_positions": "pass",
+        "action": "pass",
+        "evidence": [
+          "reviews/04-cut-contact.jpg",
+          "reviews/04-cut-action.jpg"
+        ]
+      },
+      "review": "Visual review of this physical pilot only; no full-film approval."
+    },
+    {
+      "id": "05-transfer",
+      "file": "raw/05-transfer.mp4",
+      "first_frame": 0,
+      "end_frame": 192,
+      "text": "No scripted dialogue; physical action pilot only.",
+      "continuity": {
+        "story_causality": "pass",
+        "object_identity": "pass",
+        "actor_positions": "pass",
+        "action": "pass",
+        "evidence": [
+          "reviews/05-transfer-contact.jpg"
+        ]
+      },
+      "review": "Visual review of this physical pilot only; no full-film approval."
+    }
+  ]
+}

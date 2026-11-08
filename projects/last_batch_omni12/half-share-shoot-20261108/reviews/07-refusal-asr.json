@@ -1,0 +1,91 @@
+[
+  {
+    "path": "projects/last_batch_omni12/half-share-shoot-20261108/raw/07-refusal.mp4",
+    "segments": [
+      {
+        "start": 1.52,
+        "end": 3.36,
+        "text": "妈妈 你也吃",
+        "words": [
+          {
+            "start": 1.52,
+            "end": 2.06,
+            "word": "妈"
+          },
+          {
+            "start": 2.06,
+            "end": 2.28,
+            "word": "妈"
+          },
+          {
+            "start": 2.28,
+            "end": 2.86,
+            "word": " 你"
+          },
+          {
+            "start": 2.86,
+            "end": 3.06,
+            "word": "也"
+          },
+          {
+            "start": 3.06,
+            "end": 3.36,
+            "word": "吃"
+          }
+        ]
+      },
+      {
+        "start": 3.36,
+        "end": 7.97,
+        "text": "你们先吃 妈妈回家再吃",
+        "words": [
+          {
+            "start": 3.36,
+            "end": 4.36,
+            "word": "你们"
+          },
+          {
+            "start": 5.61,
+            "end": 5.91,
+            "word": "先"
+          },
+          {
+            "start": 5.91,
+            "end": 6.23,
+            "word": "吃"
+          },
+          {
+            "start": 6.51,
+            "end": 6.99,
+            "word": " 妈"
+          },
+          {
+            "start": 6.99,
+            "end": 7.11,
+            "word": "妈"
+          },
+          {
+            "start": 7.11,
+            "end": 7.25,
+            "word": "回"
+          },
+          {
+            "start": 7.25,
+            "end": 7.47,
+            "word": "家"
+          },
+          {
+            "start": 7.47,
+            "end": 7.61,
+            "word": "再"
+          },
+          {
+            "start": 7.61,
+            "end": 7.97,
+            "word": "吃"
+          }
+        ]
+      }
+    ]
+  }
+]

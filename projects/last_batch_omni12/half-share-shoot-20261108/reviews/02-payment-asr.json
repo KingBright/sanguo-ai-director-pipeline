@@ -1,0 +1,71 @@
+[
+  {
+    "path": "projects/last_batch_omni12/half-share-shoot-20261108/raw/02-payment.mp4",
+    "segments": [
+      {
+        "start": 2.18,
+        "end": 3.94,
+        "text": "师傅要半份",
+        "words": [
+          {
+            "start": 2.18,
+            "end": 2.78,
+            "word": "师"
+          },
+          {
+            "start": 2.78,
+            "end": 3.02,
+            "word": "傅"
+          },
+          {
+            "start": 3.02,
+            "end": 3.4,
+            "word": "要"
+          },
+          {
+            "start": 3.4,
+            "end": 3.62,
+            "word": "半"
+          },
+          {
+            "start": 3.62,
+            "end": 3.94,
+            "word": "份"
+          }
+        ]
+      },
+      {
+        "start": 4.54,
+        "end": 6.52,
+        "text": "好 半份十块",
+        "words": [
+          {
+            "start": 4.54,
+            "end": 5.14,
+            "word": "好"
+          },
+          {
+            "start": 5.5,
+            "end": 5.74,
+            "word": " 半"
+          },
+          {
+            "start": 5.74,
+            "end": 6.0,
+            "word": "份"
+          },
+          {
+            "start": 6.0,
+            "end": 6.3,
+            "word": "十"
+          },
+          {
+            "start": 6.3,
+            "end": 6.52,
+            "word": "块"
+          }
+        ]
+      }
+    ]
+  }
+]

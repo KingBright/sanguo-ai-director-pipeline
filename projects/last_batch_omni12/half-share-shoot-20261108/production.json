@@ -1,0 +1,161 @@
+{
+  "title": "剩下的半份",
+  "status": "waiting_for_provider_manual_check",
+  "approved_story": "../half-share-story/screenplay.md",
+  "provider": "Google Flow",
+  "model_observed": "Omni 1.2 Flash",
+  "provider_project_url": "https://flow.google.com/project/4009e340-23c6-4872-bae8-49f510e3af9b",
+  "browser_task_space": 596,
+  "active_page": "p2",
+  "audio_mode": "native_joint_generation",
+  "speed": 1,
+  "blocking_policy": "Do not master with failed or unverified causal actions; preserve same picture/audio intervals.",
+  "staging_adjustment": "Gift B on its original wooden serving board to reduce extra transfers. The original board leaves counter and reaches table; counter must become empty. Story and dialogue unchanged.",
+  "takes": [
+    {
+      "id": "01-entry",
+      "file": "raw/01-entry.mp4",
+      "full_take": "rejected",
+      "selected_frames": [
+        0,
+        84
+      ],
+      "selected_status": "entry action and food count visually checked",
+      "rejection": "Duplicate whole pizza appears around 3.6s; generated utterance after 3.63s. Do not use bad ending as a reference.",
+      "evidence": [
+        "reviews/01-entry-contact.jpg",
+        "reviews/01-entry-tail.jpg"
+      ]
+    },
+    {
+      "id": "02-payment",
+      "file": "raw/02-payment.mp4",
+      "full_take": "candidate",
+      "observed": "Mother counts money, orders half; owner quotes ten, receives payment; one whole untouched pizza.",
+      "asr": "reviews/02-payment-asr.json",
+      "evidence": [
+        "reviews/02-payment-contact.jpg"
+      ]
+    },
+    {
+      "id": "04-cut",
+      "file": "raw/04-cut.mp4",
+      "full_take": "candidate",
+      "observed": "Knife cuts original whole into two complementary semicircles on board; white plate stays empty.",
+      "evidence": [
+        "reviews/04-cut-contact.jpg",
+        "reviews/04-cut-action.jpg"
+      ]
+    },
+    {
+      "id": "05-transfer",
+      "file": "raw/05-transfer.mp4",
+      "full_take": "candidate",
+      "observed": "Knife set down, right half A lifted with two connected hands and lowered onto white plate; left half B remains on board.",
+      "evidence": [
+        "reviews/05-transfer-contact.jpg"
+      ]
+    },
+    {
+      "id": "06-seating",
+      "status": "not_generated",
+      "attempts": [
+        {
+          "result": "provider content-filter block, ordinary family dining prompt"
+        },
+        {
+          "result": "provider unusual activity"
+        }
+      ],
+      "evidence": [
+        "reviews/06-seating-unusual-activity.png"
+      ]
+    },
+    {
+      "id": "07-refusal",
+      "file": "raw/07-refusal.mp4",
+      "full_take": "rejected_tail",
+      "selected_frames": [
+        0,
+        216
+      ],
+      "observed": "Boy invites mother, mother looks at portion, pushes plate toward children and declines; owner notices. After selected interval board/food position drifts.",
+      "asr": "reviews/07-refusal-asr.json",
+      "evidence": [
+        "reviews/07-refusal-contact.jpg",
+        "reviews/07-mouth-timing.jpg"
+      ]
+    },
+    {
+      "id": "08-native-gift",
+      "status": "failed_twice",
+      "parent_upload": "raw/07-refusal-selected9s.mp4",
+      "requested_added_seconds": 10,
+      "mode": "native Extend with desired-state image ingredient",
+      "ingredient": "keyframes/gift-end-board.png",
+      "first_attempt": "provider: 出错了。无法生成视频。",
+      "evidence": [
+        "reviews/08-extend-failure.png"
+      ],
+      "second_attempt": "Same generic provider generation failure after fresh page with only one Flow tab; do not retry unchanged."
+    },
+    {
+      "id": "08-gift-frameguided",
+      "status": "provider_unusual_activity",
+      "mode": "independent first-last-frame generation; NOT native Extend",
+      "first_frame_reference": "keyframes/family-half.png",
+      "last_frame_reference": "keyframes/gift-end-board.png",
+      "requested_seconds": 10,
+      "prompt": "prompts/08-gift-frameguided.txt",
+      "error": "我们发现了一些异常活动。请注意，修改页面的浏览器扩展程序可能会导致问题。",
+      "evidence": [
+        "reviews/08-frameguided-unusual-activity.png"
+      ],
+      "retry_prepared_in_browser": true
+    },
+    {
+      "id": "09-owner-reason",
+      "status": "prompt_ready_not_generated",
+      "prompt": "prompts/09-owner-reason.txt"
+    },
+    {
+      "id": "10-shared-bite",
+      "status": "prompt_ready_not_generated",
+      "prompt": "prompts/10-shared-bite.txt"
+    }
+  ],
+  "verification_limits": [
+    "ASR supports dialogue completeness, not independent hearing or timbre acceptance.",
+    "Mouth open/close and speaker assignment inspected on acting pilot; phoneme-level lip sync unverified.",
+    "No complete film exists yet; previous rejected films remain rejected."
+  ],
+  "native_extend_scene_url": "https://flow.google.com/project/4009e340-23c6-4872-bae8-49f510e3af9b/scene/9e828cb7-43d9-49ef-aa4c-3f30d7362acb",
+  "music": {
+    "status": "blocked_region",
+    "provider": "Google Flow Music",
+    "observed_url": "https://www.flowmusic.app/",
+    "error": "Flow Music isn't available in your country",
+    "evidence": "reviews/music-region-unavailable.png",
+    "gemini_api_configured": false
+  },
+  "browser_control": "handed_to_user",
+  "required_user_step": "Click Generate once on prepared gift shot; report whether generation starts or same error remains. No new creative approval requested.",
+  "delivered_full_film": false,
+  "action_pilot": {
+    "file": "action-pilot-14s.mp4",
+    "duration": 14,
+    "stage": "physical_action_pilot_only",
+    "full_film": false,
+    "technical_report": "reviews/action-pilot-technical-report.json",
+    "decode_check": "passed"
+  },
+  "keyframe_roles": {
+    "cut-start-v0.png": "rejected composition: plate cropped and undersized",
+    "entry-end-actual.png": "rejected tail: duplicate pizza; never use for next shot",
+    "entry-selected-end.png": "actual safe entry interval ending",
+    "refusal-end-actual.png": "rejected later drift; do not propagate",
+    "refusal-selected-end.png": "actual before drift; upload failed",
+    "gift-end-board.png": "planned gifted state, not generated animation evidence",
+    "shared-final.png": "planned final food accounting, not generated animation evidence"
+  }
+}

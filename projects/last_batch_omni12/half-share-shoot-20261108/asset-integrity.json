@@ -1,0 +1,280 @@
+{
+  "artifacts": [
+    {
+      "file": ".gitignore",
+      "bytes": 21,
+      "sha256": "67111143dd8bd98eb14fcd7248952b46c17005a06bc0b473272471ef33f71cc0"
+    },
+    {
+      "file": "action-pilot-14s.mp4",
+      "bytes": 4443539,
+      "sha256": "46dd80257ee72aa167528d2dfe1d69c05cf901360bf0d95131cf1e709ff01717"
+    },
+    {
+      "file": "action-pilot-manifest.json",
+      "bytes": 1227,
+      "sha256": "4e6a0834a6ce76f8996f0024789ddfc667546bc18e9bd930b4aef724ad1f5951"
+    },
+    {
+      "file": "keyframes/cut-end-actual.png",
+      "bytes": 1140020,
+      "sha256": "39e40d4ffcefd65659ea7711b324a26b01a91a8b2ba06c85c691634d143d7d9d"
+    },
+    {
+      "file": "keyframes/cut-end.png",
+      "bytes": 2131703,
+      "sha256": "8f8235f529a270f1cc1877de52bdd6523e4dcbecd3379058fa7f10b22706357c"
+    },
+    {
+      "file": "keyframes/cut-start-v0.png",
+      "bytes": 2283346,
+      "sha256": "d0a28ca10567eb5143c6e0c3d3ca7c50f4da7ff76b71b574c58acf2a39d27d55"
+    },
+    {
+      "file": "keyframes/cut-start.png",
+      "bytes": 2241612,
+      "sha256": "409547ed47cf4d2b0a3c5603fa5017b76d31fc952e34eef62f9fc3184eaf5d3e"
+    },
+    {
+      "file": "keyframes/entry-end-actual.png",
+      "bytes": 1174427,
+      "sha256": "e5605c24fd910b9a78f846b76bdc91dc217abcdc808bce7beca1c7b0f1a003f0"
+    },
+    {
+      "file": "keyframes/entry-selected-end.png",
+      "bytes": 1191276,
+      "sha256": "a802012d503752f5056e9bf3a981aea48abc5de880fc9583aff6c8309f5e80b6"
+    },
+    {
+      "file": "keyframes/entry-start.png",
+      "bytes": 2501086,
+      "sha256": "98411675279687a42ab23bf0dcc79002efa7215617283b4442a362c56acbdd58"
+    },
+    {
+      "file": "keyframes/family-half.png",
+      "bytes": 2386648,
+      "sha256": "3b99e90319b2e2dbb7c70cbfe9a79483a55fa103ca78f18c1135fde2621fbddf"
+    },
+    {
+      "file": "keyframes/gift-end-board.png",
+      "bytes": 2365142,
+      "sha256": "476e07c962d12d3f66e77c5d07c751b51b032a9c44cdb667072c12652b03f734"
+    },
+    {
+      "file": "keyframes/payment-start.png",
+      "bytes": 2526947,
+      "sha256": "bd80a963d8f4a22bd467014ec786bd342b767f92877b644e7eed3a635e22753e"
+    },
+    {
+      "file": "keyframes/refusal-end-actual.png",
+      "bytes": 1171225,
+      "sha256": "463619c1d24d9a037e67982e385ecf2cc4f7197eee7aa47d9b9f00fab56a1911"
+    },
+    {
+      "file": "keyframes/refusal-selected-end.png",
+      "bytes": 1201212,
+      "sha256": "d980e72b16de1484d77edd8db175ae62a576a0626268005566879c6c6a5085f9"
+    },
+    {
+      "file": "keyframes/serve-start.png",
+      "bytes": 2443396,
+      "sha256": "5a5e4f6eef2158dccedf1f6eeb7f0d33f3a9ff1fd998f57b3fa4d745d39216cb"
+    },
+    {
+      "file": "keyframes/shared-final.png",
+      "bytes": 2234150,
+      "sha256": "da218d19bd85ec9189de2c33011ed552900431c2da5d3b2e3b13f755cf1925cb"
+    },
+    {
+      "file": "keyframes/transfer-end-actual.png",
+      "bytes": 1209155,
+      "sha256": "ed2385c8dffd4adf6d966cb9304e5c59dc4ca1d3097bb6e5134a5519ebb6e99b"
+    },
+    {
+      "file": "keyframes/transfer-end.png",
+      "bytes": 2189862,
+      "sha256": "056e2bffe3c8569fe0e5ea9f797e7b3b003ee8c8c87d6bf94e06f984c8e6b307"
+    },
+    {
+      "file": "production.json",
+      "bytes": 6299,
+      "sha256": "9c5612e4b53ec82efff8b3744a2b3a3f4a4f2978c03dafc3867e5fb872a1dc4e"
+    },
+    {
+      "file": "prompts/01-entry.txt",
+      "bytes": 1173,
+      "sha256": "4af5db37f0109f0846c2176c0e2d2ec83ea267826747e5b130ae3f6a10834cf9"
+    },
+    {
+      "file": "prompts/02-payment.txt",
+      "bytes": 1523,
+      "sha256": "08d0b129a0f0aa11fee768e35f46056b4781780f1a3e3b057c81dafc6c277a36"
+    },
+    {
+      "file": "prompts/04-cut.txt",
+      "bytes": 979,
+      "sha256": "02a285fc35f8be9df44538497874b50ae3f2f5008f3a9c135d388520e5a37f03"
+    },
+    {
+      "file": "prompts/05-transfer.txt",
+      "bytes": 1229,
+      "sha256": "ea27d6126fbe24b1a86c8f6ccb1c0e2725958b58e876e74038e4d8d5f5a15475"
+    },
+    {
+      "file": "prompts/06-seating-v2.txt",
+      "bytes": 939,
+      "sha256": "9c7380e3fde58817aad0ba513bd3662f1c49f27e95c7226d399a7055954b02c4"
+    },
+    {
+      "file": "prompts/06-seating.txt",
+      "bytes": 1501,
+      "sha256": "8b22015f3b56f990571f54581c4687aa03a647d6ed721ed8932a72bdf714d149"
+    },
+    {
+      "file": "prompts/07-refusal.txt",
+      "bytes": 1716,
+      "sha256": "cc9539d50a12a7d7127c8b2bec902431fa85bb70b4688139c45c7cf991217ac8"
+    },
+    {
+      "file": "prompts/08-gift-frameguided.txt",
+      "bytes": 1041,
+      "sha256": "2e1b3023a0a94c3f95eb2cebf26083ade866fdc543bc307723e30bfa03ee32b4"
+    },
+    {
+      "file": "prompts/08-native-gift.txt",
+      "bytes": 1230,
+      "sha256": "c937f9af10efa0c5077a01c83be6d22a16b4cda77ba12739ffd769448e4ca0fd"
+    },
+    {
+      "file": "prompts/09-owner-reason.txt",
+      "bytes": 1095,
+      "sha256": "043e447e26b735d43e201f00c4dd71b682f727963c0c3252e43c8c578344c92c"
+    },
+    {
+      "file": "prompts/10-shared-bite.txt",
+      "bytes": 1194,
+      "sha256": "981c1e872e0223899bea7722aa4ee669c2eb352dc68776b8844913e318ad6050"
+    },
+    {
+      "file": "raw/01-entry.mp4",
+      "bytes": 4787100,
+      "sha256": "fc223aeca98e0623c2b04d5b7019c003c3881df0994b200a508dad011cc583ee"
+    },
+    {
+      "file": "raw/02-payment.mp4",
+      "bytes": 5143152,
+      "sha256": "462e275be0c5e41347530a96fde120308a0a7aff2c5079725f0686749cc708c1"
+    },
+    {
+      "file": "raw/04-cut.mp4",
+      "bytes": 2782496,
+      "sha256": "a9c037ffaa6477cc4ac35d9fbb0b3b78120e5e7802c8963a71e0596d3fa47e90"
+    },
+    {
+      "file": "raw/05-transfer.mp4",
+      "bytes": 3527815,
+      "sha256": "0fe6565924227c09769b2f79a804b14156fbc4b78321304ebff8308e6601bf68"
+    },
+    {
+      "file": "raw/07-refusal-selected9s.mp4",
+      "bytes": 4018064,
+      "sha256": "81909395349f513f7f1a88ebca5ee62a2a5a69a1b3b8149f0a3e93aad657832f"
+    },
+    {
+      "file": "raw/07-refusal.mp4",
+      "bytes": 6996362,
+      "sha256": "21ab09d599334a7438749036b322335a6a41648767005c3818c66d56e5123921"
+    },
+    {
+      "file": "reviews/01-entry-asr.json",
+      "bytes": 335,
+      "sha256": "18a33844eac6241c8e31724fd487af99dbf1bd39b02595f000ef4a1850c7aa0b"
+    },
+    {
+      "file": "reviews/01-entry-contact.jpg",
+      "bytes": 321352,
+      "sha256": "26ab459d26a7295eb84a65b40f27770e0df2c9f74dac8e04c02050ad45ada6d8"
+    },
+    {
+      "file": "reviews/01-entry-tail.jpg",
+      "bytes": 197577,
+      "sha256": "e6318222f4a671bfa308c2b634c6a71b4b2b2f031cd597e4aa0abcc54f44591c"
+    },
+    {
+      "file": "reviews/02-payment-asr.json",
+      "bytes": 1395,
+      "sha256": "f968b73f30be7d4ada372246ad87e4a700e72bf4067442b2cb56c1d5c6356f6e"
+    },
+    {
+      "file": "reviews/02-payment-contact.jpg",
+      "bytes": 391465,
+      "sha256": "fd55e3d56e3dd39da9045e0f38885b2bb39cd7125a6ff89cc9fc01a074fb0866"
+    },
+    {
+      "file": "reviews/04-cut-action.jpg",
+      "bytes": 364017,
+      "sha256": "f888c81ff28f991b33e66e528d4a4eb56e88e3e46a7c295208de3351432fbc9f"
+    },
+    {
+      "file": "reviews/04-cut-contact.jpg",
+      "bytes": 259954,
+      "sha256": "af5c5d6f577eb1f48e27f6d103b93c72a289057e6f7d604e9cd2516fc651b0ae"
+    },
+    {
+      "file": "reviews/05-transfer-contact.jpg",
+      "bytes": 326512,
+      "sha256": "8bdb48f52f24e78e113623d1284c636e317e428c2c086d50104d1794978ea781"
+    },
+    {
+      "file": "reviews/06-seating-unusual-activity.png",
+      "bytes": 1282348,
+      "sha256": "57fbe154d725a465e7817f3523daca9ab82b1cac36835543ca85ba5fd7176295"
+    },
+    {
+      "file": "reviews/07-mouth-timing.jpg",
+      "bytes": 362454,
+      "sha256": "a2dd7038a2e2f5b88f7963ef2b9cba42acaef4210bfb556909915f2a8c831edb"
+    },
+    {
+      "file": "reviews/07-refusal-asr.json",
+      "bytes": 1834,
+      "sha256": "3ca9a5d241852bdc9586bd8c6dab132f6bc7800f6d0ddfb116ff491284dbe76f"
+    },
+    {
+      "file": "reviews/07-refusal-contact.jpg",
+      "bytes": 372223,
+      "sha256": "39e9177bd2947cf57dc12e47f3e725803b4acc20ee82d83832a509d10b7f0c1b"
+    },
+    {
+      "file": "reviews/08-extend-failure.png",
+      "bytes": 713745,
+      "sha256": "5c95711a8f16732698e8dc268196419a3d208d99a2f01a061d4c24ffe61c2542"
+    },
+    {
+      "file": "reviews/08-extend-retry-failure.png",
+      "bytes": 713406,
+      "sha256": "999df219d38fc7cfb422f8fc17aeb9e4fd986654e30fbf6d335bf48d70b1416e"
+    },
+    {
+      "file": "reviews/08-frameguided-unusual-activity.png",
+      "bytes": 1000595,
+      "sha256": "8295abab67a0859a7d1376cd9031d497afc44141bca1f279efd68adb757d0c2d"
+    },
+    {
+      "file": "reviews/action-pilot-technical-report.json",
+      "bytes": 2610,
+      "sha256": "0651e1ba5d35c8e7effc0168352dbe4441b5df54d6794dca59b5f25a526fa678"
+    },
+    {
+      "file": "reviews/actions-asr.json",
+      "bytes": 230,
+      "sha256": "bd080bbe9754f19a2aba98a7af2b35d76844a9ef476a4bc2d71f1940a728626a"
+    },
+    {
+      "file": "reviews/music-region-unavailable.png",
+      "bytes": 324250,
+      "sha256": "f80c09998b988e83ea9c65801681f0ba5da8582973019a340406d42c0e793bd4"
+    }
+  ],
+  "note": "Hashes establish file identity only, not story or lip-sync acceptance."
+}

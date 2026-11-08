@@ -1,0 +1,84 @@
+{
+  "title": "剩下的半份：切分与移盘动作试拍（非完整短片）",
+  "duration": 14.0,
+  "shots": [
+    {
+      "id": "04-cut",
+      "file": "raw/04-cut.mp4",
+      "first_frame": 0,
+      "end_frame": 144,
+      "text": "No scripted dialogue; physical action pilot only.",
+      "continuity": {
+        "story_causality": "pass",
+        "object_identity": "pass",
+        "actor_positions": "pass",
+        "action": "pass",
+        "evidence": [
+          "reviews/04-cut-contact.jpg",
+          "reviews/04-cut-action.jpg"
+        ]
+      },
+      "review": "Visual review of this physical pilot only; no full-film approval.",
+      "source": "raw/04-cut.mp4",
+      "source_sha256": "a9c037ffaa6477cc4ac35d9fbb0b3b78120e5e7802c8963a71e0596d3fa47e90",
+      "offset": 0,
+      "duration": 6.0,
+      "audio_interval": [
+        0.0,
+        6.0
+      ],
+      "video_interval": [
+        0.0,
+        6.0
+      ],
+      "color_conversion": "colorspace=all=bt709:range=tv:format=yuv420p",
+      "audio_replaced": false
+    },
+    {
+      "id": "05-transfer",
+      "file": "raw/05-transfer.mp4",
+      "first_frame": 0,
+      "end_frame": 192,
+      "text": "No scripted dialogue; physical action pilot only.",
+      "continuity": {
+        "story_causality": "pass",
+        "object_identity": "pass",
+        "actor_positions": "pass",
+        "action": "pass",
+        "evidence": [
+          "reviews/05-transfer-contact.jpg"
+        ]
+      },
+      "review": "Visual review of this physical pilot only; no full-film approval.",
+      "source": "raw/05-transfer.mp4",
+      "source_sha256": "0fe6565924227c09769b2f79a804b14156fbc4b78321304ebff8308e6601bf68",
+      "offset": 6.0,
+      "duration": 8.0,
+      "audio_interval": [
+        0.0,
+        8.0
+      ],
+      "video_interval": [
+        0.0,
+        8.0
+      ],
+      "color_conversion": "colorspace=all=bt709:range=tv:format=yuv420p",
+      "audio_replaced": false
+    }
+  ],
+  "audio_mode": "native_joint_generation",
+  "speed": 1,
+  "verified_frames": 336,
+  "native_pcm_preserved": true,
+  "music": null,
+  "music_sha256": null,
+  "acceptance": "candidate_requires_story_and_performance_review",
+  "user_acceptance": "not_reviewed",
+  "continuity_review_required": true,
+  "continuity_review_is_visual_proof": false,
+  "limits": [
+    "Preserved native timing is not proof that the model articulated correctly.",
+    "Source mouth motion, acting, voice continuity and narrative must be reviewed."
+  ],
+  "source_path_note": "Source paths made project-relative in this portable copy; original report retained locally."
+}
