@@ -56,3 +56,6 @@ Thumbs.db
 
 .director_server.pid
 .director_server.log
+
+# Local live quota snapshot
+/colab_quota_cache.json

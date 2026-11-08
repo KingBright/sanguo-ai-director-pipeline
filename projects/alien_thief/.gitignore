@@ -1,0 +1,9 @@
+# Decoded pixels match the already tracked PNG anchors; keep local source copies.
+/characters/images/kato_anchor.jpg
+/characters/images/libei_anchor.jpg
+/characters/images/pinkweirdo_anchor.jpg
+/characters/images/xiaodai_anchor.jpg
+/characters/images/ximu_anchor.jpg
+
+# Byte-identical to ep01_11_kf.jpg; retain the canonical filename in Git.
+/episodes/ep01_lottery_heist/keyframes/ep01_11_kf_clean.jpg
