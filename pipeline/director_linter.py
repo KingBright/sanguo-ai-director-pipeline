@@ -87,6 +87,7 @@ class DirectorLinter:
 
     def __init__(self, fact_sheet_path: Optional[Path] = None):
         self.fact_sheet_path = fact_sheet_path or (BASE_DIR / "fact_sheet.toml")
+        self.base_dir = self.fact_sheet_path.parent
         self.fact_sheet = self._load_toml(self.fact_sheet_path)
         self.rules = self.fact_sheet.get("director_rules", {})
         self.acoustic_spaces = self.fact_sheet.get("acoustic_spaces", {})
@@ -195,7 +196,7 @@ class DirectorLinter:
                         message=f"镜头包含角色 {chars}，但未显式绑定定妆母图 `ref_image`。",
                         suggestion="在 scene 中指定 `ref_image` 定妆/空间锚定母图，防止五官与空间漂移。"
                     ))
-                elif not (BASE_DIR / ref_image).exists():
+                elif not (self.base_dir / ref_image).exists() and not (BASE_DIR / ref_image).exists():
                     issues.append(LintIssue(
                         level="ERROR",
                         layer="L2-视觉资产事实锁",
