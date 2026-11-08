@@ -1,0 +1,13 @@
+Use case: precise-object-edit. Edit this ONE 12-panel storyboard sheet. Preserve the exact 4x3 grid, panel numbers01-12, every character identity, face, pose, clothes, framing, camera direction, room, lighting, drawing style and all dialogue-free artwork. Change ONLY the pizza portions and their plates where needed, so a viewer cannot mistake the story for multiple small whole pizzas.
+
+Original whole pizza in panels01-03 is ONE round pizza, about28cm diameter. Panel04 visibly cuts it through the exact center into two equal SEMICIRCLES. Two straight cut edges may be separated slightly to show the division; no second whole pizza.
+
+Crucial food geometry in panels05,06,07,08,09,10,11: every half portion must be a true HALF DISC, not an oval mini-pizza or a small circle. It retains the full original diameter along its ONE LONG STRAIGHT CUT EDGE. The curved outside arc has browned crust; the straight diameter is exposed thin cheese/bread cross-section WITHOUT a rounded outer crust. Place each half on a large round white dinner plate matching the original whole pizza diameter; precisely HALF of each plate's circular area is visibly EMPTY white ceramic. Keep the empty half-plate plainly visible. Use a slightly clear top-facing plate angle while preserving the camera composition.
+
+Panels05-07: exactly ONE semicircle A at family table, second semicircle B remains on original wooden counter board when visible. Panel08: B only at counter, clearly a semicircle.
+Panel09: owner carries B on second large round white plate, original wooden counter board is EMPTY; family's first plate still holds only A.
+Panel10: TWO large white plates each holding ONE true SEMICIRCLE, opposite complementary halves of the SAME original circle. Each plate is only half occupied, empty white semicircle visible. NOT two whole pizzas, NOT two round mini-pizzas.
+Panel11: keep existing child's offered triangular slice, but show the corresponding wedge visibly MISSING from one half. Remaining half portions shrink accordingly; no extra food.
+Panel12: three people eat pieces from that one original pizza, with matching missing wedges and much-reduced remaining food on two plates. No intact whole pizza left on any plate.
+
+Keep the story readable and natural, not a diagram; do not change characters or add written labels. Exact visible semicircle geometry is more important than decorative toppings.

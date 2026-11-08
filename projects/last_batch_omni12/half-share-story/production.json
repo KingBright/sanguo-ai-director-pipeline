@@ -1,0 +1,24 @@
+{
+  "title": "剩下的半份",
+  "date": "2026-11-08",
+  "stage": "screenplay_and_static_storyboard_draft",
+  "user_story_choice": "half purchased first, remaining half gifted after owner observes mother decline food",
+  "storyboard": "storyboard-draft-v2.png",
+  "image_tool": "built-in image_gen",
+  "prompts": [
+    "storyboard-prompt.txt",
+    "storyboard-edit-prompt.txt"
+  ],
+  "preview": "story-reel-draft.mp4",
+  "preview_seconds": 65,
+  "preview_audio": "none",
+  "timing": "estimated; not derived from acted dialogue",
+  "not_completed": [
+    "dialogue acting trial",
+    "physical action pilot",
+    "actual full film generation",
+    "pronunciation and lip-sync review"
+  ],
+  "new_film_generated": false,
+  "user_acceptance": "not_reviewed"
+}

@@ -115,11 +115,12 @@
     "duration": 44.5,
     "story": "Mother and two children dine in from start; enquiry is not a completed purchase; owner hears mother sacrifice her meal and explicitly offers one whole pizza; same food delivered and mother visibly joins children.",
     "frame_review": "Full-source contact sheets plus24fps transfer detail and join sheets",
-    "whole_film_user_acceptance": "not_reviewed",
+    "whole_film_user_acceptance": "rejected",
     "limits": [
       "No independent auditory or phoneme-level lip-sync verification",
       "Small texture/signage variations remain; not claimed physically exact simulation",
       "44.5 seconds rather than original about60-second target; optional repetitive departure beat omitted"
-    ]
+    ],
+    "story_review": "FAILED at film level: technical and local object checks do not establish dramaturgy, sufficient causality, scene flow or continuous acting."
   }
 }

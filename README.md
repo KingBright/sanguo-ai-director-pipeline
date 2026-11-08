@@ -141,4 +141,6 @@ python3 scripts/install_audio_skills.py --client codex --client antigravity --cl
 
 涉及道具转移的新片使用[剧情因果与连续性检查](.agents/skills/director-story/references/continuity-and-causality.md)，在原生剪辑清单中设置 `continuity_required: true`；关键项失败、未知或证据文件缺失时停止渲染。该检查读取人工观察记录，不自动识别视频是否正确。
 
-重做样片[《一起吃》](projects/last_batch_omni12/rebuild-20261108/story.md)为44.5秒，统一堂食，开场母子三人均在店内，唯一披萨完整移到餐桌，母亲最后坐下。[逐项审核](projects/last_batch_omni12/rebuild-20261108/review.json)与[制作证据](projects/last_batch_omni12/rebuild-20261108/production.json)保留失败小样、首尾帧试验与采用区间。仍待用户评审，不据此声称模型已解决一般物体守恒或逐音素口型。
+重做样片[《一起吃》](projects/last_batch_omni12/rebuild-20261108/story.md)为44.5秒，统一堂食，开场母子三人均在店内，唯一披萨完整移到餐桌，母亲最后坐下。[逐项审核](projects/last_batch_omni12/rebuild-20261108/review.json)与[制作证据](projects/last_batch_omni12/rebuild-20261108/production.json)保留失败小样、首尾帧试验与采用区间。该版本随后也被用户拒收：故事体量、场面衔接和表演连续性仍不足。逐镜道具检查不构成整片创作验收。
+
+按用户新确定的“买半份、让饭、老板再赠余半”的情节，新增[《剩下的半份》分镜剧本](projects/last_batch_omni12/half-share-story/screenplay.md)与[场面衔接方案](projects/last_batch_omni12/half-share-story/directing.md)。12格草图和约65秒静帧预演用于审查故事与镜头顺序，尚未对白试演或重拍成片。

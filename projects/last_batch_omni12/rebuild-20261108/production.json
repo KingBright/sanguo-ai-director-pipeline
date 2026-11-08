@@ -1,7 +1,7 @@
 {
   "title": "一起吃",
   "date": "2026-11-08",
-  "status": "candidate_requires_user_review",
+  "status": "rejected_by_user",
   "project_url": "https://flow.google.com/project/fc281829-0391-49d7-9633-6c9befe4b494",
   "model": "Omni 1.2 Flash",
   "delivery": "eat-together-v2.mp4",
@@ -27,5 +27,6 @@
   "reviews": "review.json",
   "technical_report": "technical-report.json",
   "tests": "4 native master tests passed, including declared fail/unverified blocks and missing-evidence blocks",
-  "installed_clients": "Current Mac Codex, Antigravity, DeepSeek harness verified; this update not claimed deployed to all other devices"
+  "installed_clients": "Current Mac Codex, Antigravity, DeepSeek harness verified; this update not claimed deployed to all other devices",
+  "user_feedback": "Story too thin; causal setup, scene transitions and acting continuity not sufficient. Do not treat successful object transfer or technical verification as a good film."
 }

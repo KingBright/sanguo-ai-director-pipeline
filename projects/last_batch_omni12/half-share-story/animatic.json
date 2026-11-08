@@ -1,0 +1,86 @@
+{
+  "status": "static_storyboard_preview_only",
+  "audio": "none",
+  "duration_seconds": 65,
+  "timing": "provisional, not based on acted dialogue",
+  "not_verified": [
+    "acting",
+    "pronunciation",
+    "lip sync",
+    "actual object transfer"
+  ],
+  "shots": [
+    {
+      "id": 1,
+      "seconds": 5,
+      "purpose": "进门：先交代母子三人和店内方位。",
+      "dialogue_or_note": "门铃、脚步；此处没有对白。"
+    },
+    {
+      "id": 2,
+      "seconds": 5,
+      "purpose": "母亲看零钱，再决定买半份。",
+      "dialogue_or_note": "母亲：“师傅，要半份。”"
+    },
+    {
+      "id": 3,
+      "seconds": 4,
+      "purpose": "付款成立，老板开始正常服务。",
+      "dialogue_or_note": "老板：“好，半份十块。”"
+    },
+    {
+      "id": 4,
+      "seconds": 5,
+      "purpose": "同一整饼切成两半；A上白盘，B留在柜台。",
+      "dialogue_or_note": "切饼声、盘子声；完整动作需要后续试拍。"
+    },
+    {
+      "id": 5,
+      "seconds": 5,
+      "purpose": "母亲端A到餐桌，两个孩子这时才坐下。",
+      "dialogue_or_note": "母亲：“来，坐这儿。”"
+    },
+    {
+      "id": 6,
+      "seconds": 4,
+      "purpose": "男孩先看见母亲没动，再邀请她。",
+      "dialogue_or_note": "男孩：“妈妈，你也吃。”"
+    },
+    {
+      "id": 7,
+      "seconds": 6,
+      "purpose": "母亲看分量、迟疑、让盘，再笑着推辞。",
+      "dialogue_or_note": "母亲：“你们先吃。妈妈回家再吃。”"
+    },
+    {
+      "id": 8,
+      "seconds": 4,
+      "purpose": "老板停下抹布；看母亲，再看剩半与钟。",
+      "dialogue_or_note": "留出听见、理解和决定的反应。"
+    },
+    {
+      "id": 9,
+      "seconds": 4,
+      "purpose": "老板把B从柜台端到餐桌；木板变空。",
+      "dialogue_or_note": "用走动和盘子方向接下一镜。"
+    },
+    {
+      "id": 10,
+      "seconds": 12,
+      "purpose": "母亲：“这……我们只买了半份。”",
+      "dialogue_or_note": "老板：“快打烊了，这半个也卖不掉。帮我吃了吧。”"
+    },
+    {
+      "id": 11,
+      "seconds": 6,
+      "purpose": "母亲：“谢谢您。”",
+      "dialogue_or_note": "男孩：“妈妈，这块给你。” 这次她接受。"
+    },
+    {
+      "id": 12,
+      "seconds": 5,
+      "purpose": "母亲真正吃下一口，孩子也放松地吃起来。",
+      "dialogue_or_note": "在第一口与放松反应处收束；图中剩余量仅为示意。"
+    }
+  ]
+}
